@@ -1,0 +1,10 @@
+github.com/alecthomas/template v0.0.0-20160405071501-a0175ee3bccc h1:cAKDfWh5VpdgMhJosfJnn5/FoN2SRZ4p7fJNX58YPaU=
+github.com/alecthomas/template v0.0.0-20160405071501-a0175ee3bccc/go.mod h1:LOuyumcjzFXgccqObfd/Ljyb9UuFJ6TxHnclSeseNhc=
+github.com/integrii/flaggy v0.0.0-20180727030457-227d37e9bf81 h1:0cGkUlRwHEiAR/TIx7n/bFbMM2o+5+s4jyj7FMF2/XE=
+github.com/integrii/flaggy v0.0.0-20180727030457-227d37e9bf81/go.mod h1:3cpVUtAftUH2sUWSsXjFhC6o9aRkLEAuxGQV/qXbSOQ=
+github.com/mattn/go-runewidth v0.0.3 h1:a+kO+98RDGEfo6asOGMmpodZq4FNtnGP54yps8BzLR4=
+github.com/mattn/go-runewidth v0.0.3/go.mod h1:LwmH8dsx7+W8Uxz3IHJYH5QSwggIsqBzpuz5H//U1FU=
+github.com/mattn/godown v0.0.0-20180312012330-2e9e17e0ea51 h1:MpI7hy3MiCnrggmZI/s8LaPbLVOOWpzDbjA4F+XaXaM=
+github.com/mattn/godown v0.0.0-20180312012330-2e9e17e0ea51/go.mod h1:s3KUdOIXJ+jaGM++XHiXA6gikdleaWVATCcQGD4h734=
+golang.org/x/net v0.0.0-20180826012351-8a410e7b638d h1:g9qWBGx4puODJTMVyoPrpoxPFgVGd+z1DZwjfRu4d0I=
+golang.org/x/net v0.0.0-20180826012351-8a410e7b638d/go.mod h1:mL1N/T3taQHkDXs73rZJwtUhF3w3ftmwwsq0BUmARs4=
