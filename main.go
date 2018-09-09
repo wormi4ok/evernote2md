@@ -1,4 +1,10 @@
-// DOcumentation for my program
+// Evernote2md is a cli tool to convert Evernote notes exported in *.enex format
+// to a directory with markdown files.
+//
+// Usage:
+//   evernote2md <file> [-o <outputDir>]
+//
+// If outputDir is not specified, current workdir is used.
 package main
 
 import (
