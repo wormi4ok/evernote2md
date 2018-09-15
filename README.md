@@ -9,15 +9,15 @@ Evernote2md is a CLI tool to convert Evernote notes exported in *.enex format to
 
 ### Installation
 
-Download a release for your OS and architecture. 
+[Download a release](https://github.com/wormi4ok/evernote2md/releases/latest) for your OS.
 
 ### How to use
 
 ```
-evernote2md export.enex -o ./notes
+evernote2md [input] [outputDir]
 ```
 
-If outputDir is not specified, current `workdir` is used.
+If outputDir is not specified, `./notes` is used.
 
 ### How to export notes from Evernote
 

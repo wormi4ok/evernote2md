@@ -25,19 +25,25 @@ var version = "dev"
 
 func main() {
 	var input string
-	var outputDir = "./notes"
+	var outputDir = filepath.FromSlash("./notes")
+	var outputOverride string
 
 	flaggy.SetName("evernote2md")
 	flaggy.SetDescription(" Convert Evernote notes exported in *.enex format to markdown files")
 	flaggy.SetVersion(version)
 
 	flaggy.AddPositionalValue(&input, "input", 1, true, "Evernote export file")
-	flaggy.String(&outputDir, "o", "outputDir", "Directory where markdown files will be created")
+	flaggy.AddPositionalValue(&outputDir, "output", 2, false, "Output directory")
+	flaggy.String(&outputOverride, "o", "outputDir", "Directory where markdown files will be created")
 
 	flaggy.DefaultParser.ShowHelpOnUnexpected = false
 	flaggy.DefaultParser.AdditionalHelpPrepend = "http://github.com/wormi4ok/evernote2md"
 
 	flaggy.Parse()
+
+	if len(outputOverride) > 0 {
+		outputDir = outputOverride
+	}
 
 	run(input, outputDir)
 }
