@@ -6,4 +6,6 @@ require (
 	github.com/mattn/go-runewidth v0.0.3 // indirect
 	github.com/mattn/godown v0.0.0-20180312012330-2e9e17e0ea51
 	golang.org/x/net v0.0.0-20180826012351-8a410e7b638d // indirect
+	golang.org/x/sys v0.0.0-20180909124046-d0be0721c37e // indirect
+	gopkg.in/cheggaaa/pb.v1 v1.0.25
 )

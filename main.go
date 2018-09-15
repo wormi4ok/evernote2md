@@ -18,13 +18,14 @@ import (
 	"github.com/wormi4ok/evernote2md/encoding/enex"
 	"github.com/wormi4ok/evernote2md/file"
 	"github.com/wormi4ok/evernote2md/internal"
+	pb "gopkg.in/cheggaaa/pb.v1"
 )
 
 var version = "dev"
 
 func main() {
-	var input = "./data/Evernote.enex"
-	var outputDir = "./data/notes"
+	var input string
+	var outputDir = "./notes"
 
 	flaggy.SetName("evernote2md")
 	flaggy.SetDescription(" Convert Evernote notes exported in *.enex format to markdown files")
@@ -54,6 +55,8 @@ func run(input, output string) {
 	err = os.MkdirAll(output, os.ModePerm)
 	failWhen(err)
 
+	progress := pb.StartNew(len(export.Notes))
+	progress.Prefix("Notes:")
 	for _, note := range export.Notes {
 		md, err := internal.Converter{AssetsDir: assetsDir}.Convert(&note)
 		failWhen(err)
@@ -69,7 +72,9 @@ func run(input, output string) {
 			}
 		}
 		failWhen(err)
+		progress.Increment()
 	}
+	progress.FinishPrint("Done!")
 }
 
 func failWhen(err error) {
