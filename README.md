@@ -14,11 +14,19 @@ Evernote2md is a CLI tool to convert Evernote notes exported in *.enex format to
 
 ### How to use
 
+#### With binary
+
 ```
 evernote2md [input] [outputDir]
 ```
 
 If outputDir is not specified, `./notes` is used.
+
+#### With docker
+
+```
+docker run --rm wormi4ok/evernote2md:latest [input] [outputDir]
+```
 
 ### How to export notes from Evernote
 
