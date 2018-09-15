@@ -27,6 +27,7 @@ var expect = &enex.Export{
 		Content:    []byte(`<div>text in the note<br/><b>bold text</b><br/></div><en-media type="image/jpeg" hash="09dde741f3b38c1a954358172cad4c06"/>`),
 		Updated:    "20090101T101010Z",
 		Created:    "20090101T050505Z",
+		Tags:       []string{"tag1", "tag2"},
 		Attributes: "",
 		Resources: []enex.Resource{{
 			ID:   "09dde741f3b38c1a954358172cad4c06",

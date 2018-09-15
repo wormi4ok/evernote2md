@@ -22,6 +22,7 @@ type (
 		Content    []byte     `xml:"content"`
 		Updated    string     `xml:"created"`
 		Created    string     `xml:"updated"`
+		Tags       []string   `xml:"tag"`
 		Attributes string     `xml:"note-attributes"`
 		Resources  []Resource `xml:"resource"`
 	}
