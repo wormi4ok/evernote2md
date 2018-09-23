@@ -42,16 +42,32 @@ func (c Converter) Convert(note *enex.Note) (*markdown.Note, error) {
 
 		md.Media[res.ID] = mdr
 	}
+
+	content = prependTags(note.Tags, content)
+	content = prependTitle(note.Title, content)
+
 	var b bytes.Buffer
 	err := godown.Convert(&b, strings.NewReader(content), nil)
 	if err != nil {
 		return nil, err
 	}
-	title := []byte(fmt.Sprintf("# %s\n\n", note.Title))
-	md.Content = append(title, bytes.TrimRight(b.Bytes(), "\n")...)
-	md.Content = append(md.Content, '\n')
+
+	md.Content = regexp.MustCompile(`\n{3,}`).ReplaceAllLiteral(b.Bytes(), []byte("\n\n"))
+	md.Content = append(bytes.TrimRight(md.Content, "\n"), '\n')
 
 	return &md, nil
+}
+
+func prependTags(tags []string, content string) string {
+	var tt []string
+	for _, t := range tags {
+		tt = append(tags, fmt.Sprintf("<code>%s</code>", t))
+	}
+	return strings.Join(tt, "") + "<br>" + content
+}
+
+func prependTitle(title, content string) string {
+	return fmt.Sprintf("<h1>%s</h1>", title) + content
 }
 
 func decoder(d enex.Data) io.Reader {
