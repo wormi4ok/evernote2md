@@ -9,7 +9,6 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/mattn/godown"
 	"github.com/wormi4ok/evernote2md/encoding/enex"
 	"github.com/wormi4ok/evernote2md/encoding/markdown"
 )
@@ -47,7 +46,7 @@ func (c Converter) Convert(note *enex.Note) (*markdown.Note, error) {
 	content = prependTitle(note.Title, content)
 
 	var b bytes.Buffer
-	err := godown.Convert(&b, strings.NewReader(content), nil)
+	err := markdown.Convert(&b, strings.NewReader(content))
 	if err != nil {
 		return nil, err
 	}
