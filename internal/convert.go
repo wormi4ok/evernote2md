@@ -60,9 +60,9 @@ func (c Converter) Convert(note *enex.Note) (*markdown.Note, error) {
 func prependTags(tags []string, content string) string {
 	var tt []string
 	for _, t := range tags {
-		tt = append(tags, fmt.Sprintf("<code>%s</code>", t))
+		tt = append(tt, fmt.Sprintf("<code>%s</code>", t))
 	}
-	return strings.Join(tt, "") + "<br>" + content
+	return strings.Join(tt, " ") + "<br>" + content
 }
 
 func prependTitle(title, content string) string {

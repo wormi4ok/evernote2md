@@ -18,7 +18,7 @@ const evernoteContent = `<p>abc</p>
 
 const markdownContent = `# Test note
 
-` + "`tag1`" + `
+` + "`tag1``tag2`" + `
 
 abc
 
@@ -41,7 +41,7 @@ func TestConvert(t *testing.T) {
 			arg: &enex.Note{
 				Title:   "Test note",
 				Content: []byte(evernoteContent),
-				Tags:    []string{"tag1"},
+				Tags:    []string{"tag1", "tag2"},
 				Resources: []enex.Resource{{
 					ID: "c9e6c70ea74388346ffa16ff8edbdf58",
 					Attributes: enex.Attributes{
