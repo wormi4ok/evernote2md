@@ -15,18 +15,12 @@ import (
 
 var re = regexp.MustCompile(`<en-media type="[\w\/]*" hash="([a-z0-9]+)"/>`)
 
-// Converter is the main entity that can convert
-// *.enex notes to markdown representation
-type Converter struct {
-	AssetsDir string
-}
-
 // Convert Evernote file to markdown
-func (c Converter) Convert(note *enex.Note) (*markdown.Note, error) {
+func Convert(note *enex.Note) (*markdown.Note, error) {
 	var md markdown.Note
 	md.Media = map[string]markdown.Resource{}
 
-	content := re.ReplaceAllString(string(note.Content), `<img src="`+c.AssetsDir+`/$1"><br>`)
+	content := re.ReplaceAllString(string(note.Content), `<img src="img/$1"><br>`)
 	for _, res := range note.Resources {
 		content = strings.Replace(content, res.ID, res.Attributes.Filename, 1)
 

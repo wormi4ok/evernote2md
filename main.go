@@ -49,8 +49,6 @@ func main() {
 }
 
 func run(input, output string) {
-	var assetsDir = output + "/img"
-
 	f, err := os.Open(input)
 	failWhen(err)
 	defer f.Close()
@@ -64,20 +62,17 @@ func run(input, output string) {
 	progress := pb.StartNew(len(export.Notes))
 	progress.Prefix("Notes:")
 	for _, note := range export.Notes {
-		md, err := internal.Converter{AssetsDir: assetsDir}.Convert(&note)
+		md, err := internal.Convert(&note)
 		failWhen(err)
 		mdFile := filepath.FromSlash(output + "/" + file.BaseName(note.Title) + ".md")
-		output, err := os.Create(mdFile)
+		f, err := os.Create(mdFile)
 		failWhen(err)
-		_, err = io.Copy(output, bytes.NewReader(md.Content))
+		_, err = io.Copy(f, bytes.NewReader(md.Content))
 		failWhen(err)
 		for _, res := range md.Media {
-			err = file.Save(assetsDir, res.Name, bytes.NewReader(res.Content))
-			if err != nil {
-				log.Fatal(err)
-			}
+			err = file.Save(output+"/img", res.Name, bytes.NewReader(res.Content))
+			failWhen(err)
 		}
-		failWhen(err)
 		progress.Increment()
 	}
 	progress.FinishPrint("Done!")
