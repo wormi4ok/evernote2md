@@ -13,34 +13,38 @@ import (
 	"github.com/wormi4ok/evernote2md/encoding/markdown"
 )
 
-var re = regexp.MustCompile(`<en-media type="[\w\/]*" hash="([a-z0-9]+)"/>`)
-
 // Convert Evernote file to markdown
 func Convert(note *enex.Note) (*markdown.Note, error) {
 	var md markdown.Note
 	md.Media = map[string]markdown.Resource{}
 
-	content := re.ReplaceAllString(string(note.Content), `<img src="img/$1"><br>`)
 	for _, res := range note.Resources {
-		content = strings.Replace(content, res.ID, res.Attributes.Filename, 1)
-
 		p, err := ioutil.ReadAll(decoder(res.Data))
 		if err != nil {
 			return nil, err
 		}
+
 		mdr := markdown.Resource{
 			Name:    res.Attributes.Filename,
 			Content: p,
+		}
+		if mdr.Name == "" {
+			mdr.Name = res.ID
 		}
 
 		md.Media[res.ID] = mdr
 	}
 
-	content = prependTags(note.Tags, content)
+	html, err := convertEnMediaToHTML(note.Content, md.Media)
+	if err != nil {
+		return nil, err
+	}
+
+	content := prependTags(note.Tags, string(html))
 	content = prependTitle(note.Title, content)
 
 	var b bytes.Buffer
-	err := markdown.Convert(&b, strings.NewReader(content))
+	err = markdown.Convert(&b, strings.NewReader(content))
 	if err != nil {
 		return nil, err
 	}

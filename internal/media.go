@@ -1,0 +1,64 @@
+package internal
+
+import (
+	"bytes"
+	"strings"
+
+	"golang.org/x/net/html"
+
+	"github.com/wormi4ok/evernote2md/encoding/enex"
+	"github.com/wormi4ok/evernote2md/encoding/markdown"
+)
+
+func convertEnMediaToHTML(b []byte, rr map[string]markdown.Resource) ([]byte, error) {
+	doc, err := html.Parse(bytes.NewReader(b))
+	if err != nil {
+		return nil, err
+	}
+	var f func(*html.Node)
+	f = func(n *html.Node) {
+		if isMedia(n) {
+			var hash string
+			for _, a := range n.Attr {
+				if a.Key == "hash" {
+					hash = a.Val
+					break
+				}
+			}
+			if r, ok := rr[hash]; ok {
+				image := parseOne(`<img src="img/`+r.Name+`">`, n)
+				appendMedia(n, image)
+			}
+		}
+		for c := n.FirstChild; c != nil; c = c.NextSibling {
+			f(c)
+		}
+	}
+	f(doc)
+	var out bytes.Buffer
+	html.Render(&out, doc)
+	return out.Bytes(), nil
+}
+
+func isMedia(n *html.Node) bool {
+	return n.Type == html.ElementNode && n.Data == enex.AtomMedia
+}
+
+func appendMedia(n *html.Node, media *html.Node) {
+	p := n.Parent
+	for isMedia(p) {
+		p = p.Parent
+	}
+	p.AppendChild(media)
+	p.AppendChild(parseOne(`<br/>`, n)) // newline
+}
+
+// Since we control intput, this wrapper gives a simple
+// interface which will panic in case of really wierd strings
+func parseOne(h string, context *html.Node) *html.Node {
+	nodes, err := html.ParseFragment(strings.NewReader(h), context)
+	if err != nil {
+		panic("parseHtml: " + err.Error())
+	}
+	return nodes[0]
+}
