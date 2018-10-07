@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	"mime"
 	"regexp"
 	"strings"
 
@@ -24,12 +25,18 @@ func Convert(note *enex.Note) (*markdown.Note, error) {
 			return nil, err
 		}
 
+		rType := markdown.File
+		if isImage(res.Mime) {
+			rType = markdown.Image
+		}
+
 		mdr := markdown.Resource{
 			Name:    res.Attributes.Filename,
+			Type:    rType,
 			Content: p,
 		}
 		if mdr.Name == "" {
-			mdr.Name = res.ID
+			mdr.Name = res.ID + guessExt(res.Mime)
 		}
 
 		md.Media[res.ID] = mdr
@@ -73,4 +80,18 @@ func decoder(d enex.Data) io.Reader {
 	}
 
 	return bytes.NewReader(d.Content)
+}
+
+func guessExt(mimeType string) string {
+	ext, err := mime.ExtensionsByType(mimeType)
+	if err != nil || len(ext) == 0 {
+		return ""
+	}
+	return ext[0]
+}
+
+var reImg = regexp.MustCompile(`^image/[\w]+`)
+
+func isImage(mimeType string) bool {
+	return reImg.MatchString(mimeType)
 }

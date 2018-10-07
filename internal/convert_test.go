@@ -43,7 +43,8 @@ func TestConvert(t *testing.T) {
 				Content: []byte(evernoteContent),
 				Tags:    []string{"tag1", "tag2"},
 				Resources: []enex.Resource{{
-					ID: "c9e6c70ea74388346ffa16ff8edbdf58",
+					ID:   "c9e6c70ea74388346ffa16ff8edbdf58",
+					Mime: "image/png",
 					Attributes: enex.Attributes{
 						Filename: "1.jpg",
 					},
@@ -52,7 +53,8 @@ func TestConvert(t *testing.T) {
 						Content:  []byte(encodedImage),
 					},
 				}, {
-					ID: "1sdb49hgt574388346ffa19kh3edbdf09",
+					ID:   "1sdb49hgt574388346ffa19kh3edbdf09",
+					Mime: "image/gif",
 					Attributes: enex.Attributes{
 						Filename: "2.jpg",
 					},
@@ -67,10 +69,12 @@ func TestConvert(t *testing.T) {
 				Media: map[string]markdown.Resource{
 					"c9e6c70ea74388346ffa16ff8edbdf58": markdown.Resource{
 						Name:    "1.jpg",
+						Type:    "image",
 						Content: image,
 					},
 					"1sdb49hgt574388346ffa19kh3edbdf09": markdown.Resource{
 						Name:    "2.jpg",
+						Type:    "image",
 						Content: image,
 					},
 				},
