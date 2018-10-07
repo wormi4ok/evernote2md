@@ -18,16 +18,8 @@ func convertEnMediaToHTML(b []byte, rr map[string]markdown.Resource) ([]byte, er
 	var f func(*html.Node)
 	f = func(n *html.Node) {
 		if isMedia(n) {
-			var hash string
-			for _, a := range n.Attr {
-				if a.Key == "hash" {
-					hash = a.Val
-					break
-				}
-			}
-			if r, ok := rr[hash]; ok {
-				image := parseOne(`<img src="img/`+r.Name+`">`, n)
-				appendMedia(n, image)
+			if res, ok := rr[hashAttr(n)]; ok {
+				appendMedia(n, parseOne(`<img src="img/`+res.Name+`">`, n))
 			}
 		}
 		for c := n.FirstChild; c != nil; c = c.NextSibling {
@@ -35,13 +27,25 @@ func convertEnMediaToHTML(b []byte, rr map[string]markdown.Resource) ([]byte, er
 		}
 	}
 	f(doc)
+
 	var out bytes.Buffer
 	html.Render(&out, doc)
+
 	return out.Bytes(), nil
 }
 
 func isMedia(n *html.Node) bool {
 	return n.Type == html.ElementNode && n.Data == enex.AtomMedia
+}
+
+func hashAttr(n *html.Node) string {
+	for _, a := range n.Attr {
+		if a.Key == "hash" {
+			return a.Val
+		}
+	}
+
+	return ""
 }
 
 func appendMedia(n *html.Node, media *html.Node) {
