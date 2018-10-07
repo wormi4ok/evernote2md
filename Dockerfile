@@ -1,4 +1,4 @@
-FROM golang:1.11 AS build
+FROM golang:1.11-alpine AS build
 # Modules are enabled to use exact versions of dependencies
 ENV GO111MODULE on
 
