@@ -67,12 +67,12 @@ func TestConvert(t *testing.T) {
 			want: &markdown.Note{
 				Content: []byte(markdownContent),
 				Media: map[string]markdown.Resource{
-					"c9e6c70ea74388346ffa16ff8edbdf58": markdown.Resource{
+					"c9e6c70ea74388346ffa16ff8edbdf58": {
 						Name:    "1.jpg",
 						Type:    "image",
 						Content: image,
 					},
-					"1sdb49hgt574388346ffa19kh3edbdf09": markdown.Resource{
+					"1sdb49hgt574388346ffa19kh3edbdf09": {
 						Name:    "2.jpg",
 						Type:    "image",
 						Content: image,
