@@ -6,6 +6,8 @@ WORKDIR /go/src/github.com/wormi4ok/evernote2md
 
 COPY . .
 
+RUN set -xe && apk add --no-cache git
+
 RUN go install && go test ./...
 
 FROM alpine:3.8
