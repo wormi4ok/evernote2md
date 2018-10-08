@@ -6,7 +6,6 @@ import (
 
 	"golang.org/x/net/html"
 
-	"github.com/wormi4ok/evernote2md/encoding/enex"
 	"github.com/wormi4ok/evernote2md/encoding/markdown"
 )
 
@@ -34,8 +33,23 @@ func convertEnMediaToHTML(b []byte, rr map[string]markdown.Resource) ([]byte, er
 	return out.Bytes(), nil
 }
 
-func isMedia(n *html.Node) bool {
-	return n.Type == html.ElementNode && n.Data == enex.AtomMedia
+func appendMedia(n *html.Node, media *html.Node) {
+	p := n.Parent
+	for isMedia(p) {
+		p = p.Parent
+	}
+	p.AppendChild(media)
+	p.AppendChild(parseOne(`<br/>`, n)) // newline
+}
+
+// Since we control intput, this wrapper gives a simple
+// interface which will panic in case of bad strings
+func parseOne(h string, context *html.Node) *html.Node {
+	nodes, err := html.ParseFragment(strings.NewReader(h), context)
+	if err != nil {
+		panic("parseHtml: " + err.Error())
+	}
+	return nodes[0]
 }
 
 func hashAttr(n *html.Node) string {
@@ -48,21 +62,6 @@ func hashAttr(n *html.Node) string {
 	return ""
 }
 
-func appendMedia(n *html.Node, media *html.Node) {
-	p := n.Parent
-	for isMedia(p) {
-		p = p.Parent
-	}
-	p.AppendChild(media)
-	p.AppendChild(parseOne(`<br/>`, n)) // newline
-}
-
-// Since we control intput, this wrapper gives a simple
-// interface which will panic in case of really wierd strings
-func parseOne(h string, context *html.Node) *html.Node {
-	nodes, err := html.ParseFragment(strings.NewReader(h), context)
-	if err != nil {
-		panic("parseHtml: " + err.Error())
-	}
-	return nodes[0]
+func isMedia(n *html.Node) bool {
+	return n.Type == html.ElementNode && n.Data == "en-media"
 }

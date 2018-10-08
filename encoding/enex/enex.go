@@ -7,8 +7,6 @@ import (
 	"log"
 )
 
-const AtomMedia = "en-media"
-
 type (
 	// Export represents Evernote enex file structure
 	Export struct {
