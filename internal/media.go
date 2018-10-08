@@ -33,13 +33,13 @@ func convertEnMediaToHTML(b []byte, rr map[string]markdown.Resource) ([]byte, er
 	return out.Bytes(), nil
 }
 
-func appendMedia(n *html.Node, media *html.Node) {
-	p := n.Parent
+func appendMedia(note, media *html.Node) {
+	p := note.Parent
 	for isMedia(p) {
 		p = p.Parent
 	}
 	p.AppendChild(media)
-	p.AppendChild(parseOne(`<br/>`, n)) // newline
+	p.AppendChild(parseOne(`<br/>`, note)) // newline
 }
 
 // Since we control intput, this wrapper gives a simple
