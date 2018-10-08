@@ -1,6 +1,7 @@
 FROM golang:1.11-alpine AS build
 # Modules are enabled to use exact versions of dependencies
 ENV GO111MODULE on
+ENV CGO_ENABLED 0
 
 WORKDIR /go/src/github.com/wormi4ok/evernote2md
 
