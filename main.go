@@ -61,10 +61,11 @@ func run(input, output string) {
 
 	progress := pb.StartNew(len(export.Notes))
 	progress.Prefix("Notes:")
-	for _, note := range export.Notes {
-		md, err := internal.Convert(&note)
+	n := export.Notes
+	for i := range n {
+		md, err := internal.Convert(&n[i])
 		failWhen(err)
-		mdFile := filepath.FromSlash(output + "/" + file.BaseName(note.Title) + ".md")
+		mdFile := filepath.FromSlash(output + "/" + file.BaseName(n[i].Title) + ".md")
 		f, err := os.Create(mdFile)
 		failWhen(err)
 		_, err = io.Copy(f, bytes.NewReader(md.Content))

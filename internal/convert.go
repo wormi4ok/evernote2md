@@ -19,27 +19,28 @@ func Convert(note *enex.Note) (*markdown.Note, error) {
 	var md markdown.Note
 	md.Media = map[string]markdown.Resource{}
 
-	for _, res := range note.Resources {
-		p, err := ioutil.ReadAll(decoder(res.Data))
+	r := note.Resources
+	for i := range r {
+		p, err := ioutil.ReadAll(decoder(r[i].Data))
 		if err != nil {
 			return nil, err
 		}
 
 		rType := markdown.File
-		if isImage(res.Mime) {
+		if isImage(r[i].Mime) {
 			rType = markdown.Image
 		}
 
 		mdr := markdown.Resource{
-			Name:    res.Attributes.Filename,
+			Name:    r[i].Attributes.Filename,
 			Type:    rType,
 			Content: p,
 		}
 		if mdr.Name == "" {
-			mdr.Name = res.ID + guessExt(res.Mime)
+			mdr.Name = r[i].ID + guessExt(r[i].Mime)
 		}
 
-		md.Media[res.ID] = mdr
+		md.Media[r[i].ID] = mdr
 	}
 
 	html, err := convertEnMediaToHTML(note.Content, md.Media)
