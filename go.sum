@@ -1,7 +1,11 @@
-github.com/alecthomas/template v0.0.0-20160405071501-a0175ee3bccc h1:cAKDfWh5VpdgMhJosfJnn5/FoN2SRZ4p7fJNX58YPaU=
-github.com/alecthomas/template v0.0.0-20160405071501-a0175ee3bccc/go.mod h1:LOuyumcjzFXgccqObfd/Ljyb9UuFJ6TxHnclSeseNhc=
-github.com/integrii/flaggy v0.0.0-20180727030457-227d37e9bf81 h1:0cGkUlRwHEiAR/TIx7n/bFbMM2o+5+s4jyj7FMF2/XE=
-github.com/integrii/flaggy v0.0.0-20180727030457-227d37e9bf81/go.mod h1:3cpVUtAftUH2sUWSsXjFhC6o9aRkLEAuxGQV/qXbSOQ=
+github.com/fatih/color v1.7.0 h1:DkWD4oS2D8LGGgTQ6IvwJJXSL5Vp2ffcQg58nFV38Ys=
+github.com/fatih/color v1.7.0/go.mod h1:Zm6kSWBoL9eyXnKyktHP6abPY2pDugNf5KwzbycvMj4=
+github.com/integrii/flaggy v0.0.0-20181007032133-1056ce330646 h1:TVhJwbh3Mq4cVdaQdIp46GQgYbatkToa8jjoy8mr7is=
+github.com/integrii/flaggy v0.0.0-20181007032133-1056ce330646/go.mod h1:3cpVUtAftUH2sUWSsXjFhC6o9aRkLEAuxGQV/qXbSOQ=
+github.com/mattn/go-colorable v0.0.9 h1:UVL0vNpWh04HeJXV0KLcaT7r06gOH2l4OW6ddYRUIY4=
+github.com/mattn/go-colorable v0.0.9/go.mod h1:9vuHe8Xs5qXnSaW/c/ABM9alt+Vo+STaOChaDxuIBZU=
+github.com/mattn/go-isatty v0.0.4 h1:bnP0vzxcAdeI1zdubAl5PjU6zsERjGZb7raWodagDYs=
+github.com/mattn/go-isatty v0.0.4/go.mod h1:M+lRXTBqGeGNdLjl/ufCoiOlB5xdOkqRJdNxMWT7Zi4=
 github.com/mattn/go-runewidth v0.0.3 h1:a+kO+98RDGEfo6asOGMmpodZq4FNtnGP54yps8BzLR4=
 github.com/mattn/go-runewidth v0.0.3/go.mod h1:LwmH8dsx7+W8Uxz3IHJYH5QSwggIsqBzpuz5H//U1FU=
 github.com/mattn/godown v0.0.0-20180312012330-2e9e17e0ea51 h1:MpI7hy3MiCnrggmZI/s8LaPbLVOOWpzDbjA4F+XaXaM=
