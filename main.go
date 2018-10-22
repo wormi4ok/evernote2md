@@ -71,7 +71,7 @@ func run(input, output string) {
 		_, err = io.Copy(f, bytes.NewReader(md.Content))
 		failWhen(err)
 		for _, res := range md.Media {
-			err = file.Save(output+"/img", res.Name, bytes.NewReader(res.Content))
+			err = file.Save(output+"/"+string(res.Type), res.Name, bytes.NewReader(res.Content))
 			failWhen(err)
 		}
 		progress.Increment()

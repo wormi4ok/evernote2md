@@ -2,12 +2,18 @@ package internal
 
 import (
 	"bytes"
+	"fmt"
 	"strings"
 
 	"golang.org/x/net/html"
 
 	"github.com/wormi4ok/evernote2md/encoding/markdown"
 )
+
+var htmlFormat = map[markdown.ResourceType]string{
+	markdown.Image: `<img src="%s/%s" alt="%s" />`,
+	markdown.File:  `<a href="file://%s/%s">%s</a>`,
+}
 
 func convertEnMediaToHTML(b []byte, rr map[string]markdown.Resource) ([]byte, error) {
 	doc, err := html.Parse(bytes.NewReader(b))
@@ -18,7 +24,7 @@ func convertEnMediaToHTML(b []byte, rr map[string]markdown.Resource) ([]byte, er
 	f = func(n *html.Node) {
 		if isMedia(n) {
 			if res, ok := rr[hashAttr(n)]; ok {
-				appendMedia(n, parseOne(`<img src="img/`+res.Name+`">`, n))
+				appendMedia(n, parseOne(resourceReference(res), n))
 			}
 		}
 		for c := n.FirstChild; c != nil; c = c.NextSibling {
@@ -64,4 +70,8 @@ func hashAttr(n *html.Node) string {
 
 func isMedia(n *html.Node) bool {
 	return n.Type == html.ElementNode && n.Data == "en-media"
+}
+
+func resourceReference(res markdown.Resource) string {
+	return fmt.Sprintf(htmlFormat[res.Type], res.Type, res.Name, res.Name)
 }
