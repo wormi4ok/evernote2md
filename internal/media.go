@@ -12,7 +12,7 @@ import (
 
 var htmlFormat = map[markdown.ResourceType]string{
 	markdown.Image: `<img src="%s/%s" alt="%s" />`,
-	markdown.File:  `<a href="file://%s/%s">%s</a>`,
+	markdown.File:  `<a href="./%s/%s">%s</a>`,
 }
 
 func convertEnMediaToHTML(b []byte, rr map[string]markdown.Resource) ([]byte, error) {
@@ -24,7 +24,11 @@ func convertEnMediaToHTML(b []byte, rr map[string]markdown.Resource) ([]byte, er
 	f = func(n *html.Node) {
 		if isMedia(n) {
 			if res, ok := rr[hashAttr(n)]; ok {
-				appendMedia(n, parseOne(resourceReference(res), n))
+				replaceNode(n, res)
+			} else {
+				if _, ok := rr[""]; ok && len(rr) == 1 {
+					replaceNode(n, rr[""])
+				}
 			}
 		}
 		for c := n.FirstChild; c != nil; c = c.NextSibling {
@@ -37,6 +41,10 @@ func convertEnMediaToHTML(b []byte, rr map[string]markdown.Resource) ([]byte, er
 	html.Render(&out, doc)
 
 	return out.Bytes(), nil
+}
+
+func replaceNode(n *html.Node, res markdown.Resource) {
+	appendMedia(n, parseOne(resourceReference(res), n))
 }
 
 func appendMedia(note, media *html.Node) {
