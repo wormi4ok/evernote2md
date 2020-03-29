@@ -1,5 +1,7 @@
 module github.com/wormi4ok/evernote2md
 
+go 1.14
+
 require (
 	github.com/fatih/color v1.7.0 // indirect
 	github.com/integrii/flaggy v0.0.0-20181007032133-1056ce330646

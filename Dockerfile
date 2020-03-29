@@ -1,6 +1,5 @@
-FROM golang:1.11-alpine AS build
-# Modules are enabled to use exact versions of dependencies
-ENV GO111MODULE on
+FROM golang:1.14-alpine AS build
+
 ENV CGO_ENABLED 0
 
 WORKDIR /go/src/github.com/wormi4ok/evernote2md
@@ -11,7 +10,7 @@ RUN set -xe && apk add --no-cache git
 
 RUN go install && go test ./...
 
-FROM alpine:3.8
+FROM alpine:3.11
 
 LABEL   org.label-schema.name="evernote2md" \
         org.label-schema.description="Convert Evernote .enex export file to Markdown" \
