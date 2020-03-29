@@ -4,7 +4,7 @@ go 1.14
 
 require (
 	github.com/fatih/color v1.7.0 // indirect
-	github.com/integrii/flaggy v0.0.0-20181007032133-1056ce330646
+	github.com/integrii/flaggy v1.4.4
 	github.com/mattn/go-colorable v0.0.9 // indirect
 	github.com/mattn/go-isatty v0.0.4 // indirect
 	github.com/mattn/go-runewidth v0.0.4 // indirect
