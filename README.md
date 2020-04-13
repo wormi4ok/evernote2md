@@ -1,6 +1,6 @@
 # Evernote to Markdown converter
 
-[![Build Status](https://travis-ci.org/wormi4ok/evernote2md.svg?branch=master)](https://travis-ci.org/wormi4ok/evernote2md)
+[![Build Status](https://github.com/wormi4ok/evernote2md/workflows/Test/badge.svg)](https://github.com/wormi4ok/evernote2md/actions)
 [![Docker Build Status](https://img.shields.io/docker/build/wormi4ok/evernote2md.svg)](https://hub.docker.com/r/wormi4ok/evernote2md/)
 [![codecov](https://codecov.io/gh/wormi4ok/evernote2md/branch/master/graph/badge.svg)](https://codecov.io/gh/wormi4ok/evernote2md)
 [![GoDoc](https://godoc.org/github.com/wormi4ok/evernote2md?status.svg)](http://godoc.org/github.com/wormi4ok/evernote2md)

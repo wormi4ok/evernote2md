@@ -1,4 +1,4 @@
-name: release
+name: Release
 
 on:
   push:
@@ -11,15 +11,15 @@ jobs:
   release:
     runs-on: ubuntu-latest
     steps:
-    - name: checkout
+    - name: Checkout
       uses: actions/checkout@v2
-    - name: unshallow
+    - name: Unshallow
       run: git fetch --prune --unshallow
-    - name: go
+    - name: Setup Go
       uses: actions/setup-go@v1
       with:
         go-version: 1.14.x
-    - name: releaser
+    - name: Release
       uses: goreleaser/goreleaser-action@v1
       with:
         version: latest
