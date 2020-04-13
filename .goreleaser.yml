@@ -7,12 +7,15 @@ builds:
     - amd64
   env:
     - CGO_ENABLED=0
-archive:
-  replacements:
-    darwin: MacOS
-    linux: Linux
-    windows: Windows
-    amd64: 64-bit
-  format_overrides:
-  - goos: windows
-    format: zip
+archives:
+  - replacements:
+      darwin: MacOS
+      linux: Linux
+      windows: Windows
+      amd64: 64-bit
+    format_overrides:
+    - goos: windows
+      format: zip
+    wrap_in_directory: false
+    files:
+      - none*
