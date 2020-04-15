@@ -22,6 +22,9 @@ func convertEnMediaToHTML(b []byte, rr map[string]markdown.Resource) ([]byte, er
 	}
 	var f func(*html.Node)
 	f = func(n *html.Node) {
+		if isCode(n) {
+			n.Data = "pre"
+		}
 		if isMedia(n) {
 			if res, ok := rr[hashAttr(n)]; ok {
 				replaceNode(n, res)
@@ -56,7 +59,7 @@ func appendMedia(note, media *html.Node) {
 	p.AppendChild(parseOne(`<br/>`, note)) // newline
 }
 
-// Since we control intput, this wrapper gives a simple
+// Since we control input, this wrapper gives a simple
 // interface which will panic in case of bad strings
 func parseOne(h string, context *html.Node) *html.Node {
 	nodes, err := html.ParseFragment(strings.NewReader(h), context)
@@ -78,6 +81,18 @@ func hashAttr(n *html.Node) string {
 
 func isMedia(n *html.Node) bool {
 	return n.Type == html.ElementNode && n.Data == "en-media"
+}
+
+func isCode(n *html.Node) bool {
+	if n.Type == html.ElementNode && n.Data == "div" {
+		for _, a := range n.Attr {
+			if a.Key == "style" {
+				return strings.Contains(a.Val, "-en-codeblock:true")
+			}
+		}
+	}
+
+	return false
 }
 
 func resourceReference(res markdown.Resource) string {
