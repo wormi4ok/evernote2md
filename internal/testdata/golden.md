@@ -6,6 +6,7 @@ abc
 
 ```
    //This is a code block
+    fmt.Println("hello world")
 ```
 
 ![1.jpg](image/1.jpg)

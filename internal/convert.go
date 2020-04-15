@@ -19,11 +19,36 @@ func Convert(note *enex.Note) (*markdown.Note, error) {
 	var md markdown.Note
 	md.Media = map[string]markdown.Resource{}
 
+	if err := mapResources(note, md); err != nil {
+		return nil, err
+	}
+
+	html, err := normalizeHTML(note.Content, NewReplacerMedia(md.Media), &Code{})
+	if err != nil {
+		return nil, err
+	}
+
+	content := prependTags(note.Tags, string(html))
+	content = prependTitle(note.Title, content)
+
+	var b bytes.Buffer
+	err = markdown.Convert(&b, strings.NewReader(content))
+	if err != nil {
+		return nil, err
+	}
+
+	md.Content = regexp.MustCompile(`\n{3,}`).ReplaceAllLiteral(b.Bytes(), []byte("\n\n"))
+	md.Content = append(bytes.TrimRight(md.Content, "\n"), '\n')
+
+	return &md, nil
+}
+
+func mapResources(note *enex.Note, md markdown.Note) error {
 	r := note.Resources
 	for i := range r {
 		p, err := ioutil.ReadAll(decoder(r[i].Data))
 		if err != nil {
-			return nil, err
+			return err
 		}
 
 		rType := markdown.File
@@ -42,25 +67,7 @@ func Convert(note *enex.Note) (*markdown.Note, error) {
 
 		md.Media[r[i].ID] = mdr
 	}
-
-	html, err := convertEnMediaToHTML(note.Content, md.Media)
-	if err != nil {
-		return nil, err
-	}
-
-	content := prependTags(note.Tags, string(html))
-	content = prependTitle(note.Title, content)
-
-	var b bytes.Buffer
-	err = markdown.Convert(&b, strings.NewReader(content))
-	if err != nil {
-		return nil, err
-	}
-
-	md.Content = regexp.MustCompile(`\n{3,}`).ReplaceAllLiteral(b.Bytes(), []byte("\n\n"))
-	md.Content = append(bytes.TrimRight(md.Content, "\n"), '\n')
-
-	return &md, nil
+	return nil
 }
 
 func prependTags(tags []string, content string) string {
