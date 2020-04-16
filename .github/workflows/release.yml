@@ -26,3 +26,14 @@ jobs:
         args: release --rm-dist
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  package:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Publish Docker image to GitHub Packages
+      uses: elgohr/Publish-Docker-Github-Action@2.14
+      with:
+        name: ${{ github.repository }}/cli
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+        registry: docker.pkg.github.com
+        tag_names: true
