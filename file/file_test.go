@@ -56,8 +56,8 @@ func TestBaseName(t *testing.T) {
 	}{
 		{"should return name as it is", "input", "input"},
 		{"separator to dash", "ac/dc", "ac-dc"},
-		{"multiple separators to dash", "http://s.petrashov.ru", "http_-s-petrashov-ru"},
-		{"blacklist chars to underscore", "1 <3 6014|\\|6", "1__3_6014_\\_6"},
+		{"multiple separators to dash", "http://s.petrashov.ru", "http-s-petrashov-ru"},
+		{"blacklist chars to underscore", "1 <3 6014|\\|6", "1-3_6014_\\_6"},
 		{"complicated one", "/.-./.-./.com   ", "-com"},
 		{"should truncate long names", longName, longName[:200]},
 	}
