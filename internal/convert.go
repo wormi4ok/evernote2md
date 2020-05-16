@@ -2,11 +2,8 @@ package internal
 
 import (
 	"bytes"
-	"encoding/base64"
 	"fmt"
-	"io"
 	"io/ioutil"
-	"mime"
 	"regexp"
 	"strings"
 
@@ -57,7 +54,7 @@ func mapResources(note *enex.Note, md markdown.Note) error {
 		}
 
 		mdr := markdown.Resource{
-			Name:    r[i].Attributes.Filename,
+			Name:    sanitize(r[i].Attributes.Filename),
 			Type:    rType,
 			Content: p,
 		}
@@ -80,26 +77,4 @@ func prependTags(tags []string, content string) string {
 
 func prependTitle(title, content string) string {
 	return fmt.Sprintf("<h1>%s</h1>", title) + content
-}
-
-func decoder(d enex.Data) io.Reader {
-	if d.Encoding == "base64" {
-		return base64.NewDecoder(base64.StdEncoding, bytes.NewReader(d.Content))
-	}
-
-	return bytes.NewReader(d.Content)
-}
-
-func guessExt(mimeType string) string {
-	ext, err := mime.ExtensionsByType(mimeType)
-	if err != nil || len(ext) == 0 {
-		return ""
-	}
-	return ext[0]
-}
-
-var reImg = regexp.MustCompile(`^image/[\w]+`)
-
-func isImage(mimeType string) bool {
-	return reImg.MatchString(mimeType)
 }

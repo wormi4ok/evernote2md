@@ -12,9 +12,9 @@ const maxPathLength = 200
 var (
 	baseNameSeparators = regexp.MustCompile(`[./]`)
 
-	blacklist = regexp.MustCompile(`[ |"'<>&_=+:?]`)
+	blacklist = regexp.MustCompile(`[\s|"'<>&_=+:?]`)
 
-	dashes = regexp.MustCompile(`[\-]+`)
+	dashes = regexp.MustCompile(`[\-_]{2,}`)
 )
 
 // Save a new file in a given dir with the following content
