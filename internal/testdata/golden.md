@@ -11,4 +11,4 @@ abc
 
 ![1.jpg](image/1.jpg)
 
-![2.jpg](image/2.jpg)
+![complex_path_http-image-com-2.gif](image/complex_path_http-image-com-2.gif)

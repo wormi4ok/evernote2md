@@ -46,7 +46,7 @@ func TestConvert(t *testing.T) {
 					ID:   "1sdb49hgt574388346ffa19kh3edbdf09",
 					Mime: "image/gif",
 					Attributes: enex.Attributes{
-						Filename: "2.jpg",
+						Filename: "complex?path=http://image.com/2.gif",
 					},
 					Data: enex.Data{
 						Encoding: "base64",
@@ -63,7 +63,7 @@ func TestConvert(t *testing.T) {
 						Content: image,
 					},
 					"1sdb49hgt574388346ffa19kh3edbdf09": {
-						Name:    "2.jpg",
+						Name:    "complex_path_http-image-com-2.gif",
 						Type:    "image",
 						Content: image,
 					},
