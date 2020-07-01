@@ -29,6 +29,8 @@ jobs:
   package:
     runs-on: ubuntu-latest
     steps:
+    - name: Checkout
+      uses: actions/checkout@v2
     - name: Publish Docker image to GitHub Packages
       uses: elgohr/Publish-Docker-Github-Action@2.14
       with:
