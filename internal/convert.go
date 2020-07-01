@@ -41,6 +41,7 @@ func Convert(note *enex.Note) (*markdown.Note, error) {
 }
 
 func mapResources(note *enex.Note, md markdown.Note) error {
+	names := map[string]int{}
 	r := note.Resources
 	for i := range r {
 		p, err := ioutil.ReadAll(decoder(r[i].Data))
@@ -52,14 +53,20 @@ func mapResources(note *enex.Note, md markdown.Note) error {
 		if isImage(r[i].Mime) {
 			rType = markdown.Image
 		}
+		name, ext := guessName(r[i])
+
+		// Ensure the name is unique
+		if cnt, exist := names[name+ext]; exist {
+			names[name+ext] = cnt + 1
+			name = fmt.Sprintf("%s-%d", name, cnt)
+		} else {
+			names[name+ext] = 1
+		}
 
 		mdr := markdown.Resource{
-			Name:    sanitize(r[i].Attributes.Filename),
+			Name:    name + ext,
 			Type:    rType,
 			Content: p,
-		}
-		if mdr.Name == "" {
-			mdr.Name = r[i].ID + guessExt(r[i].Mime)
 		}
 
 		md.Media[r[i].ID] = mdr

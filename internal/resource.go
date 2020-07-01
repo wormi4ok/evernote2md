@@ -23,23 +23,31 @@ func decoder(d enex.Data) io.Reader {
 	return bytes.NewReader(d.Content)
 }
 
+func isImage(mimeType string) bool {
+	return reImg.MatchString(mimeType)
+}
+
+func guessName(r enex.Resource) (name string, extension string) {
+	// Use ID as name if there is no resource name
+	if r.Attributes.Filename == "" {
+		return r.ID, guessExt(r.Mime)
+	}
+
+	// Try to split a file into name and extension
+	ff := reFileAndExt.FindStringSubmatch(r.Attributes.Filename)
+	if len(ff) < 2 {
+		// Use only filename if there is no extension
+		return file.BaseName(r.Attributes.Filename), ""
+	}
+
+	// Return sanitized filename
+	return file.BaseName(ff[len(ff)-2]), ff[len(ff)-1]
+}
+
 func guessExt(mimeType string) string {
 	ext, err := mime.ExtensionsByType(mimeType)
 	if err != nil || len(ext) == 0 {
 		return ""
 	}
 	return ext[0]
-}
-
-func isImage(mimeType string) bool {
-	return reImg.MatchString(mimeType)
-}
-
-func sanitize(filename string) string {
-	ff := reFileAndExt.FindStringSubmatch(filename)
-	if len(ff) < 2 {
-		return filename
-	}
-
-	return file.BaseName(ff[len(ff)-2]) + ff[len(ff)-1]
 }

@@ -43,6 +43,16 @@ func TestConvert(t *testing.T) {
 						Content:  []byte(encodedImage),
 					},
 				}, {
+					ID:   "90fdbde3hk91aff643883475tgh94bds1",
+					Mime: "image/gif",
+					Attributes: enex.Attributes{
+						Filename: "1.jpg",
+					},
+					Data: enex.Data{
+						Encoding: "base64",
+						Content:  []byte(encodedImage),
+					},
+				}, {
 					ID:   "1sdb49hgt574388346ffa19kh3edbdf09",
 					Mime: "image/gif",
 					Attributes: enex.Attributes{
@@ -59,6 +69,11 @@ func TestConvert(t *testing.T) {
 				Media: map[string]markdown.Resource{
 					"c9e6c70ea74388346ffa16ff8edbdf58": {
 						Name:    "1.jpg",
+						Type:    "image",
+						Content: image,
+					},
+					"90fdbde3hk91aff643883475tgh94bds1": {
+						Name:    "1-1.jpg",
 						Type:    "image",
 						Content: image,
 					},
