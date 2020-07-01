@@ -9,16 +9,17 @@ package main
 
 import (
 	"bytes"
+	"fmt"
 	"io"
 	"log"
 	"os"
 	"path/filepath"
 
+	"github.com/cheggaaa/pb/v3"
 	"github.com/integrii/flaggy"
 	"github.com/wormi4ok/evernote2md/encoding/enex"
 	"github.com/wormi4ok/evernote2md/file"
 	"github.com/wormi4ok/evernote2md/internal"
-	pb "gopkg.in/cheggaaa/pb.v1"
 )
 
 var version = "dev"
@@ -60,7 +61,7 @@ func run(input, output string) {
 	failWhen(err)
 
 	progress := pb.StartNew(len(export.Notes))
-	progress.Prefix("Notes:")
+	progress.SetTemplateString(`Notes: {{counters .}} {{bar . "[" "=" ">" "_" "]" }} {{percent .}} {{etime .}}`)
 	n := export.Notes
 	for i := range n {
 		md, err := internal.Convert(&n[i])
@@ -76,7 +77,8 @@ func run(input, output string) {
 		}
 		progress.Increment()
 	}
-	progress.FinishPrint("Done!")
+	progress.Finish()
+	fmt.Println("Done!")
 }
 
 func failWhen(err error) {
