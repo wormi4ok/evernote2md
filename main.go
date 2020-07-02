@@ -50,11 +50,13 @@ func main() {
 }
 
 func run(input, output string) {
-	f, err := os.Open(input)
+	i, err := os.Open(input)
 	failWhen(err)
-	defer f.Close()
 
-	export, err := enex.Decode(f)
+	export, err := enex.Decode(i)
+	failWhen(err)
+
+	err = i.Close()
 	failWhen(err)
 
 	err = os.MkdirAll(output, os.ModePerm)
@@ -62,6 +64,7 @@ func run(input, output string) {
 
 	progress := pb.StartNew(len(export.Notes))
 	progress.SetTemplateString(`Notes: {{counters .}} {{bar . "[" "=" ">" "_" "]" }} {{percent .}} {{etime .}}`)
+
 	n := export.Notes
 	for i := range n {
 		md, err := internal.Convert(&n[i])
@@ -75,6 +78,8 @@ func run(input, output string) {
 			err = file.Save(output+"/"+string(res.Type), res.Name, bytes.NewReader(res.Content))
 			failWhen(err)
 		}
+		err = f.Close()
+		failWhen(err)
 		progress.Increment()
 	}
 	progress.Finish()

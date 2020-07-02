@@ -35,9 +35,10 @@ func Save(dir, name string, content io.Reader) error {
 	if err != nil {
 		return err
 	}
-	defer output.Close()
 
 	_, err = io.Copy(output, content)
+
+	err = output.Close()
 	return err
 }
 
