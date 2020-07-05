@@ -10,7 +10,6 @@ package main
 import (
 	"bytes"
 	"fmt"
-	"io"
 	"log"
 	"os"
 	"path/filepath"
@@ -49,6 +48,11 @@ func main() {
 	run(input, outputDir)
 }
 
+const progressBarTmpl = `Notes: {{counters .}} {{bar . "[" "=" ">" "_" "]" }} {{percent .}} {{etime .}}`
+
+// A map to keep track of what notes are already created
+var notes = map[string]int{}
+
 func run(input, output string) {
 	i, err := os.Open(input)
 	failWhen(err)
@@ -63,27 +67,35 @@ func run(input, output string) {
 	failWhen(err)
 
 	progress := pb.StartNew(len(export.Notes))
-	progress.SetTemplateString(`Notes: {{counters .}} {{bar . "[" "=" ">" "_" "]" }} {{percent .}} {{etime .}}`)
+	progress.SetTemplateString(progressBarTmpl)
 
 	n := export.Notes
 	for i := range n {
 		md, err := internal.Convert(&n[i])
 		failWhen(err)
-		mdFile := filepath.FromSlash(output + "/" + file.BaseName(n[i].Title) + ".md")
-		f, err := os.Create(mdFile)
-		failWhen(err)
-		_, err = io.Copy(f, bytes.NewReader(md.Content))
+		err = file.Save(output, uniqueName(n[i].Title), bytes.NewReader(md.Content))
 		failWhen(err)
 		for _, res := range md.Media {
 			err = file.Save(output+"/"+string(res.Type), res.Name, bytes.NewReader(res.Content))
 			failWhen(err)
 		}
-		err = f.Close()
-		failWhen(err)
 		progress.Increment()
 	}
 	progress.Finish()
 	fmt.Println("Done!")
+}
+
+// uniqueName returns a unique note name
+func uniqueName(title string) string {
+	name := file.BaseName(title) + ".md"
+	if k, exist := notes[name]; exist {
+		notes[name] = k + 1
+		name = fmt.Sprintf("%s-%d.md", file.BaseName(title), k)
+	} else {
+		notes[name] = 1
+	}
+
+	return name
 }
 
 func failWhen(err error) {

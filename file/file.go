@@ -3,6 +3,7 @@ package file
 import (
 	"io"
 	"os"
+	"path/filepath"
 	"regexp"
 	"strings"
 )
@@ -17,21 +18,19 @@ var (
 	dashes = regexp.MustCompile(`[\-_]{2,}`)
 )
 
-// Save a new file in a given dir with the following content
-// If directory doesn't exist it will create it
+// Save a new file in a given dir with the following content.
+// Creates a directory if necessary.
 func Save(dir, name string, content io.Reader) error {
 	if len(name) == 0 {
 		return nil
 	}
 
-	if _, err := os.Stat(dir); os.IsNotExist(err) {
-		err = os.Mkdir(dir, os.ModePerm)
-		if err != nil {
-			return err
-		}
+	err := os.MkdirAll(dir, os.ModePerm)
+	if err != nil {
+		return err
 	}
 
-	output, err := os.Create(dir + "/" + name)
+	output, err := os.Create(filepath.FromSlash(dir + "/" + name))
 	if err != nil {
 		return err
 	}
