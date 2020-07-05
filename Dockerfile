@@ -4,13 +4,13 @@ ENV CGO_ENABLED 0
 
 WORKDIR /go/src/github.com/wormi4ok/evernote2md
 
-COPY . .
-
 RUN set -xe && apk add --no-cache git
 
-RUN go install && go test ./...
+COPY . .
 
-FROM alpine:3.11
+RUN go test ./... && go install -ldflags "-X main.version=$(git describe --tags --abbrev=0)"
+
+FROM alpine:3.12
 
 LABEL   org.label-schema.name="evernote2md" \
         org.label-schema.description="Convert Evernote .enex export file to Markdown" \

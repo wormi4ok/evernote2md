@@ -33,7 +33,7 @@ If outputDir is not specified, `./notes` is used.
 #### With docker
 
 ```
-docker run --rm wormi4ok/evernote2md:latest [input] [outputDir]
+docker run -t --rm -v "$PWD":/tmp -w /tmp wormi4ok/evernote2md:latest [input] [outputDir]
 ```
 
 ### How to export notes from Evernote
