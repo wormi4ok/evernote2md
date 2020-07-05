@@ -54,17 +54,17 @@ func TestBaseName(t *testing.T) {
 		input string
 		want  string
 	}{
-		{"should return name as it is", "input", "input"},
-		{"separator to dash", "ac/dc", "ac-dc"},
-		{"multiple separators to dash", "http://s.petrashov.ru", "http-s-petrashov-ru"},
-		{"blacklist chars to underscore", "1 <3 6014|\\|6", "1-3_6014_\\_6"},
-		{"complicated one", "/.-./.-./.com   ", "-com"},
-		{"should truncate long names", longName, longName[:200]},
+		{"valid input should return the same", "input", "input"},
+		{"values with separator", "ac/dc", "ac-dc"},
+		{"multiple separators in the input", "http://s.petrashov.ru", "http-s-petrashov-ru"},
+		{"blacklisted chars", "1 <3 6014|\\|6", "1-3_6014_\\_6"},
+		{"complicated case", "/.-./.-./.com   ", "-com"},
+		{"very long names", longName, longName[:200]},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := file.BaseName(tt.input); got != tt.want {
-				t.Errorf("BaseName() = %v, want %v", got, tt.want)
+				t.Errorf("BaseName for %s = %v, want %v", tt.name, got, tt.want)
 			}
 		})
 	}
