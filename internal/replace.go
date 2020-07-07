@@ -3,6 +3,7 @@ package internal
 import (
 	"bytes"
 	"fmt"
+	"strconv"
 	"strings"
 
 	"golang.org/x/net/html"
@@ -45,6 +46,9 @@ func normalizeHTML(b []byte, rr ...TagReplacer) ([]byte, error) {
 // to be able to download it as a file
 type Media struct {
 	resources map[string]markdown.Resource
+
+	// If identifiers are missing we use resources one by one
+	cnt int
 }
 
 var htmlFormat = map[markdown.ResourceType]string{
@@ -60,11 +64,10 @@ func (r *Media) ReplaceTag(n *html.Node) {
 	if isMedia(n) {
 		if res, ok := r.resources[hashAttr(n)]; ok {
 			replaceNode(n, res)
-		} else {
-			if _, ok := r.resources[""]; ok && len(r.resources) == 1 {
-				replaceNode(n, r.resources[""])
-			}
+			return
 		}
+		replaceNode(n, r.resources[strconv.Itoa(r.cnt)])
+		r.cnt++
 	}
 }
 

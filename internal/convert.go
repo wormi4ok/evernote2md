@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"regexp"
+	"strconv"
 	"strings"
 
 	"github.com/wormi4ok/evernote2md/encoding/enex"
@@ -69,7 +70,12 @@ func mapResources(note *enex.Note, md markdown.Note) error {
 			Content: p,
 		}
 
-		md.Media[r[i].ID] = mdr
+		if r[i].ID != "" {
+			md.Media[r[i].ID] = mdr
+		} else {
+			md.Media[strconv.Itoa(i)] = mdr
+		}
+
 	}
 	return nil
 }
