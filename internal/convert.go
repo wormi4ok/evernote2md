@@ -53,7 +53,7 @@ func mapResources(note *enex.Note, md markdown.Note) error {
 		if isImage(r[i].Mime) {
 			rType = markdown.Image
 		}
-		name, ext := guessName(r[i])
+		name, ext := name(r[i])
 
 		// Ensure the name is unique
 		if cnt, exist := names[name+ext]; exist {

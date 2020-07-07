@@ -43,6 +43,7 @@ type (
 	Attributes struct {
 		Timestamp string `xml:"timestamp"`
 		Filename  string `xml:"file-name"`
+		SourceUrl string `xml:"source-url"`
 	}
 	// Recognition for the resource
 	Recognition struct {

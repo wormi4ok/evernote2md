@@ -5,6 +5,7 @@ import (
 	"encoding/base64"
 	"io"
 	"mime"
+	"path"
 	"regexp"
 
 	"github.com/wormi4ok/evernote2md/encoding/enex"
@@ -27,21 +28,35 @@ func isImage(mimeType string) bool {
 	return reImg.MatchString(mimeType)
 }
 
-func guessName(r enex.Resource) (name string, extension string) {
-	// Use ID as name if there is no resource name
-	if r.Attributes.Filename == "" {
-		return r.ID, guessExt(r.Mime)
-	}
-
+func name(r enex.Resource) (name string, extension string) {
+	name = guessName(r)
 	// Try to split a file into name and extension
-	ff := reFileAndExt.FindStringSubmatch(r.Attributes.Filename)
+	ff := reFileAndExt.FindStringSubmatch(name)
 	if len(ff) < 2 {
-		// Use only filename if there is no extension
-		return file.BaseName(r.Attributes.Filename), ""
+		// Guess the extension by the mime type
+		return file.BaseName(name), guessExt(r.Mime)
 	}
 
 	// Return sanitized filename
 	return file.BaseName(ff[len(ff)-2]), ff[len(ff)-1]
+}
+
+// guessName of the res with the following priority:
+// 1. Filename attribute
+// 2. SourceUrl attribute
+// 3. ID of the res
+// 4. File type as name
+func guessName(r enex.Resource) string {
+	switch {
+	case r.Attributes.Filename != "":
+		return r.Attributes.Filename
+	case r.Attributes.SourceUrl != "":
+		return path.Base(r.Attributes.SourceUrl)
+	case r.ID != "":
+		return r.ID
+	default:
+		return r.Type
+	}
 }
 
 func guessExt(mimeType string) string {

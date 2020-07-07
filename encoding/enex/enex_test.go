@@ -46,6 +46,7 @@ var expect = &enex.Export{
 			Attributes: enex.Attributes{
 				Timestamp: "20120515T051032Z",
 				Filename:  "1.jpg",
+				SourceUrl: "",
 			},
 			Recognition: []byte(`<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE recoIndex PUBLIC "SYSTEM" "http://xml.evernote.com/pub/recoIndex.dtd"><recoIndex docType="unknown" objType="image" objID="09dde741f3b38c1a954358172cad4c06" engineVersion="5.5.20.1" recoType="service" lang="en" objWidth="16" objHeight="16"/>
