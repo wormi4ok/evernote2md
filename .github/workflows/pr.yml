@@ -20,7 +20,7 @@ jobs:
         go-version: 1.14.x
     - name: Prepare PR_TAG
       run: |
-        PR_TAG="$(git describe --tags --abbrev=0)-${{ github.event.number }}"
+        PR_TAG="$(git describe --tags --abbrev=0)-PR-${{ github.event.number }}"
         echo "::set-env name=PR_TAG::$PR_TAG"
     - name: Create temporary tag
       run: git tag  ${{ env.PR_TAG }}
