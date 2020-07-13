@@ -28,7 +28,7 @@ Key features:
 evernote2md [input] [outputDir]
 ```
 
-If outputDir is not specified, `./notes` is used.
+If outputDir is not specified, `./notes` is used. Use optional `--folders` flag to put every note in a separate folder.
 
 #### With docker
 
