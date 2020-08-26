@@ -42,3 +42,7 @@ Here is a link to an article in Evernote Help Center:
 
 [How to back up (export) and restore (import) notes and notebooks](https://help.evernote.com/hc/en-us/articles/209005557-How-to-back-up-export-and-restore-import-notes-and-notebooks)
 
+-----
+Made with ❤ using IDE from JetBrains.
+
+[![JetBrains](.github/powered_by.svg)](https://www.jetbrains.com/?from=evernote2md)
