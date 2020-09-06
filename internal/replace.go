@@ -143,3 +143,25 @@ func isCode(n *html.Node) bool {
 
 	return false
 }
+
+// ListItem removes extra line break between list items
+type ListItem struct{}
+
+func (*ListItem) ReplaceTag(n *html.Node) {
+	if isListItem(n) {
+		wrapper := n.FirstChild
+		if wrapper.Data == "div" {
+			content := wrapper.FirstChild
+			if content == nil {
+				return
+			}
+			wrapper.RemoveChild(content)
+			n.AppendChild(content)
+			n.RemoveChild(wrapper)
+		}
+	}
+}
+
+func isListItem(n *html.Node) bool {
+	return n.Type == html.ElementNode && n.Data == "li"
+}

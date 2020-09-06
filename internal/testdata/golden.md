@@ -9,6 +9,9 @@ abc
     fmt.Println("hello world")
 ```
 
+* First item
+* Second item
+
 ![1.jpg](image/1.jpg)
 
 ![complex_path_http-image-com-2.gif](image/complex_path_http-image-com-2.gif)

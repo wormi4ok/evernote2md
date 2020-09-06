@@ -21,7 +21,7 @@ func Convert(note *enex.Note) (*markdown.Note, error) {
 		return nil, err
 	}
 
-	html, err := normalizeHTML(note.Content, NewReplacerMedia(md.Media), &Code{})
+	html, err := normalizeHTML(note.Content, NewReplacerMedia(md.Media), &Code{}, &ListItem{})
 	if err != nil {
 		return nil, err
 	}
