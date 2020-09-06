@@ -12,6 +12,10 @@ abc
 * First item
 * Second item
 
+|Header 1      |Middle column          |Last column title|
+|Short text    |Verylongunbreakabletext|Something here   |
+|Half empty row|                       |                 |
+
 ![1.jpg](image/1.jpg)
 
 ![complex_path_http-image-com-2.gif](image/complex_path_http-image-com-2.gif)

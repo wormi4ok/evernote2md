@@ -144,11 +144,11 @@ func isCode(n *html.Node) bool {
 	return false
 }
 
-// ListItem removes extra line break between list items
-type ListItem struct{}
+// ExtraDiv removes extra line break in tables and lists
+type ExtraDiv struct{}
 
-func (*ListItem) ReplaceTag(n *html.Node) {
-	if isListItem(n) {
+func (*ExtraDiv) ReplaceTag(n *html.Node) {
+	if hasExtraDiv(n) {
 		wrapper := n.FirstChild
 		if wrapper.Data == "div" {
 			content := wrapper.FirstChild
@@ -156,12 +156,23 @@ func (*ListItem) ReplaceTag(n *html.Node) {
 				return
 			}
 			wrapper.RemoveChild(content)
-			n.AppendChild(content)
+			if content.Data != "br" || content.FirstChild != nil {
+				n.AppendChild(content)
+			}
 			n.RemoveChild(wrapper)
 		}
 	}
 }
 
-func isListItem(n *html.Node) bool {
-	return n.Type == html.ElementNode && n.Data == "li"
+func hasExtraDiv(n *html.Node) bool {
+	tagsToClean := []string{"li", "td", "th"}
+	if n.Type == html.ElementNode {
+		for _, tag := range tagsToClean {
+			if tag == n.Data {
+				return true
+			}
+		}
+	}
+
+	return false
 }
