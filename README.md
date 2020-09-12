@@ -15,6 +15,7 @@ Key features:
 * Converts attachments to files ( two directories will be created: `image` for images and `file` for other attachments e.g. pdf files )
 * Retains correct links to attachments
 * Inserts evernote tags in notes as text entries
+* Shows highlighted Evernote text
 
 ### Installation
 
@@ -25,15 +26,17 @@ Key features:
 #### With binary
 
 ```
-evernote2md [input] [outputDir]
+evernote2md (flags) [input] [outputDir]
 ```
 
 If outputDir is not specified, `./notes` is used. Use optional `--folders` flag to put every note in a separate folder.
 
+To get clean Markdown output without inline HTML tags for highlighted text, use `--noHighlights` flag.  
+
 #### With docker
 
 ```
-docker run -t --rm -v "$PWD":/tmp -w /tmp wormi4ok/evernote2md:latest [input] [outputDir]
+docker run -t --rm -v "$PWD":/tmp -w /tmp wormi4ok/evernote2md:latest (flags) [input] [outputDir]
 ```
 
 ### How to export notes from Evernote
