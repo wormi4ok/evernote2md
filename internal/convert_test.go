@@ -88,8 +88,9 @@ func TestConvert(t *testing.T) {
 		},
 	}
 	for _, tt := range tests {
+		c := &internal.Converter{EnableHighlights: true}
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := internal.Convert(tt.arg)
+			got, err := c.Convert(tt.arg)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("Convert() error = %v, wantErr %v", err, tt.wantErr)
 				return

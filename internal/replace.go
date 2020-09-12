@@ -11,8 +11,8 @@ import (
 	"github.com/wormi4ok/evernote2md/encoding/markdown"
 )
 
-// TagReplacer allows to manipulate HTML nodes in order
-// to make custom tags
+// TagReplacer allows manipulating HTML nodes in order
+// to present custom tags correctly in Markdown format after conversion
 type TagReplacer interface {
 	ReplaceTag(node *html.Node)
 }
@@ -112,7 +112,7 @@ func resourceReference(res markdown.Resource) string {
 	return fmt.Sprintf(htmlFormat[res.Type], res.Type, res.Name, res.Name)
 }
 
-// Code replaces div tag stylized to look like code blocks with actual <pre> tag
+// Code replaces div tag stylized to look like code blocks with an actual <pre> tag
 type Code struct{}
 
 func (r *Code) ReplaceTag(n *html.Node) {

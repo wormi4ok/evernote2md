@@ -29,7 +29,7 @@ func main() {
 	var input string
 	var outputDir = filepath.FromSlash("./notes")
 	var outputOverride string
-	var folders bool
+	var folders, noHighlights bool
 
 	flaggy.SetName("evernote2md")
 	flaggy.SetDescription(" Convert Evernote notes exported in *.enex format to markdown files")
@@ -40,6 +40,7 @@ func main() {
 	flaggy.String(&outputOverride, "o", "outputDir", "Directory where markdown files will be created")
 
 	flaggy.Bool(&folders, "", "folders", "Put every note in a separate folder")
+	flaggy.Bool(&noHighlights, "", "noHighlights", "Disable converting evernote highlights to inline HTML tags")
 
 	flaggy.DefaultParser.ShowHelpOnUnexpected = false
 	flaggy.DefaultParser.AdditionalHelpPrepend = "http://github.com/wormi4ok/evernote2md"
@@ -50,7 +51,7 @@ func main() {
 		outputDir = outputOverride
 	}
 
-	run(input, outputDir, folders)
+	run(input, outputDir, folders, !noHighlights)
 }
 
 const progressBarTmpl = `Notes: {{counters .}} {{bar . "[" "=" ">" "_" "]" }} {{percent .}} {{etime .}}`
@@ -58,7 +59,7 @@ const progressBarTmpl = `Notes: {{counters .}} {{bar . "[" "=" ">" "_" "]" }} {{
 // A map to keep track of what notes are already created
 var notes = map[string]int{}
 
-func run(input, output string, folders bool) {
+func run(input, output string, folders, highlights bool) {
 	i, err := os.Open(input)
 	failWhen(err)
 
@@ -74,9 +75,10 @@ func run(input, output string, folders bool) {
 	progress := pb.StartNew(len(export.Notes))
 	progress.SetTemplateString(progressBarTmpl)
 
+	c := internal.Converter{EnableHighlights: highlights}
 	n := export.Notes
 	for i := range n {
-		md, err := internal.Convert(&n[i])
+		md, err := c.Convert(&n[i])
 		failWhen(err)
 		if folders {
 			path := output + "/" + uniqueName(n[i].Title)

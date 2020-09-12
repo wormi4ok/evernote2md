@@ -2,7 +2,7 @@
 
 `tag1``tag2`
 
-abc
+abc <span style="background-color: #ffaaaa">highlighted text</span>
 
 ```
    //This is a code block

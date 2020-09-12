@@ -12,8 +12,13 @@ import (
 	"github.com/wormi4ok/evernote2md/encoding/markdown"
 )
 
+// Converter holds configuration options to control conversion
+type Converter struct {
+	EnableHighlights bool
+}
+
 // Convert Evernote file to markdown
-func Convert(note *enex.Note) (*markdown.Note, error) {
+func (c *Converter) Convert(note *enex.Note) (*markdown.Note, error) {
 	var md markdown.Note
 	md.Media = map[string]markdown.Resource{}
 
@@ -30,7 +35,7 @@ func Convert(note *enex.Note) (*markdown.Note, error) {
 	content = prependTitle(note.Title, content)
 
 	var b bytes.Buffer
-	err = markdown.Convert(&b, strings.NewReader(content))
+	err = markdown.Convert(&b, strings.NewReader(content), c.EnableHighlights)
 	if err != nil {
 		return nil, err
 	}

@@ -1,9 +1,12 @@
 package markdown
 
 import (
+	"fmt"
 	"io"
+	"strings"
 
 	"github.com/mattn/godown"
+	"golang.org/x/net/html"
 )
 
 // ResourceType gives a hint on the way to represent Resource
@@ -17,14 +20,14 @@ const (
 )
 
 type (
-	// Note is a markdown representation of some valuable knowledge
-	// which combines media resources and text represented in markdown format
+	// Note is a markdown representation of valuable knowledge
+	// that combines media resources and text represented in markdown format
 	Note struct {
 		Content []byte
 		Media   map[string]Resource
 	}
 
-	// Resource is a media resource related to a mardown note
+	// Resource is a media resource related to a markdown note
 	Resource struct {
 		Name    string
 		Type    ResourceType
@@ -34,6 +37,30 @@ type (
 
 // Convert wraps a call to external dependency to provide
 // stable interface for package users
-func Convert(w io.Writer, r io.Reader) error {
-	return godown.Convert(w, r, nil)
+func Convert(w io.Writer, r io.Reader, highlights bool) error {
+	var rules []godown.CustomRule
+	if highlights {
+		rules = append(rules, &HighlightedText{})
+	}
+
+	return godown.Convert(w, r, &godown.Option{CustomRules: rules})
+}
+
+// HighlightedText is a parsing rule to convert Evernote highlights to HTML spans with a background color
+type HighlightedText struct{}
+
+// Rule implements godown.CustomRule interface to extend basic conversion rules and
+// convert text highlighted in Evernote to an inline HTML `span` tag with a custom background color
+func (r *HighlightedText) Rule(next godown.WalkFunc) (string, godown.WalkFunc) {
+	return "span", func(node *html.Node, w io.Writer, nest int, option *godown.Option) {
+		for _, attr := range node.Attr {
+			if attr.Key == "style" && strings.Contains(attr.Val, "-evernote-highlight:true") {
+				_, _ = fmt.Fprint(w, `<span style="background-color: #ffaaaa">`)
+				next(node, w, nest, option)
+				_, _ = fmt.Fprint(w, "</span>")
+			} else {
+				next(node, w, nest, option)
+			}
+		}
+	}
 }
