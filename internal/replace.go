@@ -150,7 +150,7 @@ type ExtraDiv struct{}
 func (*ExtraDiv) ReplaceTag(n *html.Node) {
 	if hasExtraDiv(n) {
 		wrapper := n.FirstChild
-		if wrapper.Data == "div" {
+		if wrapper != nil && wrapper.Data == "div" {
 			content := wrapper.FirstChild
 			if content == nil {
 				return
