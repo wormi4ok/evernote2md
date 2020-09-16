@@ -15,6 +15,7 @@ import (
 	"path/filepath"
 
 	"github.com/cheggaaa/pb/v3"
+	"github.com/hashicorp/logutils"
 	"github.com/integrii/flaggy"
 
 	"github.com/wormi4ok/evernote2md/encoding/enex"
@@ -29,7 +30,7 @@ func main() {
 	var input string
 	var outputDir = filepath.FromSlash("./notes")
 	var outputOverride string
-	var folders, noHighlights bool
+	var folders, noHighlights, debug bool
 
 	flaggy.SetName("evernote2md")
 	flaggy.SetDescription(" Convert Evernote notes exported in *.enex format to markdown files")
@@ -41,6 +42,7 @@ func main() {
 
 	flaggy.Bool(&folders, "", "folders", "Put every note in a separate folder")
 	flaggy.Bool(&noHighlights, "", "noHighlights", "Disable converting evernote highlights to inline HTML tags")
+	flaggy.Bool(&debug, "v", "debug", "Show debug output")
 
 	flaggy.DefaultParser.ShowHelpOnUnexpected = false
 	flaggy.DefaultParser.AdditionalHelpPrepend = "http://github.com/wormi4ok/evernote2md"
@@ -51,15 +53,15 @@ func main() {
 		outputDir = outputOverride
 	}
 
-	run(input, outputDir, folders, !noHighlights)
-}
+	setLogLevel(debug)
 
-const progressBarTmpl = `Notes: {{counters .}} {{bar . "[" "=" ">" "_" "]" }} {{percent .}} {{etime .}}`
+	run(input, outputDir, newProgressBar(debug), folders, !noHighlights)
+}
 
 // A map to keep track of what notes are already created
 var notes = map[string]int{}
 
-func run(input, output string, folders, highlights bool) {
+func run(input, output string, progress *pb.ProgressBar, folders, highlights bool) {
 	i, err := os.Open(input)
 	failWhen(err)
 
@@ -72,9 +74,8 @@ func run(input, output string, folders, highlights bool) {
 	err = os.MkdirAll(output, os.ModePerm)
 	failWhen(err)
 
-	progress := pb.StartNew(len(export.Notes))
-	progress.SetTemplateString(progressBarTmpl)
-
+	progress.SetTotal(int64(len(export.Notes)))
+	progress.Start()
 	c := internal.Converter{EnableHighlights: highlights}
 	n := export.Notes
 	for i := range n {
@@ -96,11 +97,13 @@ func run(input, output string, folders, highlights bool) {
 
 // saveNote along with media resources
 func saveNote(path string, title string, md *markdown.Note) error {
+	log.Printf("[DEBUG] Saving file %s/%s", path, title)
 	if err := file.Save(path, title, bytes.NewReader(md.Content)); err != nil {
 		return fmt.Errorf("save file %s: %w", path+"/"+title, err)
 	}
 	for _, res := range md.Media {
 		mediaPath := path + "/" + string(res.Type)
+		log.Printf("[DEBUG] Saving attachment %s/%s", mediaPath, res.Name)
 		if err := file.Save(mediaPath, res.Name, bytes.NewReader(res.Content)); err != nil {
 			return fmt.Errorf("save resource %s: %w", mediaPath+"/"+res.Name, err)
 		}
@@ -122,8 +125,33 @@ func uniqueName(title string) string {
 	return name
 }
 
+const progressBarTmpl = `Notes: {{counters .}} {{bar . "[" "=" ">" "_" "]" }} {{percent .}} {{etime .}}`
+
+func newProgressBar(debug bool) *pb.ProgressBar {
+	progress := new(pb.ProgressBar)
+	progress.SetTemplateString(progressBarTmpl)
+	if debug {
+		progress.SetWriter(new(bytes.Buffer))
+	}
+	return progress
+}
+
+func setLogLevel(debug bool) {
+	var logLevel logutils.LogLevel = "WARN"
+
+	if debug {
+		logLevel = "DEBUG"
+	}
+
+	log.SetOutput(&logutils.LevelFilter{
+		Levels:   []logutils.LogLevel{"DEBUG", "WARN", "ERROR"},
+		MinLevel: logLevel,
+		Writer:   os.Stderr,
+	})
+}
+
 func failWhen(err error) {
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal(fmt.Errorf("[ERROR] %w", err))
 	}
 }
