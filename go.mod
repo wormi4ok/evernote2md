@@ -7,6 +7,7 @@ require (
 	github.com/fatih/color v1.9.0 // indirect
 	github.com/integrii/flaggy v1.4.4
 	github.com/mattn/godown v0.0.0-20200217152941-afc959f6a561
+	golang.org/x/exp v0.0.0-20200915172826-20d5ce0eab31
 	golang.org/x/net v0.0.0-20200904194848-62affa334b73
 )
 

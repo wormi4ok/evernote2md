@@ -6,6 +6,8 @@ import (
 	"path/filepath"
 	"regexp"
 	"strings"
+
+	"golang.org/x/exp/utf8string"
 )
 
 const maxPathLength = 200
@@ -55,8 +57,10 @@ func BaseName(s string) string {
 	// Remove any multiple dashes caused by replacements above
 	s = dashes.ReplaceAllString(s, "-")
 
-	if len(s) > maxPathLength {
-		s = s[:maxPathLength]
+	// Trim filename to max allowed number of characters
+	utf8 := utf8string.NewString(s)
+	if utf8.RuneCount() > maxPathLength {
+		s = utf8.Slice(0, maxPathLength)
 	}
 
 	return s
