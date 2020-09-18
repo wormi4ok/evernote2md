@@ -15,7 +15,7 @@ import (
 
 var reImg = regexp.MustCompile(`^image/[\w]+`)
 
-var reFileAndExt = regexp.MustCompile(`(.*)(\.[^.]+)`)
+var reFileAndExt = regexp.MustCompile(`(.*)(\.[\w\d]+)`)
 
 func decoder(d enex.Data) io.Reader {
 	if d.Encoding == "base64" {
