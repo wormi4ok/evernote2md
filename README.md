@@ -33,6 +33,8 @@ If outputDir is not specified, `./notes` is used. Use optional `--folders` flag 
 
 To get clean Markdown output without inline HTML tags for highlighted text, use `--noHighlights` flag.  
 
+Check [wiki](https://github.com/wormi4ok/evernote2md/wiki) section if you have problems running the tool.
+
 #### With docker
 
 ```
