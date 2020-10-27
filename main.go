@@ -82,7 +82,7 @@ func run(input, output string, progress *pb.ProgressBar, folders, highlights boo
 		md, err := c.Convert(&n[i])
 		failWhen(err)
 		if folders {
-			path := output + "/" + uniqueName(n[i].Title)
+			path := filepath.FromSlash(output + "/" + uniqueName(n[i].Title))
 			err = saveNote(path, "README.md", md)
 		} else {
 			err = saveNote(output, uniqueName(n[i].Title)+".md", md)
@@ -102,7 +102,7 @@ func saveNote(path string, title string, md *markdown.Note) error {
 		return fmt.Errorf("save file %s: %w", path+"/"+title, err)
 	}
 	for _, res := range md.Media {
-		mediaPath := path + "/" + string(res.Type)
+		mediaPath := filepath.FromSlash(path + "/" + string(res.Type))
 		log.Printf("[DEBUG] Saving attachment %s/%s", mediaPath, res.Name)
 		if err := file.Save(mediaPath, res.Name, bytes.NewReader(res.Content)); err != nil {
 			return fmt.Errorf("save resource %s: %w", mediaPath+"/"+res.Name, err)
