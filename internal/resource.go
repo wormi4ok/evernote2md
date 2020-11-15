@@ -7,6 +7,7 @@ import (
 	"mime"
 	"path"
 	"regexp"
+	"strings"
 
 	"github.com/wormi4ok/evernote2md/encoding/enex"
 	"github.com/wormi4ok/evernote2md/file"
@@ -14,11 +15,11 @@ import (
 
 var reImg = regexp.MustCompile(`^image/[\w]+`)
 
-var reFileAndExt = regexp.MustCompile(`(.*)(\.[^.]+)`)
+var reFileAndExt = regexp.MustCompile(`(.*)(\.[\w\d]+)`)
 
 func decoder(d enex.Data) io.Reader {
 	if d.Encoding == "base64" {
-		return base64.NewDecoder(base64.StdEncoding, bytes.NewReader(d.Content))
+		return base64.NewDecoder(base64.StdEncoding, bytes.NewReader(bytes.TrimSpace(d.Content)))
 	}
 
 	return bytes.NewReader(d.Content)
@@ -51,7 +52,7 @@ func guessName(r enex.Resource) string {
 	case r.Attributes.Filename != "":
 		return r.Attributes.Filename
 	case r.Attributes.SourceUrl != "":
-		return path.Base(r.Attributes.SourceUrl)
+		return strings.TrimSpace(path.Base(r.Attributes.SourceUrl))
 	case r.ID != "":
 		return r.ID
 	default:
