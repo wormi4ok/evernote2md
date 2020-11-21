@@ -8,7 +8,7 @@ RUN set -xe && apk add --no-cache git
 
 COPY . .
 
-RUN go test ./... && go install -ldflags "-X main.version=$(git describe --tags --abbrev=0)"
+RUN go test ./... && go install -trimpath -ldflags "-s -w -X main.version=$(git describe --tags --abbrev=0)"
 
 FROM alpine:3.12
 
