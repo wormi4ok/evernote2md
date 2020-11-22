@@ -10,20 +10,30 @@ Evernote2md is a CLI tool to convert Evernote notes exported in *.enex format to
 
 Key features:
 
-* Zero dependencies - download and run 
+* Zero dependencies - download and run
 * Creates one markdown file per note
-* Converts attachments to files ( two directories will be created: `image` for images and `file` for other attachments e.g. pdf files )
+* Converts attachments to files ( two directories will be created: `image` for images and `file` for other attachments
+  e.g. pdf files )
 * Retains correct links to attachments
-* Inserts evernote tags in notes as text entries
+* Inserts Evernote tags in notes as text entries
 * Shows highlighted Evernote text
 
 ### Installation
 
-[Download a release](https://github.com/wormi4ok/evernote2md/releases/latest) for your OS.
+Using [Homebrew](https://brew.sh) package manager:
+
+```
+brew install evernote2md
+```
+
+Manually:
+
+[Download the latest release](https://github.com/wormi4ok/evernote2md/releases/latest) for your OS.
+
+> ##### Note for macOS users!
+> Please, check this [wiki](https://github.com/wormi4ok/evernote2md/wiki/Run-the-binary-on-macOS-Catalina-or-higher) page if you have problems running the tool.
 
 ### How to use
-
-#### With binary
 
 ```
 evernote2md (flags) [input] [outputDir]
@@ -31,12 +41,11 @@ evernote2md (flags) [input] [outputDir]
 
 If outputDir is not specified, `./notes` is used. Use optional `--folders` flag to put every note in a separate folder.
 
-To get clean Markdown output without inline HTML tags for highlighted text, use `--noHighlights` flag.  
+To get clean Markdown output without inline HTML tags for highlighted text, use `--noHighlights` flag.
 
-> ##### Note for macOS users!
-> Please, check this [wiki](https://github.com/wormi4ok/evernote2md/wiki/Run-the-binary-on-macOS-Catalina-or-higher) page if you have problems running the tool.
+Flag `--help` shows all available options.
 
-#### With docker
+#### With Docker
 
 ```
 docker run -t --rm -v "$PWD":/tmp -w /tmp wormi4ok/evernote2md:latest (flags) [input] [outputDir]
