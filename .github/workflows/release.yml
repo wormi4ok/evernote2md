@@ -26,6 +26,11 @@ jobs:
         args: release -f .release.yml --rm-dist
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Update Homebrew Formula
+      uses: dawidd6/action-homebrew-bump-formula@v3
+      with:
+        token: ${{ secrets.HOMEBREW_TOKEN }}
+        formula: evernote2md
   package:
     runs-on: ubuntu-latest
     steps:
