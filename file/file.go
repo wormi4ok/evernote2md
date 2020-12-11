@@ -6,11 +6,10 @@ import (
 	"path/filepath"
 	"regexp"
 	"strings"
-
-	"golang.org/x/exp/utf8string"
 )
 
-const maxPathLength = 200
+// Max path length is 255 - 9 bytes for extension (.md) in multibyte encoding
+const MaxPathLength int = 246
 
 var (
 	baseNameSeparators = regexp.MustCompile(`[./]`)
@@ -57,10 +56,18 @@ func BaseName(s string) string {
 	// Remove any multiple dashes caused by replacements above
 	s = dashes.ReplaceAllString(s, "-")
 
-	// Trim filename to max allowed number of characters
-	utf8 := utf8string.NewString(s)
-	if utf8.RuneCount() > maxPathLength {
-		s = utf8.Slice(0, maxPathLength)
+	// Check file name length in bytes
+	if len(s) <= MaxPathLength {
+		return s
+	}
+
+	// Trim filename to the max allowed number of bytes
+	var sb strings.Builder
+	for index, c := range s {
+		if sb.Len()+index >= MaxPathLength {
+			return sb.String()
+		}
+		sb.WriteRune(c)
 	}
 
 	return s
