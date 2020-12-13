@@ -101,19 +101,14 @@ func prependTitle(title, content string) string {
 	return fmt.Sprintf("<h1>%s</h1>", title) + content
 }
 
+const evernoteDateFormat = "20060102T150405Z"
+
+// 20180109T173725Z -> 2018-01-09T17:37:25Z
 func convertEvernoteDate(evernoteDate string) time.Time {
-	// 20180109T173725Z -> 2018-01-09T17:37:25Z
-	year := evernoteDate[0:4]
-	month := evernoteDate[4:6]
-	day := evernoteDate[6:8]
-	hour := evernoteDate[9:11]
-	minute := evernoteDate[9:11]
-	second := evernoteDate[11:13]
-	formattedDateString := year + "-" + month + "-" + day + "T" + hour + ":" + minute + ":" + second + "Z"
-	convertedTime, err := time.Parse(time.RFC3339, formattedDateString)
+	converted, err := time.Parse(evernoteDateFormat, evernoteDate)
 	if err != nil {
-		log.Printf("Could not convert time /%s, using today instead", evernoteDate)
-		convertedTime = time.Now()
+		log.Printf("[DEBUG] Could not convert time /%s: %s, using today instead", evernoteDate, err.Error())
+		converted = time.Now()
 	}
-	return convertedTime
+	return converted
 }
