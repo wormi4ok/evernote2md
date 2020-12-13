@@ -78,7 +78,7 @@ func TestConvert(t *testing.T) {
 						Content: image,
 					},
 					"1sdb49hgt574388346ffa19kh3edbdf09": {
-						Name:    "complex_path_http-image-com-2.gif",
+						Name:    "complex?path=http-image-com-2.gif",
 						Type:    "image",
 						Content: image,
 					},
