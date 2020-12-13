@@ -12,7 +12,7 @@ import (
 )
 
 // Mon Jan 2 15:04:05 -0700 MST 2006 represented as yyyyMMddhhmm
-const TOUCH_TIME_FORMAT = "200601021504"
+const touchTimeFormat = "200601021504"
 
 var (
 	baseNameSeparators = regexp.MustCompile(`[./]`)
@@ -59,11 +59,11 @@ func ChangeFileTimes(dir, name string, ctime, mtime time.Time) error {
 	if err != nil {
 		os.Chtimes(filePathToModify, mtime, mtime)
 	}
-	changeMtime := exec.Command("touch", "-mt", mtime.Format(TOUCH_TIME_FORMAT), filePathToModify)
+	changeMtime := exec.Command("touch", "-mt", mtime.Format(touchTimeFormat), filePathToModify)
 	if err := changeMtime.Run(); err != nil {
 		return err
 	}
-	changeCTime := exec.Command("touch", "-t", ctime.Format(TOUCH_TIME_FORMAT), filePathToModify)
+	changeCTime := exec.Command("touch", "-t", ctime.Format(touchTimeFormat), filePathToModify)
 	if err := changeCTime.Run(); err != nil {
 		return err
 	}
