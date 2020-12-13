@@ -46,28 +46,28 @@ func Save(dir, name string, content io.Reader) error {
 // Match the file times with the evernote metadata
 // uses touch if available to change both cdate and mdate
 // uses os.Chtimes to change only the mdate
-func ChangeFileTimes(dir, name string, ctime, mtime time.Time) {
+func ChangeFileTimes(dir, name string, ctime, mtime time.Time) error {
 	var err error
 	filePathToModify := filepath.FromSlash((dir + "/" + name))
 	_, err = os.Stat(filePathToModify)
 	if os.IsNotExist(err) {
 		// file doesn't exist
 		log.Printf("Tried to change file creation times, file not found %s", filePathToModify)
-		return
+		return err
 	}
 	_, err = exec.LookPath("touch")
 	if err != nil {
 		os.Chtimes(filePathToModify, mtime, mtime)
-		return
 	}
 	changeMtime := exec.Command("touch", "-mt", mtime.Format(TOUCH_TIME_FORMAT), filePathToModify)
 	if err := changeMtime.Run(); err != nil {
-		log.Panic(err)
+		return err
 	}
 	changeCTime := exec.Command("touch", "-t", ctime.Format(TOUCH_TIME_FORMAT), filePathToModify)
 	if err := changeCTime.Run(); err != nil {
-		log.Panic(err)
+		return err
 	}
+	return nil
 }
 
 // BaseName normalizes a given string to use it as a safe filename
