@@ -21,7 +21,7 @@ jobs:
     - name: Prepare PR_TAG
       run: |
         PR_TAG="$(git describe --tags --abbrev=0)-PR-${{ github.event.number }}"
-        echo "::set-env name=PR_TAG::$PR_TAG"
+        echo "PR_TAG=$PR_TAG" >> $GITHUB_ENV
     - name: Create temporary tag
       run: git tag  ${{ env.PR_TAG }}
     - name: Release
