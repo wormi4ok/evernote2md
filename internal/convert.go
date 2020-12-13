@@ -4,9 +4,11 @@ import (
 	"bytes"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"regexp"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/wormi4ok/evernote2md/encoding/enex"
 	"github.com/wormi4ok/evernote2md/encoding/markdown"
@@ -43,6 +45,8 @@ func (c *Converter) Convert(note *enex.Note) (*markdown.Note, error) {
 	md.Content = regexp.MustCompile(`\n{3,}`).ReplaceAllLiteral(b.Bytes(), []byte("\n\n"))
 	md.Content = append(bytes.TrimRight(md.Content, "\n"), '\n')
 
+	md.CTime = convertEvernoteDate(note.Created)
+	md.MTime = convertEvernoteDate(note.Updated)
 	return &md, nil
 }
 
@@ -95,4 +99,16 @@ func prependTags(tags []string, content string) string {
 
 func prependTitle(title, content string) string {
 	return fmt.Sprintf("<h1>%s</h1>", title) + content
+}
+
+const evernoteDateFormat = "20060102T150405Z"
+
+// 20180109T173725Z -> 2018-01-09T17:37:25Z
+func convertEvernoteDate(evernoteDate string) time.Time {
+	converted, err := time.Parse(evernoteDateFormat, evernoteDate)
+	if err != nil {
+		log.Printf("[DEBUG] Could not convert time /%s: %s, using today instead", evernoteDate, err.Error())
+		converted = time.Now()
+	}
+	return converted
 }

@@ -2,11 +2,17 @@ package file
 
 import (
 	"io"
+	"log"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"regexp"
 	"strings"
+	"time"
 )
+
+// Mon Jan 2 15:04:05 -0700 MST 2006 represented as yyyyMMddhhmm
+const touchTimeFormat = "200601021504"
 
 var (
 	baseNameSeparators = regexp.MustCompile(`[./]`)
@@ -35,6 +41,33 @@ func Save(dir, name string, content io.Reader) error {
 
 	err = output.Close()
 	return err
+}
+
+// Match the file times with the evernote metadata
+// uses touch if available to change both cdate and mdate
+// uses os.Chtimes to change only the mdate
+func ChangeFileTimes(dir, name string, ctime, mtime time.Time) error {
+	var err error
+	filePathToModify := filepath.FromSlash((dir + "/" + name))
+	_, err = os.Stat(filePathToModify)
+	if os.IsNotExist(err) {
+		// file doesn't exist
+		log.Printf("Tried to change file creation times, file not found %s", filePathToModify)
+		return err
+	}
+	_, err = exec.LookPath("touch")
+	if err != nil {
+		os.Chtimes(filePathToModify, mtime, mtime)
+	}
+	changeMtime := exec.Command("touch", "-mt", mtime.Format(touchTimeFormat), filePathToModify)
+	if err := changeMtime.Run(); err != nil {
+		return err
+	}
+	changeCTime := exec.Command("touch", "-t", ctime.Format(touchTimeFormat), filePathToModify)
+	if err := changeCTime.Run(); err != nil {
+		return err
+	}
+	return nil
 }
 
 // BaseName normalizes a given string to use it as a safe filename

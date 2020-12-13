@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 	"strings"
+	"time"
 
 	"github.com/mattn/godown"
 	"golang.org/x/net/html"
@@ -25,6 +26,8 @@ type (
 	Note struct {
 		Content []byte
 		Media   map[string]Resource
+		CTime   time.Time
+		MTime   time.Time
 	}
 
 	// Resource is a media resource related to a markdown note

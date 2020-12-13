@@ -101,6 +101,9 @@ func saveNote(path string, title string, md *markdown.Note) error {
 	if err := file.Save(path, title, bytes.NewReader(md.Content)); err != nil {
 		return fmt.Errorf("save file %s: %w", path+"/"+title, err)
 	}
+	if err := file.ChangeFileTimes(path, title, md.CTime, md.MTime); err != nil {
+		return fmt.Errorf("Error updating file times %s %w", path+"/"+title, err)
+	}
 	for _, res := range md.Media {
 		mediaPath := filepath.FromSlash(path + "/" + string(res.Type))
 		log.Printf("[DEBUG] Saving attachment %s/%s", mediaPath, res.Name)
