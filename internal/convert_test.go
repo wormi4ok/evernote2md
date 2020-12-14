@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 	"reflect"
 	"testing"
+	"time"
 
 	"github.com/wormi4ok/evernote2md/encoding/enex"
 	"github.com/wormi4ok/evernote2md/encoding/markdown"
@@ -31,6 +32,8 @@ func TestConvert(t *testing.T) {
 			arg: &enex.Note{
 				Title:   "Test note",
 				Content: goldenFile(t, "evernote.html"),
+				Created: "20121202T112233Z",
+				Updated: "20201220T223344Z",
 				Tags:    []string{"tag1", "tag2"},
 				Resources: []enex.Resource{{
 					ID:   "c9e6c70ea74388346ffa16ff8edbdf58",
@@ -66,6 +69,8 @@ func TestConvert(t *testing.T) {
 			},
 			want: &markdown.Note{
 				Content: goldenFile(t, "golden.md"),
+				CTime:   time.Date(2012, 12, 02, 11, 22, 33, 0, time.UTC),
+				MTime:   time.Date(2020, 12, 20, 22, 33, 44, 0, time.UTC),
 				Media: map[string]markdown.Resource{
 					"c9e6c70ea74388346ffa16ff8edbdf58": {
 						Name:    "1.jpg",
