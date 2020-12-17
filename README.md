@@ -18,6 +18,7 @@ Key features:
 * Retains correct links to attachments
 * Inserts Evernote tags in notes as text entries
 * Shows highlighted Evernote text
+* Sets file created and modified date equal to the note attributes
 
 ### Installation
 
