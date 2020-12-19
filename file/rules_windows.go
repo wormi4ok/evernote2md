@@ -9,9 +9,9 @@ import (
 )
 
 // Max path length is 255 - 9 bytes for extension (.md) in multibyte encoding
-const maxPathLength int = 246
+const maxNameBytes int = 246
 
-// Additional rule for
+// Additional rule for Windows
 var illegalChars = regexp.MustCompile(`[\s\\|"'<>&_=+:?*]`)
 
 // ChangeFileTimes uses SetFileTime syscall in Windows implementation

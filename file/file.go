@@ -8,8 +8,13 @@ import (
 	"strings"
 )
 
-// Mon Jan 2 15:04:05 -0700 MST 2006 represented as yyyyMMddhhmm
-const touchTimeFormat = "200601021504"
+const (
+	// Mon Jan 2 15:04:05 -0700 MST 2006 represented as yyyyMMddhhmm
+	touchTimeFormat = "200601021504"
+
+	// OS allow 255 character for filenames = 252 + 3 (.md)
+	maxNameChars = 252
+)
 
 var (
 	baseNameSeparators = regexp.MustCompile(`[./]`)
@@ -55,17 +60,19 @@ func BaseName(s string) string {
 	s = dashes.ReplaceAllString(s, "-")
 
 	// Check file name length in bytes
-	if len(s) <= maxPathLength {
+	if len(s) < maxNameChars {
 		return s
 	}
 
 	// Trim filename to the max allowed number of bytes
 	var sb strings.Builder
+	var i = 0
 	for index, c := range s {
-		if index >= maxPathLength {
+		if index >= maxNameBytes || i >= maxNameChars {
 			return sb.String()
 		}
 		sb.WriteRune(c)
+		i++
 	}
 
 	return s

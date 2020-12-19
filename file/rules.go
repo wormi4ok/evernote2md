@@ -11,8 +11,9 @@ import (
 	"time"
 )
 
-// Max path length is 1000 - 9 bytes for extension (.md) in multibyte encoding
-const maxPathLength int = 991
+// Max path length in bytes, determined empirically.
+// P.S. Don't trust Apple documentation
+const maxNameBytes int = 704
 
 // Semicolon is not allowed in MacOS and spaces is just my personal preference
 var illegalChars = regexp.MustCompile(`[\s:]`)
