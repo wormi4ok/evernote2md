@@ -48,7 +48,8 @@ func (d *noteFilesDir) SaveNote(title string, md *markdown.Note) error {
 
 	if d.flagTimestamps {
 		if err := file.ChangeFileTimes(path, title, md.CTime, md.MTime); err != nil {
-			return fmt.Errorf("error updating file times %s %w", path+"/"+title, err)
+			// Continue processing on error
+			log.Printf("[WARN] Error updating file times for a file: %s", title)
 		}
 	}
 
