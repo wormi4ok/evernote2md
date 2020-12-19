@@ -18,7 +18,7 @@ const maxNameBytes int = 704
 // Semicolon is not allowed in MacOS and spaces is just my personal preference
 var illegalChars = regexp.MustCompile(`[\s:]`)
 
-// Match the file times with the Evernote metadata
+// ChangeFileTimes matches the file times with the Evernote metadata
 //
 // Uses touch if available to change both creation  and modification date
 // Otherwise it falls back to os.Chtimes to change only the modification date

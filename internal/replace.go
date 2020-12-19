@@ -41,9 +41,9 @@ func normalizeHTML(b []byte, rr ...TagReplacer) ([]byte, error) {
 	return out.Bytes(), nil
 }
 
-// Replaces custom <en-media> with corresponding tag
-// <img> tag if it is an image and <a> for everything else
-// to be able to download it as a file
+// Media tag replacer puts a standard HTML <img> tag
+// instead of custom <en-media> tag if it is an image
+// and <a> tag for everything else to be able to download it as a file
 type Media struct {
 	resources map[string]markdown.Resource
 
@@ -56,10 +56,12 @@ var htmlFormat = map[markdown.ResourceType]string{
 	markdown.File:  `<a href="./%s/%s">%s</a>`,
 }
 
+// NewReplacerMedia creates a Media TagReplacer using resources as a data source
 func NewReplacerMedia(resources map[string]markdown.Resource) *Media {
 	return &Media{resources: resources}
 }
 
+// ReplaceTag implements the TagReplacer interface
 func (r *Media) ReplaceTag(n *html.Node) {
 	if isMedia(n) {
 		if res, ok := r.resources[hashAttr(n)]; ok {
@@ -115,6 +117,7 @@ func resourceReference(res markdown.Resource) string {
 // Code replaces div tag stylized to look like code blocks with an actual <pre> tag
 type Code struct{}
 
+// ReplaceTag implements the TagReplacer interface
 func (r *Code) ReplaceTag(n *html.Node) {
 	if isCode(n) {
 		var f func(*html.Node)
@@ -147,6 +150,7 @@ func isCode(n *html.Node) bool {
 // ExtraDiv removes extra line break in tables and lists
 type ExtraDiv struct{}
 
+// ReplaceTag implements the TagReplacer interface
 func (*ExtraDiv) ReplaceTag(n *html.Node) {
 	if hasExtraDiv(n) {
 		wrapper := n.FirstChild

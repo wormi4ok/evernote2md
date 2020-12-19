@@ -29,8 +29,7 @@ func Save(dir, name string, content io.Reader) error {
 		return nil
 	}
 
-	err := os.MkdirAll(dir, os.ModePerm)
-	if err != nil {
+	if err := os.MkdirAll(dir, os.ModePerm); err != nil {
 		return err
 	}
 
@@ -39,10 +38,12 @@ func Save(dir, name string, content io.Reader) error {
 		return err
 	}
 
-	_, err = io.Copy(output, content)
+	if _, err = io.Copy(output, content); err != nil {
+		_ = output.Close()
+		return err
+	}
 
-	err = output.Close()
-	return err
+	return output.Close()
 }
 
 // BaseName normalizes a given string to use it as a safe filename
