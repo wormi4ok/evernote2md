@@ -2,17 +2,19 @@ package file
 
 import (
 	"io"
-	"log"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"regexp"
 	"strings"
-	"time"
 )
 
-// Mon Jan 2 15:04:05 -0700 MST 2006 represented as yyyyMMddhhmm
-const touchTimeFormat = "200601021504"
+const (
+	// Mon Jan 2 15:04:05 -0700 MST 2006 represented as yyyyMMddhhmm
+	touchTimeFormat = "200601021504"
+
+	// OS allow 255 character for filenames = 252 + 3 (.md)
+	maxNameChars = 252
+)
 
 var (
 	baseNameSeparators = regexp.MustCompile(`[./]`)
@@ -43,33 +45,6 @@ func Save(dir, name string, content io.Reader) error {
 	return err
 }
 
-// Match the file times with the evernote metadata
-// uses touch if available to change both cdate and mdate
-// uses os.Chtimes to change only the mdate
-func ChangeFileTimes(dir, name string, ctime, mtime time.Time) error {
-	var err error
-	filePathToModify := filepath.FromSlash((dir + "/" + name))
-	_, err = os.Stat(filePathToModify)
-	if os.IsNotExist(err) {
-		// file doesn't exist
-		log.Printf("Tried to change file creation times, file not found %s", filePathToModify)
-		return err
-	}
-	_, err = exec.LookPath("touch")
-	if err != nil {
-		os.Chtimes(filePathToModify, mtime, mtime)
-	}
-	changeMtime := exec.Command("touch", "-mt", mtime.Format(touchTimeFormat), filePathToModify)
-	if err := changeMtime.Run(); err != nil {
-		return err
-	}
-	changeCTime := exec.Command("touch", "-t", ctime.Format(touchTimeFormat), filePathToModify)
-	if err := changeCTime.Run(); err != nil {
-		return err
-	}
-	return nil
-}
-
 // BaseName normalizes a given string to use it as a safe filename
 func BaseName(s string) string {
 	// Replace separator characters with a dash
@@ -85,17 +60,19 @@ func BaseName(s string) string {
 	s = dashes.ReplaceAllString(s, "-")
 
 	// Check file name length in bytes
-	if len(s) <= maxPathLength {
+	if len(s) < maxNameChars {
 		return s
 	}
 
 	// Trim filename to the max allowed number of bytes
 	var sb strings.Builder
+	var i = 0
 	for index, c := range s {
-		if index >= maxPathLength {
+		if index >= maxNameBytes || i >= maxNameChars {
 			return sb.String()
 		}
 		sb.WriteRune(c)
+		i++
 	}
 
 	return s

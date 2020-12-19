@@ -18,6 +18,7 @@ Key features:
 * Retains correct links to attachments
 * Inserts Evernote tags in notes as text entries
 * Shows highlighted Evernote text
+* Sets file created and modified date equal to the note attributes
 
 ### Installation
 
@@ -56,7 +57,10 @@ docker run -t --rm -v "$PWD":/tmp -w /tmp wormi4ok/evernote2md:latest (flags) [i
 
 Here is a link to an article in Evernote Help Center:
 
-[How to back up (export) and restore (import) notes and notebooks](https://help.evernote.com/hc/en-us/articles/209005557-How-to-back-up-export-and-restore-import-notes-and-notebooks)
+[How to back up (export) and restore (import) notes and notebooks](https://help.evernote.com/hc/en-us/articles/209005557-Export-notes)
+
+Newer versions of the Evernote App do not allow selecting more than 50 notes at a time.
+Consider [exporting entire Notebook](https://help.evernote.com/hc/articles/360053159414) instead.
 
 -----
 Made with ❤ using IDE from JetBrains.

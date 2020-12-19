@@ -19,8 +19,6 @@ import (
 	"github.com/integrii/flaggy"
 
 	"github.com/wormi4ok/evernote2md/encoding/enex"
-	"github.com/wormi4ok/evernote2md/encoding/markdown"
-	"github.com/wormi4ok/evernote2md/file"
 	"github.com/wormi4ok/evernote2md/internal"
 )
 
@@ -30,7 +28,7 @@ func main() {
 	var input string
 	var outputDir = filepath.FromSlash("./notes")
 	var outputOverride string
-	var folders, noHighlights, debug bool
+	var folders, noHighlights, resetTimestamps, debug bool
 
 	flaggy.SetName("evernote2md")
 	flaggy.SetDescription(" Convert Evernote notes exported in *.enex format to markdown files")
@@ -41,7 +39,8 @@ func main() {
 	flaggy.String(&outputOverride, "o", "outputDir", "Directory where markdown files will be created")
 
 	flaggy.Bool(&folders, "", "folders", "Put every note in a separate folder")
-	flaggy.Bool(&noHighlights, "", "noHighlights", "Disable converting evernote highlights to inline HTML tags")
+	flaggy.Bool(&noHighlights, "", "noHighlights", "Disable converting Evernote highlights to inline HTML tags")
+	flaggy.Bool(&resetTimestamps, "", "resetTimestamps", "Create files ignoring timestamps in the note attributes")
 	flaggy.Bool(&debug, "v", "debug", "Show debug output")
 
 	flaggy.DefaultParser.ShowHelpOnUnexpected = false
@@ -53,15 +52,15 @@ func main() {
 		outputDir = outputOverride
 	}
 
+	output := newNoteFilesDir(outputDir, folders, !resetTimestamps)
+	converter := internal.Converter{EnableHighlights: !noHighlights}
+
 	setLogLevel(debug)
 
-	run(input, outputDir, newProgressBar(debug), folders, !noHighlights)
+	run(input, output, newProgressBar(debug), converter)
 }
 
-// A map to keep track of what notes are already created
-var notes = map[string]int{}
-
-func run(input, output string, progress *pb.ProgressBar, folders, highlights bool) {
+func run(input string, output *noteFilesDir, progress *pb.ProgressBar, c internal.Converter) {
 	i, err := os.Open(input)
 	failWhen(err)
 
@@ -71,61 +70,22 @@ func run(input, output string, progress *pb.ProgressBar, folders, highlights boo
 	err = i.Close()
 	failWhen(err)
 
-	err = os.MkdirAll(output, os.ModePerm)
+	err = os.MkdirAll(output.Path(), os.ModePerm)
 	failWhen(err)
 
 	progress.SetTotal(int64(len(export.Notes)))
 	progress.Start()
-	c := internal.Converter{EnableHighlights: highlights}
 	n := export.Notes
 	for i := range n {
 		md, err := c.Convert(&n[i])
 		failWhen(err)
-		if folders {
-			path := filepath.FromSlash(output + "/" + uniqueName(n[i].Title))
-			err = saveNote(path, "README.md", md)
-		} else {
-			err = saveNote(output, uniqueName(n[i].Title)+".md", md)
-		}
+		err = output.SaveNote(n[i].Title, md)
 		failWhen(err)
 
 		progress.Increment()
 	}
 	progress.Finish()
 	fmt.Println("Done!")
-}
-
-// saveNote along with media resources
-func saveNote(path string, title string, md *markdown.Note) error {
-	log.Printf("[DEBUG] Saving file %s/%s", path, title)
-	if err := file.Save(path, title, bytes.NewReader(md.Content)); err != nil {
-		return fmt.Errorf("save file %s: %w", path+"/"+title, err)
-	}
-	if err := file.ChangeFileTimes(path, title, md.CTime, md.MTime); err != nil {
-		return fmt.Errorf("Error updating file times %s %w", path+"/"+title, err)
-	}
-	for _, res := range md.Media {
-		mediaPath := filepath.FromSlash(path + "/" + string(res.Type))
-		log.Printf("[DEBUG] Saving attachment %s/%s", mediaPath, res.Name)
-		if err := file.Save(mediaPath, res.Name, bytes.NewReader(res.Content)); err != nil {
-			return fmt.Errorf("save resource %s: %w", mediaPath+"/"+res.Name, err)
-		}
-	}
-
-	return nil
-}
-
-// uniqueName returns a unique note name
-func uniqueName(title string) string {
-	name := file.BaseName(title)
-	if k, exist := notes[name]; exist {
-		notes[name] = k + 1
-		name = fmt.Sprintf("%s-%d", file.BaseName(title), k)
-	} else {
-		notes[name] = 1
-	}
-
-	return name
 }
 
 const progressBarTmpl = `Notes: {{counters .}} {{bar . "[" "=" ">" "_" "]" }} {{percent .}} {{etime .}}`
