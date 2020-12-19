@@ -8,8 +8,8 @@ import (
 	"time"
 )
 
-// Max path length is 255 - 9 bytes for extension (.md) in multibyte encoding
-const maxNameBytes int = 246
+// Max path length according to fixLongPath function is 248 - 3 bytes for extension (.md)
+const maxNameBytes int = 245
 
 // Additional rule for Windows
 var illegalChars = regexp.MustCompile(`[\s\\|"'<>&_=+:?*]`)
@@ -21,7 +21,7 @@ func ChangeFileTimes(dir, name string, ctime, mtime time.Time) error {
 	ctimeSpec := syscall.NsecToFiletime(ctime.UnixNano())
 	mtimeSpec := syscall.NsecToFiletime(mtime.UnixNano())
 
-	fd, err := syscall.Open(path, os.O_RDWR, 0755)
+	fd, err := syscall.Open(path, os.O_RDWR, 644)
 	if err != nil {
 		return err
 	}
