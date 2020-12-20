@@ -26,26 +26,3 @@ jobs:
         args: release -f .release.yml --rm-dist
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  formula:
-    runs-on: macos-latest
-    steps:
-    - name: Update Homebrew Formula
-      uses: dawidd6/action-homebrew-bump-formula@v3
-      continue-on-error: true
-      with:
-        token: ${{ secrets.HOMEBREW_TOKEN }}
-        formula: evernote2md
-        livecheck: true
-  package:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v2
-    - name: Publish Docker image to GitHub Packages
-      uses: elgohr/Publish-Docker-Github-Action@2.18
-      with:
-        name: ${{ github.repository }}/cli
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-        registry: docker.pkg.github.com
-        tag_names: true
