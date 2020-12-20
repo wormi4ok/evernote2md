@@ -19,3 +19,5 @@ archives:
   wrap_in_directory: false
   files:
   - none*
+release:
+  draft: true
