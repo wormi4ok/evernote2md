@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"path/filepath"
+	"strings"
 
 	"github.com/wormi4ok/evernote2md/encoding/markdown"
 	"github.com/wormi4ok/evernote2md/file"
@@ -70,7 +71,7 @@ func (d *noteFilesDir) Path() string {
 
 // uniqueName returns a unique note name
 func (d *noteFilesDir) uniqueName(title string) string {
-	name := file.BaseName(title)
+	name := strings.ToLower(file.BaseName(title))
 	if k, exist := d.names[name]; exist {
 		d.names[name] = k + 1
 		name = fmt.Sprintf("%s-%d", name, k)
