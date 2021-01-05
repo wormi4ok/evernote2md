@@ -67,6 +67,25 @@ func TestNoteFilesDir_UniqueNames(t *testing.T) {
 	shouldExist(t, tmpDir+"/test_note-1.md")
 }
 
+// Test that notes with identical names but different casing don't override each other
+func TestNoteFilesDir_UniqueNames_CaseInsensitive(t *testing.T) {
+	tmpDir := t.TempDir()
+	d := newNoteFilesDir(tmpDir, false, false)
+
+	md := fakeNote(time.Now())
+	err := d.SaveNote("TEST_note", md)
+	if err != nil {
+		t.Errorf("SaveNote returned error: %s", err.Error())
+	}
+
+	err = d.SaveNote("test_note", md)
+	if err != nil {
+		t.Errorf("SaveNote returned error: %s", err.Error())
+	}
+
+	shouldExist(t, tmpDir+"/test_note-1.md")
+}
+
 func fakeNote(wantDate time.Time) *markdown.Note {
 	return &markdown.Note{
 		Content: []byte(`12345`),
