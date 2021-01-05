@@ -24,15 +24,20 @@ import (
 
 var version = "dev"
 
+func init() {
+	flaggy.SetName("evernote2md")
+	flaggy.SetDescription(" Convert Evernote notes exported in *.enex format to markdown files")
+	flaggy.SetVersion(version)
+
+	flaggy.DefaultParser.ShowHelpOnUnexpected = false
+	flaggy.DefaultParser.AdditionalHelpPrepend = "http://github.com/wormi4ok/evernote2md"
+}
+
 func main() {
 	var input string
 	var outputDir = filepath.FromSlash("./notes")
 	var outputOverride string
 	var folders, noHighlights, resetTimestamps, debug bool
-
-	flaggy.SetName("evernote2md")
-	flaggy.SetDescription(" Convert Evernote notes exported in *.enex format to markdown files")
-	flaggy.SetVersion(version)
 
 	flaggy.AddPositionalValue(&input, "input", 1, true, "Evernote export file")
 	flaggy.AddPositionalValue(&outputDir, "output", 2, false, "Output directory")
@@ -42,9 +47,6 @@ func main() {
 	flaggy.Bool(&noHighlights, "", "noHighlights", "Disable converting Evernote highlights to inline HTML tags")
 	flaggy.Bool(&resetTimestamps, "", "resetTimestamps", "Create files ignoring timestamps in the note attributes")
 	flaggy.Bool(&debug, "v", "debug", "Show debug output")
-
-	flaggy.DefaultParser.ShowHelpOnUnexpected = false
-	flaggy.DefaultParser.AdditionalHelpPrepend = "http://github.com/wormi4ok/evernote2md"
 
 	flaggy.Parse()
 
