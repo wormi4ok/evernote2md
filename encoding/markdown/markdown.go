@@ -56,6 +56,11 @@ type HighlightedText struct{}
 // convert text highlighted in Evernote to an inline HTML `span` tag with a custom background color
 func (r *HighlightedText) Rule(next godown.WalkFunc) (string, godown.WalkFunc) {
 	return "span", func(node *html.Node, w io.Writer, nest int, option *godown.Option) {
+		if node.Attr == nil {
+			next(node, w, nest, option)
+			return
+		}
+
 		for _, attr := range node.Attr {
 			if attr.Key == "style" && strings.Contains(attr.Val, "-evernote-highlight:true") {
 				_, _ = fmt.Fprint(w, `<span style="background-color: #ffaaaa">`)
