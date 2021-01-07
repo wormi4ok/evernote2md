@@ -34,14 +34,16 @@ func init() {
 }
 
 func main() {
-	var input string
+	var input, outputOverride string
 	var outputDir = filepath.FromSlash("./notes")
-	var outputOverride string
+	var tagTemplate = "`{{tag}}`"
 	var folders, noHighlights, resetTimestamps, debug bool
 
 	flaggy.AddPositionalValue(&input, "input", 1, true, "Evernote export file")
 	flaggy.AddPositionalValue(&outputDir, "output", 2, false, "Output directory")
-	flaggy.String(&outputOverride, "o", "outputDir", "Directory where markdown files will be created")
+
+	flaggy.String(&tagTemplate, "t", "tagTemplate", "Define how Evernote tags are formatted")
+	flaggy.String(&outputOverride, "o", "outputDir", "Override the directory where markdown files will be created")
 
 	flaggy.Bool(&folders, "", "folders", "Put every note in a separate folder")
 	flaggy.Bool(&noHighlights, "", "noHighlights", "Disable converting Evernote highlights to inline HTML tags")
@@ -55,7 +57,7 @@ func main() {
 	}
 
 	output := newNoteFilesDir(outputDir, folders, !resetTimestamps)
-	converter := internal.Converter{EnableHighlights: !noHighlights}
+	converter := internal.Converter{EnableHighlights: !noHighlights, TagFormat: tagTemplate}
 
 	setLogLevel(debug)
 

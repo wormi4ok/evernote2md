@@ -16,6 +16,7 @@ import (
 
 // Converter holds configuration options to control conversion
 type Converter struct {
+	TagFormat        string
 	EnableHighlights bool
 }
 
