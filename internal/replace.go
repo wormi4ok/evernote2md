@@ -181,7 +181,7 @@ func hasExtraDiv(n *html.Node) bool {
 	return false
 }
 
-// TextFormatter catches Bold, Italic or underlined formatting
+// TextFormatter catches bold and italic 
 type TextFormatter struct{}
 
 // ReplaceTag implements the TagReplacer interface
