@@ -28,7 +28,7 @@ func (c *Converter) Convert(note *enex.Note) (*markdown.Note, error) {
 		return nil, err
 	}
 
-	html, err := normalizeHTML(note.Content, NewReplacerMedia(md.Media), &Code{}, &ExtraDiv{})
+	html, err := normalizeHTML(note.Content, NewReplacerMedia(md.Media), &Code{}, &ExtraDiv{}, &TextFormatter{})
 	if err != nil {
 		return nil, err
 	}
