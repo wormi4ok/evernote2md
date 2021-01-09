@@ -30,7 +30,7 @@ jobs:
         version: latest
         args: release -f .pr.yml --rm-dist
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.PR_RELEASE_TOKEN }}
     - name: Remove temporary tag
       run: git tag --delete ${{ env.PR_TAG }}
 
