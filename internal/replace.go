@@ -181,7 +181,7 @@ func hasExtraDiv(n *html.Node) bool {
 	return false
 }
 
-// TextFormatter catches bold and italic 
+// TextFormatter catches bold and italic, bold takes precedence
 type TextFormatter struct{}
 
 // ReplaceTag implements the TagReplacer interface
@@ -189,8 +189,7 @@ func (*TextFormatter) ReplaceTag(n *html.Node) {
 	if isBold(n) {
 		n.Data = "strong"
 		n.Attr = []html.Attribute{}
-	}
-	if isItalic(n) {
+	} else if isItalic(n) {
 		n.Data = "i"
 		n.Attr = []html.Attribute{}
 	}
