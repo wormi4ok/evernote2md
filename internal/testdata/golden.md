@@ -4,6 +4,10 @@
 
 abc <span style="background-color: #ffaaaa">highlighted text</span>
 
+Some _italic text_
+
+Some **bold text**
+
 ```
    //This is a code block
     fmt.Println("hello world")

@@ -180,3 +180,41 @@ func hasExtraDiv(n *html.Node) bool {
 
 	return false
 }
+
+// TextFormatter catches bold and italic, bold takes precedence
+type TextFormatter struct{}
+
+// ReplaceTag implements the TagReplacer interface
+func (*TextFormatter) ReplaceTag(n *html.Node) {
+	if isBold(n) {
+		n.Data = "strong"
+		n.Attr = []html.Attribute{}
+	} else if isItalic(n) {
+		n.Data = "i"
+		n.Attr = []html.Attribute{}
+	}
+}
+
+func isBold(n *html.Node) bool {
+	if n.Type == html.ElementNode && n.Data == "span" {
+		for _, a := range n.Attr {
+			if a.Key == "style" {
+				return strings.Contains(a.Val, "font-weight: bold")
+			}
+		}
+	}
+
+	return false
+}
+
+func isItalic(n *html.Node) bool {
+	if n.Type == html.ElementNode && n.Data == "span" {
+		for _, a := range n.Attr {
+			if a.Key == "style" {
+				return strings.Contains(a.Val, "font-style: italic")
+			}
+		}
+	}
+
+	return false
+}
