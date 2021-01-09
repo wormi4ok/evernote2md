@@ -37,7 +37,7 @@ func main() {
 	var input string
 	var outputDir = filepath.FromSlash("./notes")
 	var outputOverride string
-	var folders, noHighlights, resetTimestamps, debug bool
+	var folders, noHighlights, noBold, resetTimestamps, debug bool
 
 	flaggy.AddPositionalValue(&input, "input", 1, true, "Evernote export file")
 	flaggy.AddPositionalValue(&outputDir, "output", 2, false, "Output directory")
@@ -45,6 +45,7 @@ func main() {
 
 	flaggy.Bool(&folders, "", "folders", "Put every note in a separate folder")
 	flaggy.Bool(&noHighlights, "", "noHighlights", "Disable converting Evernote highlights to inline HTML tags")
+	flaggy.Bool(&noBold, "", "noBold", "Disable converting Evernote bold text to inline HTML bold tags")
 	flaggy.Bool(&resetTimestamps, "", "resetTimestamps", "Create files ignoring timestamps in the note attributes")
 	flaggy.Bool(&debug, "v", "debug", "Show debug output")
 
@@ -55,7 +56,7 @@ func main() {
 	}
 
 	output := newNoteFilesDir(outputDir, folders, !resetTimestamps)
-	converter := internal.Converter{EnableHighlights: !noHighlights}
+	converter := internal.Converter{EnableHighlights: !noHighlights, EnableBold: !noBold}
 
 	setLogLevel(debug)
 
