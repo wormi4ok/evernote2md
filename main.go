@@ -57,14 +57,15 @@ func main() {
 	}
 
 	output := newNoteFilesDir(outputDir, folders, !resetTimestamps)
-	converter := internal.Converter{EnableHighlights: !noHighlights, TagFormat: tagTemplate}
+	converter, err := internal.NewConverter(tagTemplate, !noHighlights)
+	failWhen(err)
 
 	setLogLevel(debug)
 
 	run(input, output, newProgressBar(debug), converter)
 }
 
-func run(input string, output *noteFilesDir, progress *pb.ProgressBar, c internal.Converter) {
+func run(input string, output *noteFilesDir, progress *pb.ProgressBar, c *internal.Converter) {
 	i, err := os.Open(input)
 	failWhen(err)
 

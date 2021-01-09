@@ -29,6 +29,18 @@ type Converter struct {
 	err error
 }
 
+func NewConverter(tagFormat string, enableHighlights bool) (*Converter, error) {
+	if tagFormat == "" {
+		tagFormat = DefaultTagFormat
+	}
+
+	if strings.Count(tagFormat, tagToken) != 1 {
+		return nil, errors.New("tag format should contain exactly one {{tag}} template variable")
+	}
+
+	return &Converter{TagFormat: tagFormat, EnableHighlights: enableHighlights}, nil
+}
+
 // Convert an Evernote file to markdown
 func (c *Converter) Convert(note *enex.Note) (*markdown.Note, error) {
 	md := new(markdown.Note)
@@ -87,18 +99,11 @@ func (c *Converter) prependTags(note *enex.Note, md *markdown.Note) {
 		return
 	}
 
-	if c.TagFormat == "" {
-		c.TagFormat = DefaultTagFormat
-	}
-
-	if strings.Count(c.TagFormat, tagToken) != 1 {
-		c.err = errors.New("tag format should contain exactly one {{tag}} template variable")
-	}
-
 	var tt [][]byte
 	for _, t := range note.Tags {
 		tt = append(tt, []byte(strings.Replace(c.TagFormat, tagToken, t, 1)))
 	}
+
 	md.Content = append([]byte("\n\n"), md.Content...)
 	md.Content = append(bytes.Join(tt, []byte(" ")), md.Content...)
 }
@@ -137,6 +142,7 @@ func (c *Converter) addDates(note *enex.Note, md *markdown.Note) {
 	if c.err != nil {
 		return
 	}
+
 	md.CTime = convertEvernoteDate(note.Created)
 	md.MTime = convertEvernoteDate(note.Updated)
 }
@@ -150,5 +156,6 @@ func convertEvernoteDate(evernoteDate string) time.Time {
 		log.Printf("[DEBUG] Could not convert time /%s: %s, using today instead", evernoteDate, err.Error())
 		converted = time.Now()
 	}
+
 	return converted
 }

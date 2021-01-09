@@ -93,7 +93,7 @@ func TestConvert(t *testing.T) {
 		},
 	}
 	for _, tt := range tests {
-		c := &internal.Converter{EnableHighlights: true}
+		c, _ := internal.NewConverter("", true)
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := c.Convert(tt.arg)
 			if (err != nil) != tt.wantErr {

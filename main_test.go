@@ -32,7 +32,8 @@ func Test_run(t *testing.T) {
 		t.Fatalf("failed to create a test file at %s", input)
 	}
 	output := newNoteFilesDir(tmpDir, false, false)
-	run(input, output, newProgressBar(false), internal.Converter{})
+	converter, _ := internal.NewConverter("", false)
+	run(input, output, newProgressBar(false), converter)
 
 	want := filepath.FromSlash(output.Path() + "/Test.md")
 	_, err = os.Stat(want)

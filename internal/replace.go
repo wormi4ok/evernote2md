@@ -42,8 +42,6 @@ func (c *Converter) normalizeHTML(note *enex.Note, _ *markdown.Note, rr ...TagRe
 		return
 	}
 	note.Content = out.Bytes()
-
-	return
 }
 
 // Media tag replacer puts a standard HTML <img> tag
