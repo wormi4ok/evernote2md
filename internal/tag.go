@@ -9,7 +9,7 @@ import (
 	"github.com/wormi4ok/evernote2md/encoding/markdown"
 )
 
-const DefaultTagFormat = "`{{tag}}`"
+const DefaultTagTemplate = "`{{tag}}`"
 
 const tagToken = "{{tag}}"
 
@@ -22,13 +22,13 @@ func (c *Converter) prependTags(note *enex.Note, md *markdown.Note) {
 
 	var tt [][]byte
 	for _, t := range note.Tags {
-		// Default tag format allows spaces in tags, but for custom formats
+		// Default tag template allows spaces in tags, but for custom templates
 		// we replace all spaces with underscores to prevent word splitting
-		if c.TagFormat != DefaultTagFormat {
+		if c.TagTemplate != DefaultTagTemplate {
 			t = spaces.ReplaceAllString(t, "_")
 		}
 
-		tt = append(tt, []byte(strings.Replace(c.TagFormat, tagToken, t, 1)))
+		tt = append(tt, []byte(strings.Replace(c.TagTemplate, tagToken, t, 1)))
 	}
 
 	md.Content = append([]byte("\n\n"), md.Content...)

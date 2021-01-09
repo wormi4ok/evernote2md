@@ -36,7 +36,7 @@ func init() {
 func main() {
 	var input, outputOverride string
 	var outputDir = filepath.FromSlash("./notes")
-	var tagTemplate = internal.DefaultTagFormat
+	var tagTemplate = internal.DefaultTagTemplate
 	var folders, noHighlights, resetTimestamps, debug bool
 
 	flaggy.AddPositionalValue(&input, "input", 1, true, "Evernote export file")

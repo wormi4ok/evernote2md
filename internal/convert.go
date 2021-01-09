@@ -17,7 +17,7 @@ import (
 
 // Converter holds configuration options to control conversion
 type Converter struct {
-	TagFormat        string
+	TagTemplate      string
 	EnableHighlights bool
 
 	// err holds an error during conversion
@@ -25,16 +25,16 @@ type Converter struct {
 	err error
 }
 
-func NewConverter(tagFormat string, enableHighlights bool) (*Converter, error) {
-	if tagFormat == "" {
-		tagFormat = DefaultTagFormat
+func NewConverter(tagTemplate string, enableHighlights bool) (*Converter, error) {
+	if tagTemplate == "" {
+		tagTemplate = DefaultTagTemplate
 	}
 
-	if strings.Count(tagFormat, tagToken) != 1 {
+	if strings.Count(tagTemplate, tagToken) != 1 {
 		return nil, errors.New("tag format should contain exactly one {{tag}} template variable")
 	}
 
-	return &Converter{TagFormat: tagFormat, EnableHighlights: enableHighlights}, nil
+	return &Converter{TagTemplate: tagTemplate, EnableHighlights: enableHighlights}, nil
 }
 
 // Convert an Evernote file to markdown
