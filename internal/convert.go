@@ -17,6 +17,7 @@ import (
 // Converter holds configuration options to control conversion
 type Converter struct {
 	EnableHighlights bool
+	EnableBold       bool
 }
 
 // Convert Evernote file to markdown
@@ -37,7 +38,7 @@ func (c *Converter) Convert(note *enex.Note) (*markdown.Note, error) {
 	content = prependTitle(note.Title, content)
 
 	var b bytes.Buffer
-	err = markdown.Convert(&b, strings.NewReader(content), c.EnableHighlights)
+	err = markdown.Convert(&b, strings.NewReader(content), c.EnableHighlights, c.EnableBold)
 	if err != nil {
 		return nil, err
 	}
