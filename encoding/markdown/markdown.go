@@ -40,21 +40,30 @@ type (
 
 // Convert wraps a call to external dependency to provide
 // stable interface for package users
-func Convert(w io.Writer, r io.Reader, highlights bool) error {
+func Convert(w io.Writer, r io.Reader, highlights bool, bold bool) error {
 	var rules []godown.CustomRule
+	var formatter = &Formatter{}
 	if highlights {
-		rules = append(rules, &HighlightedText{})
+		formatter.highlights = true
 	}
+	if bold {
+		formatter.bold = true
+	}
+
+	rules = append(rules, formatter)
 
 	return godown.Convert(w, r, &godown.Option{CustomRules: rules})
 }
 
-// HighlightedText is a parsing rule to convert Evernote highlights to HTML spans with a background color
-type HighlightedText struct{}
+// Formatter is a parsing rule to convert Evernote highlights to HTML spans with a background color
+type Formatter struct {
+	highlights bool
+	bold       bool
+}
 
 // Rule implements godown.CustomRule interface to extend basic conversion rules and
 // convert text highlighted in Evernote to an inline HTML `span` tag with a custom background color
-func (r *HighlightedText) Rule(next godown.WalkFunc) (string, godown.WalkFunc) {
+func (r *Formatter) Rule(next godown.WalkFunc) (string, godown.WalkFunc) {
 	return "span", func(node *html.Node, w io.Writer, nest int, option *godown.Option) {
 		if node.Attr == nil {
 			next(node, w, nest, option)
@@ -62,8 +71,12 @@ func (r *HighlightedText) Rule(next godown.WalkFunc) (string, godown.WalkFunc) {
 		}
 
 		for _, attr := range node.Attr {
-			if attr.Key == "style" && strings.Contains(attr.Val, "-evernote-highlight:true") {
+			if r.highlights && attr.Key == "style" && strings.Contains(attr.Val, "-evernote-highlight:true") {
 				_, _ = fmt.Fprint(w, `<span style="background-color: #ffaaaa">`)
+				next(node, w, nest, option)
+				_, _ = fmt.Fprint(w, "</span>")
+			} else if r.bold && attr.Key == "style" && strings.Contains(attr.Val, "font-weight: bold") {
+				_, _ = fmt.Fprint(w, `<span style="font-weight:bold">`)
 				next(node, w, nest, option)
 				_, _ = fmt.Fprint(w, "</span>")
 			} else {
