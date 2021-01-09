@@ -1,6 +1,6 @@
 # Test note
 
-`tag1``tag2`
+`tag1` `tag2`
 
 abc <span style="background-color: #ffaaaa">highlighted text</span>
 

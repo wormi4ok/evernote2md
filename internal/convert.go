@@ -2,16 +2,22 @@ package internal
 
 import (
 	"bytes"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"regexp"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/wormi4ok/evernote2md/encoding/enex"
 	"github.com/wormi4ok/evernote2md/encoding/markdown"
 )
+
+const DefaultTagFormat = "`{{tag}}`"
+
+const tagToken = "{{tag}}"
 
 // Converter holds configuration options to control conversion
 type Converter struct {
@@ -30,9 +36,9 @@ func (c *Converter) Convert(note *enex.Note) (*markdown.Note, error) {
 
 	c.mapResources(note, md)
 	c.normalizeHTML(note, md, NewReplacerMedia(md.Media), &Code{}, &ExtraDiv{}, &TextFormatter{})
+	c.toMarkdown(note, md)
 	c.prependTags(note, md)
 	c.prependTitle(note, md)
-	c.toMarkdown(note, md)
 	c.trimSpaces(note, md)
 	c.addDates(note, md)
 
@@ -76,25 +82,33 @@ func (c *Converter) mapResources(note *enex.Note, md *markdown.Note) {
 	}
 }
 
-func (c *Converter) prependTags(note *enex.Note, _ *markdown.Note) {
+func (c *Converter) prependTags(note *enex.Note, md *markdown.Note) {
 	if c.err != nil {
 		return
+	}
+
+	if c.TagFormat == "" {
+		c.TagFormat = DefaultTagFormat
+	}
+
+	if strings.Count(c.TagFormat, tagToken) != 1 {
+		c.err = errors.New("tag format should contain exactly one {{tag}} template variable")
 	}
 
 	var tt [][]byte
 	for _, t := range note.Tags {
-		tt = append(tt, []byte(fmt.Sprintf("<code>%s</code>", t)))
+		tt = append(tt, []byte(strings.Replace(c.TagFormat, tagToken, t, 1)))
 	}
-	note.Content = append([]byte("<br>"), note.Content...)
-	note.Content = append(bytes.Join(tt, []byte(" ")), note.Content...)
+	md.Content = append([]byte("\n\n"), md.Content...)
+	md.Content = append(bytes.Join(tt, []byte(" ")), md.Content...)
 }
 
-func (c *Converter) prependTitle(note *enex.Note, _ *markdown.Note) {
+func (c *Converter) prependTitle(note *enex.Note, md *markdown.Note) {
 	if c.err != nil {
 		return
 	}
 
-	note.Content = append([]byte(fmt.Sprintf("<h1>%s</h1>", note.Title)), note.Content...)
+	md.Content = append([]byte(fmt.Sprintf("# %s\n\n", note.Title)), md.Content...)
 }
 
 func (c *Converter) toMarkdown(note *enex.Note, md *markdown.Note) {
