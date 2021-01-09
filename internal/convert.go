@@ -15,10 +15,6 @@ import (
 	"github.com/wormi4ok/evernote2md/encoding/markdown"
 )
 
-const DefaultTagFormat = "`{{tag}}`"
-
-const tagToken = "{{tag}}"
-
 // Converter holds configuration options to control conversion
 type Converter struct {
 	TagFormat        string
@@ -92,20 +88,6 @@ func (c *Converter) mapResources(note *enex.Note, md *markdown.Note) {
 			md.Media[strconv.Itoa(i)] = mdr
 		}
 	}
-}
-
-func (c *Converter) prependTags(note *enex.Note, md *markdown.Note) {
-	if c.err != nil {
-		return
-	}
-
-	var tt [][]byte
-	for _, t := range note.Tags {
-		tt = append(tt, []byte(strings.Replace(c.TagFormat, tagToken, t, 1)))
-	}
-
-	md.Content = append([]byte("\n\n"), md.Content...)
-	md.Content = append(bytes.Join(tt, []byte(" ")), md.Content...)
 }
 
 func (c *Converter) prependTitle(note *enex.Note, md *markdown.Note) {
