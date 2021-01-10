@@ -11,4 +11,4 @@ require (
 	golang.org/x/net v0.0.0-20200904194848-62affa334b73
 )
 
-replace github.com/mattn/godown => github.com/wormi4ok/godown v0.1.1
+replace github.com/mattn/godown => github.com/wormi4ok/godown v0.1.2

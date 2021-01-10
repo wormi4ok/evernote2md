@@ -43,6 +43,8 @@ evernote2md (flags) [input] [outputDir]
 
 If outputDir is not specified, `./notes` is used. Use optional `--folders` flag to put every note in a separate folder.
 
+An option `--tagTemplate` allows to change the way tags are formatted. See [wiki article](https://github.com/wormi4ok/evernote2md/wiki/Custom-tag-template) for more information. 
+
 To get clean Markdown output without inline HTML tags for highlighted text, use `--noHighlights` flag.
 
 Flag `--help` shows all available options.

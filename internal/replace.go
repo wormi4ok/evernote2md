@@ -8,6 +8,7 @@ import (
 
 	"golang.org/x/net/html"
 
+	"github.com/wormi4ok/evernote2md/encoding/enex"
 	"github.com/wormi4ok/evernote2md/encoding/markdown"
 )
 
@@ -17,10 +18,13 @@ type TagReplacer interface {
 	ReplaceTag(node *html.Node)
 }
 
-func normalizeHTML(b []byte, rr ...TagReplacer) ([]byte, error) {
-	doc, err := html.Parse(bytes.NewReader(b))
-	if err != nil {
-		return nil, err
+func (c *Converter) normalizeHTML(note *enex.Note, _ *markdown.Note, rr ...TagReplacer) {
+	if c.err != nil {
+		return
+	}
+	doc, err := html.Parse(bytes.NewReader(note.Content))
+	if c.err = err; err != nil {
+		return
 	}
 	var f func(*html.Node)
 	f = func(n *html.Node) {
@@ -34,11 +38,10 @@ func normalizeHTML(b []byte, rr ...TagReplacer) ([]byte, error) {
 	f(doc)
 
 	var out bytes.Buffer
-	if err := html.Render(&out, doc); err != nil {
-		return nil, err
+	if c.err = html.Render(&out, doc); c.err != nil {
+		return
 	}
-
-	return out.Bytes(), nil
+	note.Content = out.Bytes()
 }
 
 // Media tag replacer puts a standard HTML <img> tag
