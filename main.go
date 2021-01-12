@@ -39,7 +39,7 @@ func main() {
 	var tagTemplate = internal.DefaultTagTemplate
 	var folders, noHighlights, resetTimestamps, debug bool
 
-	flaggy.AddPositionalValue(&input, "input", 1, true, "Evernote export file")
+	flaggy.AddPositionalValue(&input, "input", 1, false, "Evernote export file")
 	flaggy.AddPositionalValue(&outputDir, "output", 2, false, "Output directory")
 
 	flaggy.String(&tagTemplate, "t", "tagTemplate", "Define how Evernote tags are formatted")
@@ -51,6 +51,8 @@ func main() {
 	flaggy.Bool(&debug, "v", "debug", "Show debug output")
 
 	flaggy.Parse()
+
+	_ = matchInput(input)
 
 	if len(outputOverride) > 0 {
 		outputDir = outputOverride
@@ -102,6 +104,30 @@ func newProgressBar(debug bool) *pb.ProgressBar {
 		progress.SetWriter(new(bytes.Buffer))
 	}
 	return progress
+}
+
+func matchInput(input string) []string {
+	var err error
+	if input == "" {
+		input, err = os.Getwd()
+	} else {
+		input, err = filepath.Abs(input)
+	}
+	failWhen(err)
+
+	pattern := input
+	info, err := os.Stat(input)
+	if err == nil && info.IsDir() {
+		pattern = filepath.FromSlash(input + "/*.enex")
+	}
+
+	files, err := filepath.Glob(pattern)
+	failWhen(err)
+	if files == nil {
+		log.Fatal(fmt.Errorf("[ERROR] No enex files found in path: %s", input))
+	}
+
+	return files
 }
 
 func setLogLevel(debug bool) {
