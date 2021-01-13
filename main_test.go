@@ -91,6 +91,16 @@ func Test_matchInput_fail(t *testing.T) {
 	}
 }
 
+func Test_matchInput_ignoreDirectories(t *testing.T) {
+	tmpDir := tDir(t)
+	_ = wantDir(t, tmpDir, "test1")
+	want := wantFile(t, tmpDir, "test1.enex")
+
+	if got, _ := matchInput("test*"); !matchPath(got, want) {
+		t.Errorf("matchInput()\n got  %v\n want %v", got, want)
+	}
+}
+
 func tDir(t *testing.T) string {
 	tmpDir := t.TempDir()
 	if err := os.Chdir(tmpDir); err != nil {

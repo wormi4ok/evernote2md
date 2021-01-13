@@ -104,7 +104,10 @@ func newProgressBar(debug bool) *pb.ProgressBar {
 // matchInput finds all files matching input pattern
 // If input is a path to a directory, it will search for *.enex files inside the directory
 func matchInput(input string) ([]string, error) {
-	var err error
+	var (
+		files []string
+		err   error
+	)
 	if input == "" {
 		input, err = os.Getwd()
 	} else {
@@ -114,19 +117,26 @@ func matchInput(input string) ([]string, error) {
 		return nil, err
 	}
 
-	pattern := input
-	info, err := os.Stat(input)
-	if err == nil && info.IsDir() {
-		pattern = filepath.FromSlash(input + "/*.enex")
+	// If input is a directory, find all *.enex files and return
+	if info, err := os.Stat(input); err == nil && info.IsDir() {
+		files, err := filepath.Glob(filepath.FromSlash(input + "/*.enex"))
+		if files != nil {
+			return files, err
+		}
 	}
 
-	files, err := filepath.Glob(pattern)
-	failWhen(err)
+	// User glob patterns may include directories that we filter out
+	matches, err := filepath.Glob(input)
+	for _, match := range matches {
+		if info, err := os.Stat(match); err == nil && !info.IsDir() {
+			files = append(files, match)
+		}
+	}
 	if files == nil {
-		return nil, fmt.Errorf("[ERROR] No enex files found in the path: %s", input)
+		err = fmt.Errorf("[ERROR] No enex files found in the path: %s", input)
 	}
 
-	return files, nil
+	return files, err
 }
 
 // decodeFiles creates a single Evernote export from multiple input files
