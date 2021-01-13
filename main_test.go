@@ -44,78 +44,74 @@ func Test_run(t *testing.T) {
 }
 
 func Test_matchInput_cwd(t *testing.T) {
-	tmpDir := t.TempDir()
-	if err := os.Chdir(tmpDir); err != nil {
-		t.Fatal(err)
-	}
-	if _, err := os.Create(filepath.Join(tmpDir, "test_export.enex")); err != nil {
-		t.Fatal(err)
-	}
+	tmpDir := tDir(t)
+	want := wantFile(t, tmpDir, "test_export.enex")
 
-	want := filepath.Join(tmpDir, "test_export.enex")
-	if got := matchInput(""); !matchPath(got, want) {
+	if got, _ := matchInput(""); !matchPath(got, want) {
 		t.Errorf("matchInput()\n got  %v\n want %v", got, want)
 	}
 }
 
 func Test_matchInput_file(t *testing.T) {
-	tmpDir := t.TempDir()
-	if err := os.Chdir(tmpDir); err != nil {
-		t.Fatal(err)
-	}
+	tmpDir := tDir(t)
+	want := wantFile(t, tmpDir, "test_export.enex")
 
-	want := filepath.Join(tmpDir, "export.enex")
-	if _, err := os.Create(want); err != nil {
-		t.Fatal(err)
-	}
-
-	if got := matchInput("export.enex"); !matchPath(got, want) {
+	if got, _ := matchInput("test_export.enex"); !matchPath(got, want) {
 		t.Errorf("matchInput()\n got  %v\n want %v", got, want)
 	}
 }
 
 func Test_matchInput_dir(t *testing.T) {
-	tmpDir := t.TempDir()
-	if err := os.Chdir(tmpDir); err != nil {
-		t.Fatal(err)
-	}
+	tmpDir := tDir(t)
+	wDir := wantDir(t, tmpDir, "testDir")
+	want := wantFile(t, wDir, "in_dir.enex")
 
-	if err := os.MkdirAll(filepath.Join(tmpDir, "test2"), 0777); err != nil {
-		t.Fatal(err)
-	}
-
-	want := filepath.Join(tmpDir, "test2", "in_dir.enex")
-	if _, err := os.Create(want); err != nil {
-		t.Fatal(err)
-	}
-
-	if got := matchInput("test2"); !matchPath(got, want) {
+	if got, _ := matchInput("testDir"); !matchPath(got, want) {
 		t.Errorf("matchInput()\n got  %v\n want %v", got, want)
 	}
 }
 
 func Test_matchInput_glob(t *testing.T) {
+	tmpDir := tDir(t)
+	wDir := wantDir(t, tmpDir, "testDir2")
+	want1 := wantFile(t, wDir, "glob1.enex")
+	want2 := wantFile(t, wDir, "glob2.enex")
+
+	if got, _ := matchInput("testDir2/glob*.enex"); !matchPath(got, want1, want2) {
+		t.Errorf("matchInput()\n got  %v\n want %v\n and  %v", got, want1, want2)
+	}
+}
+
+func Test_matchInput_fail(t *testing.T) {
+	_ = tDir(t)
+
+	if _, err := matchInput("not_exist.enex"); err == nil || !strings.HasPrefix(err.Error(), "[ERROR]") {
+		t.Errorf("matchInput() got unexpected eror %v", err)
+	}
+}
+
+func tDir(t *testing.T) string {
 	tmpDir := t.TempDir()
 	if err := os.Chdir(tmpDir); err != nil {
 		t.Fatal(err)
 	}
+	return tmpDir
+}
 
-	if err := os.MkdirAll(filepath.Join(tmpDir, "test3"), 0777); err != nil {
+func wantFile(t *testing.T, path ...string) string {
+	filePath := filepath.Join(path...)
+	if _, err := os.Create(filePath); err != nil {
 		t.Fatal(err)
 	}
+	return filePath
+}
 
-	want1 := filepath.Join(tmpDir, "test3", "glob1.enex")
-	if _, err := os.Create(want1); err != nil {
+func wantDir(t *testing.T, path ...string) string {
+	dirPath := filepath.Join(path...)
+	if err := os.MkdirAll(filepath.Join(path...), 0777); err != nil {
 		t.Fatal(err)
 	}
-	want2 := filepath.Join(tmpDir, "test3", "glob2.enex")
-	if _, err := os.Create(want2); err != nil {
-		t.Fatal(err)
-	}
-
-	if got := matchInput("test3/glob*.enex"); !matchPath(got, want1, want2) {
-		t.Errorf("matchInput()\n got  %v\n want %v\n and  %v", got, want1, want2)
-	}
+	return dirPath
 }
 
 func matchPath(got []string, want ...string) bool {

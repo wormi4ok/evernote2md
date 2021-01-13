@@ -52,7 +52,7 @@ func main() {
 
 	flaggy.Parse()
 
-	_ = matchInput(input)
+	_, _ = matchInput(input)
 
 	if len(outputOverride) > 0 {
 		outputDir = outputOverride
@@ -106,14 +106,16 @@ func newProgressBar(debug bool) *pb.ProgressBar {
 	return progress
 }
 
-func matchInput(input string) []string {
+func matchInput(input string) ([]string, error) {
 	var err error
 	if input == "" {
 		input, err = os.Getwd()
 	} else {
 		input, err = filepath.Abs(input)
 	}
-	failWhen(err)
+	if err != nil {
+		return nil, err
+	}
 
 	pattern := input
 	info, err := os.Stat(input)
@@ -124,10 +126,10 @@ func matchInput(input string) []string {
 	files, err := filepath.Glob(pattern)
 	failWhen(err)
 	if files == nil {
-		log.Fatal(fmt.Errorf("[ERROR] No enex files found in path: %s", input))
+		return nil, fmt.Errorf("[ERROR] No enex files found in path: %s", input)
 	}
 
-	return files
+	return files, nil
 }
 
 func setLogLevel(debug bool) {
