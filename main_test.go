@@ -26,15 +26,16 @@ const sampleFile = `
 
 func Test_run(t *testing.T) {
 	setLogLevel(false)
-	tmpDir := t.TempDir()
+	tmpDir := tDir(t)
 	input := filepath.FromSlash(tmpDir + "/export.enex")
 	err := ioutil.WriteFile(input, []byte(sampleFile), 0600)
 	if err != nil {
 		t.Fatalf("failed to create a test file at %s", input)
 	}
+	files, _ := matchInput(input)
 	output := newNoteFilesDir(tmpDir, false, false)
 	converter, _ := internal.NewConverter("", false)
-	run(input, output, newProgressBar(false), converter)
+	run(files, output, newProgressBar(false), converter)
 
 	want := filepath.FromSlash(output.Path() + "/Test.md")
 	_, err = os.Stat(want)
