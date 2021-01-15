@@ -27,3 +27,11 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
         registry: docker.pkg.github.com
         tag_names: true
+    - name: Publish Docker image to GitHub Container Registry
+      uses: elgohr/Publish-Docker-Github-Action@3.02
+      with:
+        name: ${{ github.repository }}
+        registry: ghcr.io
+        username: ${{ github.repository_owner }}
+        password: ${{ secrets.GHCR_TOKEN }}
+        tag_semver: true
