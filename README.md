@@ -16,7 +16,7 @@ Key features:
 * Converts attachments to files ( two directories will be created: `image` for images and `file` for other attachments
   e.g. pdf files )
 * Retains correct links to attachments
-* Inserts Evernote tags in notes as text entries
+* Inserts Evernote tags in notes as text entries with customizable formatting
 * Shows highlighted Evernote text
 * Sets file created and modified date equal to the note attributes
 
@@ -41,11 +41,12 @@ Manually:
 evernote2md (flags) [input] [outputDir]
 ```
 
-If outputDir is not specified, `./notes` is used. Use optional `--folders` flag to put every note in a separate folder.
+`input` can be a file, a directory with exported files, or a glob pattern (like `exports/My*.enex`, for example).
 
-An option `--tagTemplate` allows to change the way tags are formatted. See [wiki article](https://github.com/wormi4ok/evernote2md/wiki/Custom-tag-template) for more information. 
+If `outputDir` is not specified, `./notes` is used. Add optional `--folders` flag to put every note in a separate folder.
 
-To get clean Markdown output without inline HTML tags for highlighted text, use `--noHighlights` flag.
+An option `--tagTemplate` allows to change the way tags are formatted. 
+See [wiki article](https://github.com/wormi4ok/evernote2md/wiki/Custom-tag-template) for more information.
 
 Flag `--help` shows all available options.
 
