@@ -39,7 +39,7 @@ func main() {
 	var tagTemplate = internal.DefaultTagTemplate
 	var folders, noHighlights, resetTimestamps, debug bool
 
-	flaggy.AddPositionalValue(&input, "input", 1, false, "Evernote export file")
+	flaggy.AddPositionalValue(&input, "input", 1, true, "Evernote export file, directory or a glob pattern")
 	flaggy.AddPositionalValue(&outputDir, "output", 2, false, "Output directory")
 
 	flaggy.String(&tagTemplate, "t", "tagTemplate", "Define how Evernote tags are formatted")
