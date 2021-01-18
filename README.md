@@ -33,7 +33,7 @@ Manually:
 [Download the latest release](https://github.com/wormi4ok/evernote2md/releases/latest) for your OS.
 
 > ##### Note for macOS users!
-> Please, check this [wiki](https://github.com/wormi4ok/evernote2md/wiki/Run-the-binary-on-macOS-Catalina-or-higher) page if you have problems running the tool.
+> Please, check this [wiki](https://github.com/wormi4ok/evernote2md/wiki/macOS-FAQ) page if you have problems running the tool.
 
 ### How to use
 
