@@ -1,6 +1,7 @@
 package file
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -18,6 +19,9 @@ var illegalChars = regexp.MustCompile(`[\s\\|"'<>&_=+:?*]`)
 // which supports updating both creation and modification dates
 func ChangeFileTimes(dir, name string, ctime, mtime time.Time) error {
 	path := filepath.FromSlash(dir + "/" + name)
+	if _, err := os.Stat(path); os.IsNotExist(err) {
+		return fmt.Errorf("change file timestamps %s: %w", path, err)
+	}
 	ctimeSpec := syscall.NsecToFiletime(ctime.UnixNano())
 	mtimeSpec := syscall.NsecToFiletime(mtime.UnixNano())
 
