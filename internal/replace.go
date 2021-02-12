@@ -221,3 +221,15 @@ func isItalic(n *html.Node) bool {
 
 	return false
 }
+
+// EmptyAnchor removes anchor tags without text
+type EmptyAnchor struct{}
+
+// ReplaceTag implements the TagReplacer interface
+func (*EmptyAnchor) ReplaceTag(n *html.Node) {
+	if n.Type == html.ElementNode && n.Data == "a" {
+		if content := n.FirstChild; content == nil {
+			n.Data = "span"
+		}
+	}
+}
