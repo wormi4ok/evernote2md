@@ -20,8 +20,8 @@ type (
 		XMLName    xml.Name   `xml:"note"`
 		Title      string     `xml:"title"`
 		Content    []byte     `xml:"content"`
-		Updated    string     `xml:"created"`
-		Created    string     `xml:"updated"`
+		Updated    string     `xml:"updated"`
+		Created    string     `xml:"created"`
 		Tags       []string   `xml:"tag"`
 		Attributes string     `xml:"note-attributes"`
 		Resources  []Resource `xml:"resource"`

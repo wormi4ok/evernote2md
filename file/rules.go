@@ -32,12 +32,15 @@ func ChangeFileTimes(dir, name string, ctime, mtime time.Time) error {
 	if err != nil {
 		return os.Chtimes(filePathToModify, mtime, mtime)
 	}
-	changeMtime := exec.Command(touchCmd, "-mt", mtime.Format(touchTimeFormat), filePathToModify)
-	if err := changeMtime.Run(); err != nil {
+	// On macOS, first touch set both creation date and modification date
+	// On Linux, this touch will be ignored by second touch. There is no easy way to setting creation date
+	changeCTime := exec.Command(touchCmd, "-mt", ctime.Format(touchTimeFormat), filePathToModify)
+	if err := changeCTime.Run(); err != nil {
 		return err
 	}
-	changeCTime := exec.Command(touchCmd, "-t", ctime.Format(touchTimeFormat), filePathToModify)
-	if err := changeCTime.Run(); err != nil {
+	// On macOS, second touch updates the modification date and the creation date is preserved
+	changeMtime := exec.Command(touchCmd, "-mt", mtime.Format(touchTimeFormat), filePathToModify)
+	if err := changeMtime.Run(); err != nil {
 		return err
 	}
 	return nil
