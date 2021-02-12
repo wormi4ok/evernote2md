@@ -43,7 +43,7 @@ func (c *Converter) Convert(note *enex.Note) (*markdown.Note, error) {
 	md.Media = map[string]markdown.Resource{}
 
 	c.mapResources(note, md)
-	c.normalizeHTML(note, md, NewReplacerMedia(md.Media), &Code{}, &ExtraDiv{}, &TextFormatter{})
+	c.normalizeHTML(note, md, NewReplacerMedia(md.Media), &Code{}, &ExtraDiv{}, &TextFormatter{}, &EmptyAnchor{})
 	c.toMarkdown(note, md)
 	c.prependTags(note, md)
 	c.prependTitle(note, md)
