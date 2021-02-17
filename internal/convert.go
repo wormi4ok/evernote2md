@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"log"
 	"regexp"
 	"strconv"
@@ -57,7 +57,7 @@ func (c *Converter) mapResources(note *enex.Note, md *markdown.Note) {
 	names := map[string]int{}
 	r := note.Resources
 	for i := range r {
-		p, err := ioutil.ReadAll(decoder(r[i].Data))
+		p, err := io.ReadAll(decoder(r[i].Data))
 		if c.err = err; err != nil {
 			return
 		}

@@ -1,7 +1,7 @@
 package main
 
 import (
-	"io/ioutil"
+	"io"
 	"log"
 	"os"
 	"path/filepath"
@@ -12,7 +12,7 @@ import (
 )
 
 func TestNoteFilesDir_SaveNote(t *testing.T) {
-	log.SetOutput(ioutil.Discard)
+	log.SetOutput(io.Discard)
 	tmpDir := t.TempDir()
 	wantDate := time.Unix(1608463260, 0)
 

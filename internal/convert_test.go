@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"encoding/base64"
 	"flag"
-	"io/ioutil"
+	"os"
 	"path/filepath"
 	"reflect"
 	"testing"
@@ -101,7 +101,7 @@ func TestConvert(t *testing.T) {
 				return
 			}
 			if *update {
-				if err := ioutil.WriteFile(filepath.Join("testdata", "golden.md"), got.Content, 0644); err == nil {
+				if err := os.WriteFile(filepath.Join("testdata", "golden.md"), got.Content, 0644); err == nil {
 					t.SkipNow()
 				}
 			}
@@ -118,7 +118,7 @@ func TestConvert(t *testing.T) {
 
 func goldenFile(t *testing.T, filename string) []byte {
 	golden := filepath.Join("testdata", filename)
-	expected, err := ioutil.ReadFile(golden)
+	expected, err := os.ReadFile(golden)
 	if err != nil {
 		t.Fatal(err)
 	}

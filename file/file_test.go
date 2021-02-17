@@ -1,7 +1,6 @@
 package file_test
 
 import (
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
@@ -29,7 +28,7 @@ func TestSave(t *testing.T) {
 
 	// File should be created
 	filePath := filepath.FromSlash(dirName + "/" + fileName)
-	b, err := ioutil.ReadFile(filePath)
+	b, err := os.ReadFile(filePath)
 	if err != nil {
 		t.Error(err)
 	}

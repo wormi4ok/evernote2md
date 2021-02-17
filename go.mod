@@ -1,6 +1,6 @@
 module github.com/wormi4ok/evernote2md
 
-go 1.15
+go 1.16
 
 require (
 	github.com/cheggaaa/pb/v3 v3.0.4

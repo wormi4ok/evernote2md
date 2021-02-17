@@ -1,7 +1,6 @@
 package main
 
 import (
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
@@ -28,7 +27,7 @@ func Test_run(t *testing.T) {
 	setLogLevel(false)
 	tmpDir := tDir(t)
 	input := filepath.FromSlash(tmpDir + "/export.enex")
-	err := ioutil.WriteFile(input, []byte(sampleFile), 0600)
+	err := os.WriteFile(input, []byte(sampleFile), 0600)
 	if err != nil {
 		t.Fatalf("failed to create a test file at %s", input)
 	}

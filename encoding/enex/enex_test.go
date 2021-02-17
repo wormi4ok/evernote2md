@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/base64"
 	"encoding/xml"
-	"io/ioutil"
 	"os"
 	"reflect"
 	"testing"
@@ -72,7 +71,7 @@ func TestDecode(t *testing.T) {
 }
 
 func readFile(filename string) []byte {
-	file, err := ioutil.ReadFile(filename)
+	file, err := os.ReadFile(filename)
 	if err != nil {
 		panic(err)
 	}
