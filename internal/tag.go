@@ -9,6 +9,7 @@ import (
 	"github.com/wormi4ok/evernote2md/encoding/markdown"
 )
 
+// DefaultTagTemplate format if none specified
 const DefaultTagTemplate = "`{{tag}}`"
 
 const tagToken = "{{tag}}"

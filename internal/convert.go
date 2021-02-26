@@ -25,6 +25,7 @@ type Converter struct {
 	err error
 }
 
+// NewConverter creates a Converter with valid tagTemplate
 func NewConverter(tagTemplate string, enableHighlights bool) (*Converter, error) {
 	if tagTemplate == "" {
 		tagTemplate = DefaultTagTemplate
