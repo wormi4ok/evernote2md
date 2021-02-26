@@ -5,6 +5,10 @@ builds:
   - windows
   goarch:
   - amd64
+  - arm64
+  ignore:
+  - goos: linux
+    goarch: arm64
   env:
   - CGO_ENABLED=0
 archives:
@@ -13,6 +17,7 @@ archives:
     linux: Linux
     windows: Windows
     amd64: 64-bit
+    arm64: M1
   format_overrides:
   - goos: windows
     format: zip
