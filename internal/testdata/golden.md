@@ -1,8 +1,8 @@
 date: 2012-12-02 11:22:33 +0000
 updated_at: 2020-12-20 22:33:44 +0000
 title: Test note
-tags: `tag1` `tag2`
-lattitude: 50.00000000000000
+tags: [ 'tag1', 'tag2' ]
+latitude: 50.00000000000000
 longitude: 30.00000000000000
 source: mobile.android
 

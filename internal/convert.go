@@ -134,15 +134,15 @@ func (c *Converter) addDates(note *enex.Note, md *markdown.Note) {
 const dateFrontMatterFormat = "2006-01-02 15:04:05 -0700"
 
 func (c *Converter) addFrontMatter(note *enex.Note, md *markdown.Note) {
-	var frontMatter = fmt.Sprintf("date: %s\nupdated_at: %s\ntitle: %s\ntags: %s\n",
+	var frontMatter = fmt.Sprintf("date: %s\nupdated_at: %s\ntitle: %s\ntags: [ %s ]\n",
 		md.CTime.Format(dateFrontMatterFormat),
 		md.MTime.Format(dateFrontMatterFormat),
-		note.Title, c.tagList(note, md))
+		note.Title, c.tagList(note, "'{{tag}}'", ", ", false))
 	if len(note.Attributes.SourceUrl) > 0 {
 		frontMatter += fmt.Sprintf("url: %s\n", note.Attributes.SourceUrl)
 	}
 	if len(note.Attributes.Latitude) > 0 {
-		frontMatter += fmt.Sprintf("lattitude: %s\n", note.Attributes.Latitude)
+		frontMatter += fmt.Sprintf("latitude: %s\n", note.Attributes.Latitude)
 	}
 	if len(note.Attributes.Longitude) > 0 {
 		frontMatter += fmt.Sprintf("longitude: %s\n", note.Attributes.Longitude)
