@@ -35,6 +35,15 @@ func TestConvert(t *testing.T) {
 				Created: "20121202T112233Z",
 				Updated: "20201220T223344Z",
 				Tags:    []string{"tag1", "tag2"},
+				Attributes: enex.NoteAttributes{
+					Source:            "mobile.android",
+					SourceApplication: "",
+					Lattitude:         "50.00000000000000",
+					Longitude:         "30.00000000000000",
+					Altitude:          "",
+					Author:            "",
+					SourceUrl:         "",
+				},
 				Resources: []enex.Resource{{
 					ID:   "c9e6c70ea74388346ffa16ff8edbdf58",
 					Mime: "image/png",

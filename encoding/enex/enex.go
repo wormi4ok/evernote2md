@@ -17,14 +17,25 @@ type (
 
 	// Note is one note in Evernote
 	Note struct {
-		XMLName    xml.Name   `xml:"note"`
-		Title      string     `xml:"title"`
-		Content    []byte     `xml:"content"`
-		Updated    string     `xml:"updated"`
-		Created    string     `xml:"created"`
-		Tags       []string   `xml:"tag"`
-		Attributes string     `xml:"note-attributes"`
-		Resources  []Resource `xml:"resource"`
+		XMLName    xml.Name       `xml:"note"`
+		Title      string         `xml:"title"`
+		Content    []byte         `xml:"content"`
+		Updated    string         `xml:"updated"`
+		Created    string         `xml:"created"`
+		Tags       []string       `xml:"tag"`
+		Attributes NoteAttributes `xml:"note-attributes"`
+		Resources  []Resource     `xml:"resource"`
+	}
+
+	// Attributes of the note
+	NoteAttributes struct {
+		Source            string `xml:"source"`
+		SourceApplication string `xml:"source-application"`
+		Lattitude         string `xml:"latitude"`
+		Longitude         string `xml:"longitude"`
+		Altitude          string `xml:"altitude"`
+		Author            string `xml:"author"`
+		SourceUrl         string `xml:"source-url"`
 	}
 
 	// Resource embedded in the note

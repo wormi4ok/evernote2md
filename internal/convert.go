@@ -50,6 +50,7 @@ func (c *Converter) Convert(note *enex.Note) (*markdown.Note, error) {
 	c.prependTitle(note, md)
 	c.trimSpaces(note, md)
 	c.addDates(note, md)
+	c.addFrontMatter(note, md)
 
 	return md, c.err
 }
@@ -128,6 +129,32 @@ func (c *Converter) addDates(note *enex.Note, md *markdown.Note) {
 
 	md.CTime = convertEvernoteDate(note.Created)
 	md.MTime = convertEvernoteDate(note.Updated)
+}
+
+const dateFrontMatterFormat = "2006-01-02 15:04:05 -0700"
+
+func (c *Converter) addFrontMatter(note *enex.Note, md *markdown.Note) {
+	var frontMatter = fmt.Sprintf("date: %s\nupdated_at: %s\ntitle: %s\ntags: %s\n",
+		md.CTime.Format(dateFrontMatterFormat),
+		md.MTime.Format(dateFrontMatterFormat),
+		note.Title, c.tagList(note, md))
+	if len(note.Attributes.SourceUrl) > 0 {
+		frontMatter += fmt.Sprintf("url: %s\n", note.Attributes.SourceUrl)
+	}
+	if len(note.Attributes.Lattitude) > 0 {
+		frontMatter += fmt.Sprintf("lattitude: %s\n", note.Attributes.Lattitude)
+	}
+	if len(note.Attributes.Longitude) > 0 {
+		frontMatter += fmt.Sprintf("longitude: %s\n", note.Attributes.Longitude)
+	}
+	if len(note.Attributes.Altitude) > 0 {
+		frontMatter += fmt.Sprintf("altitude: %s\n", note.Attributes.Altitude)
+	}
+	if len(note.Attributes.Source) > 0 {
+		frontMatter += fmt.Sprintf("source: %s\n", note.Attributes.Source)
+	}
+	var frontMatterBytes = append([]byte(frontMatter), []byte("\n---\n\n")...)
+	md.Content = append(frontMatterBytes, md.Content...)
 }
 
 const evernoteDateFormat = "20060102T150405Z"
