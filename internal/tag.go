@@ -1,7 +1,6 @@
 package internal
 
 import (
-	"bytes"
 	"regexp"
 	"strings"
 
@@ -16,8 +15,8 @@ const tagToken = "{{tag}}"
 
 var spaces = regexp.MustCompile(`\s+`)
 
-func (c *Converter) tagList(note *enex.Note, tagTemplate string, joinString string, spacesToUnderscores bool) []byte {
-	var tt [][]byte
+func (c *Converter) tagList(note *enex.Note, tagTemplate string, joinString string, spacesToUnderscores bool) string {
+	var tt []string
 
 	for _, t := range note.Tags {
 		// Default tag template allows spaces in tags, but for custom templates
@@ -25,14 +24,14 @@ func (c *Converter) tagList(note *enex.Note, tagTemplate string, joinString stri
 		if spacesToUnderscores {
 			t = spaces.ReplaceAllString(t, "_")
 		}
-		tt = append(tt, []byte(strings.Replace(tagTemplate, tagToken, t, 1)))
+		tt = append(tt, strings.Replace(tagTemplate, tagToken, t, 1))
 	}
-	return bytes.Join(tt, []byte(joinString))
+	return strings.Join(tt, joinString)
 }
 func (c *Converter) prependTags(note *enex.Note, md *markdown.Note) {
 	if c.err != nil {
 		return
 	}
 	md.Content = append([]byte("\n\n"), md.Content...)
-	md.Content = append(c.tagList(note, c.TagTemplate, " ", c.TagTemplate != DefaultTagTemplate), md.Content...)
+	md.Content = append([]byte(c.tagList(note, c.TagTemplate, " ", c.TagTemplate != DefaultTagTemplate)), md.Content...)
 }

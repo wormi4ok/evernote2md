@@ -33,7 +33,7 @@ func Test_run(t *testing.T) {
 	}
 	files, _ := matchInput(input)
 	output := newNoteFilesDir(tmpDir, false, false)
-	converter, _ := internal.NewConverter("", false)
+	converter, _ := internal.NewConverter("", "", false)
 	run(files, output, newProgressBar(false), converter)
 
 	want := filepath.FromSlash(output.Path() + "/Test.md")
