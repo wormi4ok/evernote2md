@@ -53,7 +53,7 @@ type Converter struct {
 }
 
 // NewConverter creates a Converter with valid tagTemplate
-func NewConverter(tagTemplate string, frontMatterTemplate string, enableHighlights bool) (*Converter, error) {
+func NewConverter(tagTemplate string, enableFrontMatter bool, frontMatterTemplate string, enableHighlights bool) (*Converter, error) {
 	if tagTemplate == "" {
 		tagTemplate = DefaultTagTemplate
 	}
@@ -65,7 +65,7 @@ func NewConverter(tagTemplate string, frontMatterTemplate string, enableHighligh
 		return nil, errors.New("tag format should contain exactly one {{tag}} template variable")
 	}
 
-	return &Converter{TagTemplate: tagTemplate, FrontMatterTemplate: frontMatterTemplate, EnableHighlights: enableHighlights}, nil
+	return &Converter{TagTemplate: tagTemplate, EnableFrontMatter: enableFrontMatter, FrontMatterTemplate: frontMatterTemplate, EnableHighlights: enableHighlights}, nil
 }
 
 // Convert an Evernote file to markdown
@@ -80,7 +80,9 @@ func (c *Converter) Convert(note *enex.Note) (*markdown.Note, error) {
 	c.prependTitle(note, md)
 	c.trimSpaces(note, md)
 	c.addDates(note, md)
-	c.addFrontMatter(note, md)
+	if c.EnableFrontMatter {
+		c.addFrontMatter(note, md)
+	}
 
 	return md, c.err
 }
