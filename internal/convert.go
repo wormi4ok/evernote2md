@@ -16,8 +16,9 @@ import (
 	"github.com/wormi4ok/evernote2md/encoding/markdown"
 )
 
-const DefaultFrontMatterTemplate = `date: {{.CTime}}
-updated_at: {{.MTime}}
+const DefaultFrontMatterTemplate = `---
+date: '{{.CTime}}'
+updated_at: '{{.MTime}}'
 title: {{.Title}}
 tags: [ {{.TagList}} ]
 {{- if .Attributes.SourceUrl}}
