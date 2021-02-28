@@ -12,7 +12,7 @@ Evernote2md is a CLI tool to convert Evernote notes exported in *.enex format to
 Key features:
 
 * Zero dependencies - download and run
-* Creates one markdown file per note
+* Creates one markdown file per note ( with optional frontmatter e.g. for [Jekyll](https://jekyllrb.com/docs/front-matter/) )
 * Converts attachments to files ( two directories will be created: `image` for images and `file` for other attachments
   e.g. pdf files )
 * Retains correct links to attachments

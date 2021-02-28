@@ -9,16 +9,44 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"text/template"
 	"time"
 
 	"github.com/wormi4ok/evernote2md/encoding/enex"
 	"github.com/wormi4ok/evernote2md/encoding/markdown"
 )
 
+const DefaultFrontMatterTemplate = `---
+date: '{{.CTime}}'
+updated_at: '{{.MTime}}'
+title: {{.Title}}
+tags: [ {{.TagList}} ]
+{{- if .Attributes.SourceUrl}}
+url: {{.Attributes.SourceUrl -}}
+{{end -}}
+{{- if .Attributes.Latitude}}
+latitude: {{.Attributes.Latitude -}}
+{{end -}}
+{{- if .Attributes.Longitude}}
+longitude: {{.Attributes.Longitude -}}
+{{end -}}
+{{- if .Attributes.Altitude}}
+altitude: {{.Attributes.Altitude -}}
+{{end -}}
+{{- if .Attributes.Source}}
+source: {{.Attributes.Source -}}
+{{end}}
+
+---
+
+`
+
 // Converter holds configuration options to control conversion
 type Converter struct {
-	TagTemplate      string
-	EnableHighlights bool
+	TagTemplate         string
+	EnableHighlights    bool
+	EnableFrontMatter   bool
+	FrontMatterTemplate string
 
 	// err holds an error during conversion
 	// Every conversion step should check this field and skip execution if it is not empty
@@ -26,16 +54,19 @@ type Converter struct {
 }
 
 // NewConverter creates a Converter with valid tagTemplate
-func NewConverter(tagTemplate string, enableHighlights bool) (*Converter, error) {
+func NewConverter(tagTemplate string, enableFrontMatter bool, frontMatterTemplate string, enableHighlights bool) (*Converter, error) {
 	if tagTemplate == "" {
 		tagTemplate = DefaultTagTemplate
+	}
+	if frontMatterTemplate == "" {
+		frontMatterTemplate = DefaultFrontMatterTemplate
 	}
 
 	if strings.Count(tagTemplate, tagToken) != 1 {
 		return nil, errors.New("tag format should contain exactly one {{tag}} template variable")
 	}
 
-	return &Converter{TagTemplate: tagTemplate, EnableHighlights: enableHighlights}, nil
+	return &Converter{TagTemplate: tagTemplate, EnableFrontMatter: enableFrontMatter, FrontMatterTemplate: frontMatterTemplate, EnableHighlights: enableHighlights}, nil
 }
 
 // Convert an Evernote file to markdown
@@ -50,6 +81,9 @@ func (c *Converter) Convert(note *enex.Note) (*markdown.Note, error) {
 	c.prependTitle(note, md)
 	c.trimSpaces(note, md)
 	c.addDates(note, md)
+	if c.EnableFrontMatter {
+		c.addFrontMatter(note, md)
+	}
 
 	return md, c.err
 }
@@ -128,6 +162,34 @@ func (c *Converter) addDates(note *enex.Note, md *markdown.Note) {
 
 	md.CTime = convertEvernoteDate(note.Created)
 	md.MTime = convertEvernoteDate(note.Updated)
+}
+
+const dateFrontMatterFormat = "2006-01-02 15:04:05 -0700"
+
+func (c *Converter) addFrontMatter(note *enex.Note, md *markdown.Note) {
+	data := struct {
+		CTime      string
+		MTime      string
+		Title      string
+		Attributes enex.NoteAttributes
+		TagList    string
+	}{
+		md.CTime.Format(dateFrontMatterFormat),
+		md.MTime.Format(dateFrontMatterFormat),
+		note.Title,
+		note.Attributes,
+		c.tagList(note, "'{{tag}}'", ", ", false),
+	}
+	tmpl, err := template.New("frontMatter").Parse(c.FrontMatterTemplate)
+	if err != nil {
+		panic(err)
+	}
+	var b bytes.Buffer
+	err = tmpl.Execute(&b, data)
+	if err != nil {
+		panic(err)
+	}
+	md.Content = append(b.Bytes(), md.Content...)
 }
 
 const evernoteDateFormat = "20060102T150405Z"

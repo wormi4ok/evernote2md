@@ -37,7 +37,7 @@ func main() {
 	var input, outputOverride string
 	var outputDir = filepath.FromSlash("./notes")
 	var tagTemplate = internal.DefaultTagTemplate
-	var folders, noHighlights, resetTimestamps, debug bool
+	var folders, noHighlights, resetTimestamps, addFrontMatter, debug bool
 
 	flaggy.AddPositionalValue(&input, "input", 1, true, "Evernote export file, directory or a glob pattern")
 	flaggy.AddPositionalValue(&outputDir, "output", 2, false, "Output directory")
@@ -48,6 +48,7 @@ func main() {
 	flaggy.Bool(&folders, "", "folders", "Put every note in a separate folder")
 	flaggy.Bool(&noHighlights, "", "noHighlights", "Disable converting Evernote highlights to inline HTML tags")
 	flaggy.Bool(&resetTimestamps, "", "resetTimestamps", "Create files ignoring timestamps in the note attributes")
+	flaggy.Bool(&addFrontMatter, "", "addFrontMatter", "Prepend FrontMatter to markdown files")
 	flaggy.Bool(&debug, "v", "debug", "Show debug output")
 
 	flaggy.Parse()
@@ -59,7 +60,7 @@ func main() {
 	files, err := matchInput(input)
 	failWhen(err)
 	output := newNoteFilesDir(outputDir, folders, !resetTimestamps)
-	converter, err := internal.NewConverter(tagTemplate, !noHighlights)
+	converter, err := internal.NewConverter(tagTemplate, addFrontMatter, "", !noHighlights)
 	failWhen(err)
 
 	setLogLevel(debug)
