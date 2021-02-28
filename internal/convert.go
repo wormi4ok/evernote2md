@@ -141,8 +141,8 @@ func (c *Converter) addFrontMatter(note *enex.Note, md *markdown.Note) {
 	if len(note.Attributes.SourceUrl) > 0 {
 		frontMatter += fmt.Sprintf("url: %s\n", note.Attributes.SourceUrl)
 	}
-	if len(note.Attributes.Lattitude) > 0 {
-		frontMatter += fmt.Sprintf("lattitude: %s\n", note.Attributes.Lattitude)
+	if len(note.Attributes.Latitude) > 0 {
+		frontMatter += fmt.Sprintf("lattitude: %s\n", note.Attributes.Latitude)
 	}
 	if len(note.Attributes.Longitude) > 0 {
 		frontMatter += fmt.Sprintf("longitude: %s\n", note.Attributes.Longitude)

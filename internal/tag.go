@@ -16,7 +16,7 @@ const tagToken = "{{tag}}"
 
 var spaces = regexp.MustCompile(`\s+`)
 
-func (c *Converter) tagList(note *enex.Note, md *markdown.Note) []byte {
+func (c *Converter) tagList(note *enex.Note, _ *markdown.Note) []byte {
 	var tt [][]byte
 
 	for _, t := range note.Tags {

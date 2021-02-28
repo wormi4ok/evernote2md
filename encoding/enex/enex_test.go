@@ -30,7 +30,7 @@ var expect = &enex.Export{
 		Attributes: enex.NoteAttributes{
 			Source:            "mobile.android",
 			SourceApplication: "",
-			Lattitude:         "50.00000000000000",
+			Latitude:          "50.00000000000000",
 			Longitude:         "30.00000000000000",
 			Altitude:          "",
 			Author:            "",

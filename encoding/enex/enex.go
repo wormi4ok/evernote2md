@@ -27,11 +27,11 @@ type (
 		Resources  []Resource     `xml:"resource"`
 	}
 
-	// Attributes of the note
+	// NoteAttributes contain the note metadata
 	NoteAttributes struct {
 		Source            string `xml:"source"`
 		SourceApplication string `xml:"source-application"`
-		Lattitude         string `xml:"latitude"`
+		Latitude          string `xml:"latitude"`
 		Longitude         string `xml:"longitude"`
 		Altitude          string `xml:"altitude"`
 		Author            string `xml:"author"`
