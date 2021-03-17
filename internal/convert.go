@@ -19,23 +19,27 @@ import (
 const FrontMatterTemplate = `---
 date: '{{.CTime}}'
 updated_at: '{{.MTime}}'
-title: {{.Title}}
-tags: [ {{.TagList}} ]
-{{- if .Attributes.SourceUrl}}
-url: {{.Attributes.SourceUrl -}}
-{{end -}}
-{{- if .Attributes.Latitude}}
-latitude: {{.Attributes.Latitude -}}
-{{end -}}
-{{- if .Attributes.Longitude}}
-longitude: {{.Attributes.Longitude -}}
-{{end -}}
-{{- if .Attributes.Altitude}}
-altitude: {{.Attributes.Altitude -}}
-{{end -}}
-{{- if .Attributes.Source}}
-source: {{.Attributes.Source -}}
-{{end}}
+title: {{ trim .Title }}
+{{- if .TagList }}
+tags: [ {{ .TagList }} ]
+{{- end -}}
+{{- with .Attributes -}}
+{{- if .SourceUrl }}
+url: {{ trim .SourceUrl -}}
+{{- end -}}
+{{- if .Latitude }}
+latitude: {{ .Latitude -}}
+{{- end -}}
+{{- if .Longitude }}
+longitude: {{ .Longitude -}}
+{{- end -}}
+{{- if .Altitude }}
+altitude: {{ .Altitude -}}
+{{- end -}}
+{{- if .Source }}
+source: {{ trim .Source -}}
+{{- end }}
+{{- end }}
 
 ---
 
@@ -177,7 +181,11 @@ func (c *Converter) addFrontMatter(note *enex.Note, md *markdown.Note) {
 		note.Attributes,
 		c.tagList(note, "'{{tag}}'", ", ", false),
 	}
-	tmpl, err := template.New("frontMatter").Parse(c.FrontMatterTemplate)
+	tmpl, err := template.New("frontMatter").Funcs(template.FuncMap{
+		"trim": func(text string) string {
+			return strings.TrimSpace(text)
+		},
+	}).Parse(c.FrontMatterTemplate)
 	if err != nil {
 		panic(err)
 	}

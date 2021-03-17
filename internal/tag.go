@@ -15,6 +15,14 @@ const tagToken = "{{tag}}"
 
 var spaces = regexp.MustCompile(`\s+`)
 
+func (c *Converter) prependTags(note *enex.Note, md *markdown.Note) {
+	if c.err != nil {
+		return
+	}
+	md.Content = append([]byte("\n\n"), md.Content...)
+	md.Content = append([]byte(c.tagList(note, c.TagTemplate, " ", c.TagTemplate != DefaultTagTemplate)), md.Content...)
+}
+
 func (c *Converter) tagList(note *enex.Note, tagTemplate string, joinString string, spacesToUnderscores bool) string {
 	var tt []string
 
@@ -27,11 +35,4 @@ func (c *Converter) tagList(note *enex.Note, tagTemplate string, joinString stri
 		tt = append(tt, strings.Replace(tagTemplate, tagToken, t, 1))
 	}
 	return strings.Join(tt, joinString)
-}
-func (c *Converter) prependTags(note *enex.Note, md *markdown.Note) {
-	if c.err != nil {
-		return
-	}
-	md.Content = append([]byte("\n\n"), md.Content...)
-	md.Content = append([]byte(c.tagList(note, c.TagTemplate, " ", c.TagTemplate != DefaultTagTemplate)), md.Content...)
 }
