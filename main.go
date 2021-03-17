@@ -60,7 +60,7 @@ func main() {
 	files, err := matchInput(input)
 	failWhen(err)
 	output := newNoteFilesDir(outputDir, folders, !resetTimestamps)
-	converter, err := internal.NewConverter(tagTemplate, addFrontMatter, "", !noHighlights)
+	converter, err := internal.NewConverter(tagTemplate, addFrontMatter, !noHighlights)
 	failWhen(err)
 
 	setLogLevel(debug)

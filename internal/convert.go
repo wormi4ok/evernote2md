@@ -16,7 +16,7 @@ import (
 	"github.com/wormi4ok/evernote2md/encoding/markdown"
 )
 
-const DefaultFrontMatterTemplate = `---
+const FrontMatterTemplate = `---
 date: '{{.CTime}}'
 updated_at: '{{.MTime}}'
 title: {{.Title}}
@@ -54,19 +54,16 @@ type Converter struct {
 }
 
 // NewConverter creates a Converter with valid tagTemplate
-func NewConverter(tagTemplate string, enableFrontMatter bool, frontMatterTemplate string, enableHighlights bool) (*Converter, error) {
+func NewConverter(tagTemplate string, enableFrontMatter bool, enableHighlights bool) (*Converter, error) {
 	if tagTemplate == "" {
 		tagTemplate = DefaultTagTemplate
-	}
-	if frontMatterTemplate == "" {
-		frontMatterTemplate = DefaultFrontMatterTemplate
 	}
 
 	if strings.Count(tagTemplate, tagToken) != 1 {
 		return nil, errors.New("tag format should contain exactly one {{tag}} template variable")
 	}
 
-	return &Converter{TagTemplate: tagTemplate, EnableFrontMatter: enableFrontMatter, FrontMatterTemplate: frontMatterTemplate, EnableHighlights: enableHighlights}, nil
+	return &Converter{TagTemplate: tagTemplate, EnableFrontMatter: enableFrontMatter, FrontMatterTemplate: FrontMatterTemplate, EnableHighlights: enableHighlights}, nil
 }
 
 // Convert an Evernote file to markdown

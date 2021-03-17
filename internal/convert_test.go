@@ -112,7 +112,7 @@ func TestConvert(t *testing.T) {
 	secondTestWithFrontMatter.enableFrontMatter = true
 	tests = append(tests, secondTestWithFrontMatter)
 	for _, tt := range tests {
-		c, _ := internal.NewConverter("", tt.enableFrontMatter, "", true)
+		c, _ := internal.NewConverter("", tt.enableFrontMatter, true)
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := c.Convert(tt.arg)
 			if (err != nil) != tt.wantErr {
