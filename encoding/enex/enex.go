@@ -88,6 +88,8 @@ func Decode(data io.Reader) (*Export, error) {
 		var c Content
 		decoder := xml.NewDecoder(bytes.NewReader(e.Notes[i].Content))
 		decoder.Strict = false
+
+		log.Printf("[DEBUG] Decoding a note: %s", e.Notes[i].Title)
 		err = decoder.Decode(&c)
 		if err != nil {
 			log.Fatal(err)
