@@ -3,8 +3,9 @@ package enex
 import (
 	"bytes"
 	"encoding/xml"
+	"errors"
+	"fmt"
 	"io"
-	"log"
 )
 
 type (
@@ -79,20 +80,17 @@ type (
 // Decode will return an Export from evernote
 func Decode(data io.Reader) (*Export, error) {
 	var e Export
-
-	decoder := xml.NewDecoder(data)
-	decoder.Strict = false
-	err := decoder.Decode(&e)
+	err := newDecoder(data).Decode(&e)
 
 	for i := range e.Notes {
 		var c Content
-		decoder := xml.NewDecoder(bytes.NewReader(e.Notes[i].Content))
-		decoder.Strict = false
+		var reader = bytes.NewReader(e.Notes[i].Content)
 
-		log.Printf("[DEBUG] Decoding a note: %s", e.Notes[i].Title)
-		err = decoder.Decode(&c)
-		if err != nil {
-			log.Fatal(err)
+		if err := newDecoder(reader).Decode(&c); err != nil {
+			// EOF is a known case when the content is empty
+			if !errors.Is(err, io.EOF) {
+				return nil, fmt.Errorf("decoding note %s: %w", e.Notes[i].Title, err)
+			}
 		}
 		e.Notes[i].Content = c.Text
 
@@ -101,16 +99,21 @@ func Decode(data io.Reader) (*Export, error) {
 			if len(e.Notes[i].Resources[j].Recognition) == 0 {
 				continue
 			}
-			decoder := xml.NewDecoder(bytes.NewReader(e.Notes[i].Resources[j].Recognition))
-			decoder.Strict = false
+			decoder := newDecoder(bytes.NewReader(e.Notes[i].Resources[j].Recognition))
 			err = decoder.Decode(&r)
 			if err != nil {
-				log.Fatal(err)
+				return nil, fmt.Errorf("decoding resource %s: %w", e.Notes[i].Resources[j].Attributes.Filename, err)
 			}
 			e.Notes[i].Resources[j].ID = r.ObjID
 			e.Notes[i].Resources[j].Type = r.ObjType
 		}
-
 	}
+
 	return &e, err
+}
+
+func newDecoder(r io.Reader) *xml.Decoder {
+	d := xml.NewDecoder(r)
+	d.Strict = false
+	return d
 }
