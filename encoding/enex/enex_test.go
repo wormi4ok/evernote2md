@@ -75,7 +75,17 @@ func TestDecode(t *testing.T) {
 	if !reflect.DeepEqual(got, expect) {
 		t.Errorf("Decode() = %+v,\nwant %+v", got, expect)
 	}
+}
 
+func TestDecodeEmptyNote(t *testing.T) {
+	enexContent, err := os.Open("testdata/empty.enex")
+	if err != nil {
+		t.Error(err)
+	}
+	_, err = enex.Decode(enexContent)
+	if err != nil {
+		t.Errorf("Error while Decoding = %v", err)
+	}
 }
 
 func readFile(filename string) []byte {
