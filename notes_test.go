@@ -23,11 +23,11 @@ func TestNoteFilesDir_SaveNote(t *testing.T) {
 		t.Errorf("SaveNote returned error: %s", err.Error())
 	}
 
-	stat := shouldExist(t, tmpDir+"/test_note.md")
+	stat := shouldExist(t, tmpDir, "test_note.md")
 	if stat.ModTime() != wantDate {
 		t.Errorf("Timestamp doesn't match, got =  %s, want = %s", stat.ModTime().String(), wantDate.String())
 	}
-	shouldExist(t, tmpDir+"/image/test.jpg")
+	shouldExist(t, tmpDir, "/image/test.jpg")
 }
 
 // Test non-default flag states
@@ -42,7 +42,7 @@ func TestNoteFilesDir_Flags(t *testing.T) {
 		t.Errorf("SaveNote returned error: %s", err.Error())
 	}
 
-	stat := shouldExist(t, tmpDir+"/test_note/README.md")
+	stat := shouldExist(t, tmpDir, "/test_note/README.md")
 	if stat.ModTime() == fixedDate {
 		t.Errorf("Timestamp matches the fixed date =  %s, want = %s", stat.ModTime().String(), time.Now().String())
 	}
@@ -64,7 +64,7 @@ func TestNoteFilesDir_UniqueNames(t *testing.T) {
 		t.Errorf("SaveNote returned error: %s", err.Error())
 	}
 
-	shouldExist(t, tmpDir+"/test_note-1.md")
+	shouldExist(t, tmpDir, "/test_note-1.md")
 }
 
 // Test that notes with identical names but different casing don't override each other
@@ -83,7 +83,7 @@ func TestNoteFilesDir_UniqueNames_CaseInsensitive(t *testing.T) {
 		t.Errorf("SaveNote returned error: %s", err.Error())
 	}
 
-	shouldExist(t, tmpDir+"/test_note-1.md")
+	shouldExist(t, tmpDir, "/test_note-1.md")
 }
 
 func fakeNote(wantDate time.Time) *markdown.Note {
@@ -101,8 +101,8 @@ func fakeNote(wantDate time.Time) *markdown.Note {
 	}
 }
 
-func shouldExist(t *testing.T, path string) os.FileInfo {
-	wantPath := filepath.FromSlash(path)
+func shouldExist(t *testing.T, path ...string) os.FileInfo {
+	wantPath := filepath.Join(path...)
 	stat, err := os.Stat(wantPath)
 	if err != nil && os.IsNotExist(err) {
 		t.Errorf("%s was not created", wantPath)

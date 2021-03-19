@@ -36,7 +36,7 @@ func newNoteFilesDir(output string, folders, timestamps bool) *noteFilesDir {
 func (d *noteFilesDir) SaveNote(title string, md *markdown.Note) error {
 	path := d.path
 	if d.flagFolders {
-		path = filepath.FromSlash(d.path + "/" + d.uniqueName(title))
+		path = filepath.Join(d.path, d.uniqueName(title))
 		title = "README.md"
 	} else {
 		title = d.uniqueName(title) + ".md"
@@ -55,10 +55,10 @@ func (d *noteFilesDir) SaveNote(title string, md *markdown.Note) error {
 	}
 
 	for _, res := range md.Media {
-		mediaPath := filepath.FromSlash(path + "/" + string(res.Type))
-		log.Printf("[DEBUG] Saving attachment %s/%s", mediaPath, res.Name)
+		mediaPath := filepath.Join(path, string(res.Type))
+		log.Printf("[DEBUG] Saving attachment %s", filepath.Join(mediaPath, res.Name))
 		if err := file.Save(mediaPath, res.Name, bytes.NewReader(res.Content)); err != nil {
-			return fmt.Errorf("save resource %s: %w", mediaPath+"/"+res.Name, err)
+			return fmt.Errorf("save resource %s: %w", filepath.Join(mediaPath, res.Name), err)
 		}
 	}
 

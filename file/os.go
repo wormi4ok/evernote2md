@@ -23,7 +23,7 @@ var illegalChars = regexp.MustCompile(`[\s:]`)
 // Uses touch if available to change both creation  and modification date
 // Otherwise it falls back to os.Chtimes to change only the modification date
 func ChangeFileTimes(dir, name string, ctime, mtime time.Time) error {
-	path := filepath.FromSlash(dir + "/" + name)
+	path := filepath.Join(dir, name)
 	if _, err := os.Stat(path); os.IsNotExist(err) {
 		return fmt.Errorf("change file timestamps %s: %w", path, err)
 	}

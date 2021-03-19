@@ -18,7 +18,7 @@ var illegalChars = regexp.MustCompile(`[\s\\|"'<>&_=+:?*]`)
 // ChangeFileTimes uses SetFileTime syscall in Windows implementation
 // which supports updating both creation and modification dates
 func ChangeFileTimes(dir, name string, ctime, mtime time.Time) error {
-	path := filepath.FromSlash(dir + "/" + name)
+	path := filepath.Join(dir, name)
 	if _, err := os.Stat(path); os.IsNotExist(err) {
 		return fmt.Errorf("change file timestamps %s: %w", path, err)
 	}

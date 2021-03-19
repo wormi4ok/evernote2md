@@ -33,7 +33,7 @@ func Save(dir, name string, content io.Reader) error {
 		return err
 	}
 
-	output, err := os.Create(filepath.FromSlash(dir + "/" + name))
+	output, err := os.Create(filepath.Join(dir, name))
 	if err != nil {
 		return err
 	}

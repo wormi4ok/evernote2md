@@ -36,7 +36,7 @@ func Test_run(t *testing.T) {
 	converter, _ := internal.NewConverter("", true, false)
 	run(files, output, newProgressBar(false), converter)
 
-	want := filepath.FromSlash(output.Path() + "/Test.md")
+	want := filepath.Join(output.Path(), "Test.md")
 	_, err = os.Stat(want)
 	if err != nil && os.IsNotExist(err) {
 		t.Error("Test.md was not created")

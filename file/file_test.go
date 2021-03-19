@@ -27,7 +27,7 @@ func TestSave(t *testing.T) {
 	}
 
 	// File should be created
-	filePath := filepath.FromSlash(dirName + "/" + fileName)
+	filePath := filepath.Join(dirName, fileName)
 	b, err := os.ReadFile(filePath)
 	if err != nil {
 		t.Error(err)
