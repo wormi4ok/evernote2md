@@ -8,6 +8,7 @@ require (
 	github.com/hashicorp/logutils v1.0.0
 	github.com/integrii/flaggy v1.4.4
 	github.com/mattn/godown v0.0.0-20200217152941-afc959f6a561
+	github.com/sergi/go-diff v1.2.0
 	golang.org/x/net v0.0.0-20200904194848-62affa334b73
 )
 

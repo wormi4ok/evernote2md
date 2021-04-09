@@ -94,13 +94,10 @@ func replaceNode(n *html.Node, res markdown.Resource) {
 	appendMedia(n, parseOne(resourceReference(res), n))
 }
 
-func appendMedia(note, media *html.Node) {
-	p := note.Parent
-	for isMedia(p) {
-		p = p.Parent
-	}
-	p.AppendChild(media)
-	p.AppendChild(parseOne(`<br/>`, note)) // newline
+func appendMedia(node, media *html.Node) {
+	p := node.Parent
+	p.InsertBefore(media, node)
+	p.InsertBefore(parseOne(`<br/>`, node), node) // newline
 }
 
 // Since we control input, this wrapper gives a simple
