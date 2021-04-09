@@ -10,6 +10,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/sergi/go-diff/diffmatchpatch"
 	"github.com/wormi4ok/evernote2md/encoding/enex"
 	"github.com/wormi4ok/evernote2md/encoding/markdown"
 	"github.com/wormi4ok/evernote2md/internal"
@@ -32,7 +33,7 @@ func TestConvert(t *testing.T) {
 	image, _ := base64.StdEncoding.DecodeString(encodedImage)
 	tests := []testTemplate{
 		{
-			name: "",
+			name: "Happy path",
 			arg: &enex.Note{
 				Title:   "Test note",
 				Content: goldenFile(t, "evernote.html"),
@@ -106,11 +107,82 @@ func TestConvert(t *testing.T) {
 			enableFrontMatter: false,
 			markdownFile:      "golden.md",
 		},
+		{
+			name: "FrontMatter",
+			arg: &enex.Note{
+				Title:   "Test note",
+				Content: goldenFile(t, "evernote.html"),
+				Created: "20121202T112233Z",
+				Updated: "20201220T223344Z",
+				Tags:    []string{"tag1", "tag2"},
+				Attributes: enex.NoteAttributes{
+					Source:            "mobile.android",
+					SourceApplication: "",
+					Latitude:          "50.00000000000000",
+					Longitude:         "30.00000000000000",
+					Altitude:          "",
+					Author:            "",
+					SourceUrl:         "",
+				},
+				Resources: []enex.Resource{{
+					ID:   "c9e6c70ea74388346ffa16ff8edbdf58",
+					Mime: "image/png",
+					Attributes: enex.Attributes{
+						Filename: "1.jpg",
+					},
+					Data: enex.Data{
+						Encoding: "base64",
+						Content:  []byte(encodedImage),
+					},
+				}, {
+					ID:   "90fdbde3hk91aff643883475tgh94bds1",
+					Mime: "image/gif",
+					Attributes: enex.Attributes{
+						Filename: "1.jpg",
+					},
+					Data: enex.Data{
+						Encoding: "base64",
+						Content:  []byte(encodedImage),
+					},
+				}, {
+					ID:   "1sdb49hgt574388346ffa19kh3edbdf09",
+					Mime: "image/gif",
+					Attributes: enex.Attributes{
+						Filename: "complex?path=http://image.com/2.gif",
+					},
+					Data: enex.Data{
+						Encoding: "base64",
+						Content:  []byte(encodedImage),
+					},
+				}},
+			},
+			want: &markdown.Note{
+				Content: []byte(""),
+				CTime:   time.Date(2012, 12, 02, 11, 22, 33, 0, time.UTC),
+				MTime:   time.Date(2020, 12, 20, 22, 33, 44, 0, time.UTC),
+				Media: map[string]markdown.Resource{
+					"c9e6c70ea74388346ffa16ff8edbdf58": {
+						Name:    "1.jpg",
+						Type:    "image",
+						Content: image,
+					},
+					"90fdbde3hk91aff643883475tgh94bds1": {
+						Name:    "1-1.jpg",
+						Type:    "image",
+						Content: image,
+					},
+					"1sdb49hgt574388346ffa19kh3edbdf09": {
+						Name:    "complex?path=http-image-com-2.gif",
+						Type:    "image",
+						Content: image,
+					},
+				},
+			},
+			wantErr:           false,
+			enableFrontMatter: true,
+			markdownFile:      "golden-frontmatter.md",
+		},
 	}
-	secondTestWithFrontMatter := tests[0]
-	secondTestWithFrontMatter.markdownFile = "golden-frontmatter.md"
-	secondTestWithFrontMatter.enableFrontMatter = true
-	tests = append(tests, secondTestWithFrontMatter)
 	for _, tt := range tests {
 		c, _ := internal.NewConverter("", tt.enableFrontMatter, true)
 		t.Run(tt.name, func(t *testing.T) {
@@ -126,9 +198,11 @@ func TestConvert(t *testing.T) {
 			}
 			content := goldenFile(t, tt.markdownFile)
 			tt.want.Content = content
-			if !reflect.DeepEqual(got, tt.want) {
+			if got != nil && !reflect.DeepEqual(got, tt.want) {
 				if !bytes.Equal(got.Content, tt.want.Content) {
-					t.Errorf("Content mismatch! \nGot = %s, \nWant= %s", got.Content, tt.want.Content)
+					dmp := diffmatchpatch.New()
+					diffs := dmp.DiffMain(string(tt.want.Content), string(got.Content), true)
+					t.Error(dmp.DiffPrettyText(diffs))
 				} else {
 					t.Errorf("Convert() = %s, want %+v", got.Media["c9e6c70ea74388346ffa16ff8edbdf58"].Content, tt.want)
 				}
