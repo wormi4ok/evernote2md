@@ -33,5 +33,6 @@ Some **bold text**
     * Nested item
 
 |Header 1      |Middle column          |Last column title|
+|--------------|-----------------------|-----------------|
 |Short text    |Verylongunbreakabletext|Something here   |
 |Half empty row|                       |                 |
