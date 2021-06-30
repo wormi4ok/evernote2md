@@ -83,7 +83,7 @@ func run(files []string, output *noteFilesDir, progress *pb.ProgressBar, c *inte
 		md, err := c.Convert(&n[i])
 		failWhen(err)
 		err = output.SaveNote(n[i].Title, md)
-		failWhen(err)
+		_ = fmt.Errorf("[ERROR] %w", err)
 
 		progress.Increment()
 	}
