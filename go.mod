@@ -10,3 +10,5 @@ require (
 	github.com/sergi/go-diff v1.2.0
 	golang.org/x/net v0.0.0-20210614182718-04defd469f4e
 )
+
+replace github.com/mattn/godown => github.com/wormi4ok/godown v0.2.0
