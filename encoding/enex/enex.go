@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"regexp"
 )
 
 type (
@@ -81,6 +82,7 @@ type (
 func Decode(data io.Reader) (*Export, error) {
 	var e Export
 	err := newDecoder(data).Decode(&e)
+	re, _ := regexp.Compile(`\b[0-9a-f]{32}\b`)
 
 	for i := range e.Notes {
 		var c Content
@@ -97,6 +99,10 @@ func Decode(data io.Reader) (*Export, error) {
 		for j := range e.Notes[i].Resources {
 			var r Recognition
 			if len(e.Notes[i].Resources[j].Recognition) == 0 {
+				hash := re.FindString(e.Notes[i].Resources[j].Attributes.SourceUrl)
+				if len(hash) > 0 {
+					e.Notes[i].Resources[j].ID = hash
+				}
 				continue
 			}
 			decoder := newDecoder(bytes.NewReader(e.Notes[i].Resources[j].Recognition))
