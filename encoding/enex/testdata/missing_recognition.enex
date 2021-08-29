@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE en-export SYSTEM "http://xml.evernote.com/pub/evernote-export2.dtd">
+<en-export export-date="20090101T202020Z" application="Evernote/Windows" version="6.x">
+    <note>
+        <title>Sample note</title>
+        <content><![CDATA[<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE en-note SYSTEM "http://xml.evernote.com/pub/enml2.dtd">
+<en-note style="word-wrap: break-word; -webkit-nbsp-mode: space; -webkit-line-break: after-white-space;"><div>text in the note<br/><b>bold text</b><br/></div><en-media type="image/jpeg" hash="09dde741f3b38c1a954358172cad4c06"/></en-note>]]></content>
+        <created>20090101T101010Z</created>
+        <updated>20090101T050505Z</updated>
+        <tag>tag1</tag>
+        <tag>tag2</tag>
+        <note-attributes>
+            <latitude>50.00000000000000</latitude>
+            <longitude>30.00000000000000</longitude>
+            <source>mobile.android</source>
+        </note-attributes>
+        <resource>
+            <data encoding="base64">
+                R0lGODlhEAAQAPcAAAAAAAAAMwAAZgAAmQAAzAAA/wArAAArMwArZgArmQArzAAr/wBVAABVMwBVZgBVmQBVzABV/wCAAACAMwCAZgCAmQCAzACA/wCqAACqMwCqZgCqmQCqzACq/wDVAADVMwDVZgDVmQDVzADV/wD/AAD/MwD/ZgD/mQD/zAD//zMAADMAMzMAZjMAmTMAzDMA/zMrADMrMzMrZjMrmTMrzDMr/zNVADNVMzNVZjNVmTNVzDNV/zOAADOAMzOAZjOAmTOAzDOA/zOqADOqMzOqZjOqmTOqzDOq/zPVADPVMzPVZjPVmTPVzDPV/zP/ADP/MzP/ZjP/mTP/zDP//2YAAGYAM2YAZmYAmWYAzGYA/2YrAGYrM2YrZmYrmWYrzGYr/2ZVAGZVM2ZVZmZVmWZVzGZV/2aAAGaAM2aAZmaAmWaAzGaA/2aqAGaqM2aqZmaqmWaqzGaq/2bVAGbVM2bVZmbVmWbVzGbV/2b/AGb/M2b/Zmb/mWb/zGb//5kAAJkAM5kAZpkAmZkAzJkA/5krAJkrM5krZpkrmZkrzJkr/5lVAJlVM5lVZplVmZlVzJlV/5mAAJmAM5mAZpmAmZmAzJmA/5mqAJmqM5mqZpmqmZmqzJmq/5nVAJnVM5nVZpnVmZnVzJnV/5n/AJn/M5n/Zpn/mZn/zJn//8wAAMwAM8wAZswAmcwAzMwA/8wrAMwrM8wrZswrmcwrzMwr/8xVAMxVM8xVZsxVmcxVzMxV/8yAAMyAM8yAZsyAmcyAzMyA/8yqAMyqM8yqZsyqmcyqzMyq/8zVAMzVM8zVZszVmczVzMzV/8z/AMz/M8z/Zsz/mcz/zMz///8AAP8AM/8AZv8Amf8AzP8A//8rAP8rM/8rZv8rmf8rzP8r//9VAP9VM/9VZv9Vmf9VzP9V//+AAP+AM/+AZv+Amf+AzP+A//+qAP+qM/+qZv+qmf+qzP+q///VAP/VM//VZv/Vmf/VzP/V////AP//M///Zv//mf//zP///wAAAAAAAAAAAAAAACH5BAEAAPwALAAAAAAQABAAAAhuAPftg2PECEGDBQkKFFhwjZEgcIAcUWNkohGGcYAQ3GhQI8J9HxeKBAkxFEUgI0ciNBLnYsqFGoF0fLmQZcIjNBnGjJiT4sGWIGN2rAgnyEAjKBFabKkQpEIgTAtSVFPTYU6RM68K9KgVo0utAQEAOw==
+            </data>
+            <mime>image/gif</mime>
+            <width>16</width>
+            <height>16</height>
+            <resource-attributes>
+                <timestamp>20120515T051032Z</timestamp>
+                <file-name>1.jpg</file-name>
+                <source-url>en-cache://tokenKey%3D%22AuthToken%3AUser%3A7170724%22+dda5c9e4-37ad-42ca-a4df-483712625b6e+084f886210557e19eafc72449154331e+https://www.evernote.com/shard/s64/res/01cc04d8-7b5f-49f8-9d61-997c5b39118b</source-url>
+            </resource-attributes>
+        </resource>
+    </note>
+</en-export>

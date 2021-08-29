@@ -62,6 +62,8 @@ var expect = &enex.Export{
 	}},
 }
 
+var expectHash = "084f886210557e19eafc72449154331e"
+
 func TestDecode(t *testing.T) {
 	enexContent, err := os.Open("testdata/export.enex")
 	if err != nil {
@@ -85,6 +87,22 @@ func TestDecodeEmptyNote(t *testing.T) {
 	_, err = enex.Decode(enexContent)
 	if err != nil {
 		t.Errorf("Error while Decoding = %v", err)
+	}
+}
+
+func TestDecodeWithMissingRecognition(t *testing.T) {
+	enexContent, err := os.Open("testdata/missing_recognition.enex")
+	if err != nil {
+		t.Error(err)
+	}
+	got, err := enex.Decode(enexContent)
+	if err != nil {
+		t.Errorf("Error while Decodeing = %v", err)
+	}
+
+	id := got.Notes[0].Resources[0].ID
+	if id != expectHash {
+		t.Errorf("Decoded resource id = %s,\nexpected resource id = %s", id, expectHash)
 	}
 }
 
