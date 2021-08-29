@@ -78,11 +78,12 @@ type (
 	}
 )
 
+var hashRe = regexp.MustCompile(`\b[0-9a-f]{32}\b`)
+
 // Decode will return an Export from evernote
 func Decode(data io.Reader) (*Export, error) {
 	var e Export
 	err := newDecoder(data).Decode(&e)
-	re, _ := regexp.Compile(`\b[0-9a-f]{32}\b`)
 
 	for i := range e.Notes {
 		var c Content
@@ -97,21 +98,21 @@ func Decode(data io.Reader) (*Export, error) {
 		e.Notes[i].Content = c.Text
 
 		for j := range e.Notes[i].Resources {
-			var r Recognition
-			if len(e.Notes[i].Resources[j].Recognition) == 0 {
-				hash := re.FindString(e.Notes[i].Resources[j].Attributes.SourceUrl)
+			if res := e.Notes[i].Resources[j]; len(res.Recognition) == 0 {
+				hash := hashRe.FindString(res.Attributes.SourceUrl)
 				if len(hash) > 0 {
 					e.Notes[i].Resources[j].ID = hash
 				}
 				continue
 			}
+			var rec Recognition
 			decoder := newDecoder(bytes.NewReader(e.Notes[i].Resources[j].Recognition))
-			err = decoder.Decode(&r)
+			err = decoder.Decode(&rec)
 			if err != nil {
 				return nil, fmt.Errorf("decoding resource %s: %w", e.Notes[i].Resources[j].Attributes.Filename, err)
 			}
-			e.Notes[i].Resources[j].ID = r.ObjID
-			e.Notes[i].Resources[j].Type = r.ObjType
+			e.Notes[i].Resources[j].ID = rec.ObjID
+			e.Notes[i].Resources[j].Type = rec.ObjType
 		}
 	}
 
