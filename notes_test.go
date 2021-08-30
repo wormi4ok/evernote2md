@@ -16,7 +16,7 @@ func TestNoteFilesDir_SaveNote(t *testing.T) {
 	tmpDir := t.TempDir()
 	wantDate := time.Unix(1608463260, 0)
 
-	d := newNoteFilesDir(tmpDir, false, true)
+	d := newNoteFilesDir(tmpDir, false, true, false, false)
 	md := fakeNote(wantDate)
 	err := d.SaveNote("test_note", md)
 	if err != nil {
@@ -34,7 +34,7 @@ func TestNoteFilesDir_SaveNote(t *testing.T) {
 func TestNoteFilesDir_Flags(t *testing.T) {
 	tmpDir := t.TempDir()
 	fixedDate := time.Unix(1608463260, 0)
-	d := newNoteFilesDir(tmpDir, true, false)
+	d := newNoteFilesDir(tmpDir, true, false, false, false)
 
 	md := fakeNote(fixedDate)
 	err := d.SaveNote("test_note", md)
@@ -48,10 +48,25 @@ func TestNoteFilesDir_Flags(t *testing.T) {
 	}
 }
 
+// Test prepending of dates
+func TestNoteFilesDir_DatesPrepend(t *testing.T) {
+	tmpDir := t.TempDir()
+	fixedDate := time.Unix(1608463260, 0)
+	d := newNoteFilesDir(tmpDir, false, false, true, true)
+
+	md := fakeNote(fixedDate)
+	err := d.SaveNote("test_note", md)
+	if err != nil {
+		t.Errorf("SaveNote returned error: %s", err.Error())
+	}
+
+	shouldExist(t, tmpDir, "/2020-12-20_2020-12-20_test_note.md")
+}
+
 // Test that notes don't overwrite each other
 func TestNoteFilesDir_UniqueNames(t *testing.T) {
 	tmpDir := t.TempDir()
-	d := newNoteFilesDir(tmpDir, false, false)
+	d := newNoteFilesDir(tmpDir, false, false, false, false)
 
 	md := fakeNote(time.Now())
 	err := d.SaveNote("test_note", md)
@@ -70,7 +85,7 @@ func TestNoteFilesDir_UniqueNames(t *testing.T) {
 // Test that notes with identical names but different casing don't override each other
 func TestNoteFilesDir_UniqueNames_CaseInsensitive(t *testing.T) {
 	tmpDir := t.TempDir()
-	d := newNoteFilesDir(tmpDir, false, false)
+	d := newNoteFilesDir(tmpDir, false, false, false, false)
 
 	md := fakeNote(time.Now())
 	err := d.SaveNote("TEST_note", md)
