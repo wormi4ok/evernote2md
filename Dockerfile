@@ -1,4 +1,4 @@
-FROM golang:1.16-alpine3.13 AS build
+FROM golang:1.16-alpine3.14 AS build
 
 ENV CGO_ENABLED 0
 
@@ -10,12 +10,12 @@ COPY . .
 
 RUN go test ./... && go install -trimpath -ldflags "-s -w -X main.version=$(git describe --tags --abbrev=0)"
 
-FROM alpine:3.13
+FROM alpine:3.14
 
 LABEL   org.label-schema.name="evernote2md" \
         org.label-schema.description="Convert Evernote .enex export file to Markdown" \
         org.label-schema.vcs-url="https://github.com/wormi4ok/evernote2md" \
-        org.label-schema.docker.cmd="docker run --rm wormi4ok/evernote2md export.enex notes"
+        org.label-schema.docker.cmd="docker run -t --rm wormi4ok/evernote2md export.enex notes"
 
 COPY --from=build /go/bin/evernote2md /
 
