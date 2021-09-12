@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"golang.org/x/net/html"
+	"golang.org/x/net/html/atom"
 
 	"github.com/wormi4ok/evernote2md/encoding/enex"
 	"github.com/wormi4ok/evernote2md/encoding/markdown"
@@ -105,7 +106,7 @@ func appendMedia(node, media *html.Node) {
 func parseOne(h string, context *html.Node) *html.Node {
 	nodes, err := html.ParseFragment(strings.NewReader(h), context)
 	if err != nil {
-		panic("parseHtml: " + err.Error())
+		panic("parseOne: " + err.Error())
 	}
 	return nodes[0]
 }
@@ -132,6 +133,7 @@ func (r *Code) ReplaceTag(n *html.Node) {
 		}
 		f(n)
 		n.Data = "pre"
+		n.DataAtom = atom.Pre
 	}
 }
 
