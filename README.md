@@ -63,7 +63,7 @@ Here is a link to an article in Evernote Help Center:
 [How to back up (export) and restore (import) notes and notebooks](https://help.evernote.com/hc/en-us/articles/209005557-Export-notes)
 
 Newer versions of the Evernote App do not allow selecting more than 50 notes at a time.
-Consider [exporting entire Notebook](https://help.evernote.com/hc/articles/360053159414) instead.
+Consider [exporting entire Notebook](https://github.com/wormi4ok/evernote2md/wiki/Export-a-notebook) instead.
 
 -----
 Made with ❤ using IDE from JetBrains.
