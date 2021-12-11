@@ -43,12 +43,14 @@ evernote2md (flags) [input] [outputDir]
 
 `input` can be a file, a directory with exported files, or a glob pattern (like `exports/My*.enex`, for example).
 
-If `outputDir` is not specified, `./notes` is used. Add optional `--folders` flag to put every note in a separate folder.
+If `outputDir` is not specified, `./notes` is used.
 
-An option `--tagTemplate` allows to change the way tags are formatted. 
+An option `--tagTemplate` allows to change the way tags are formatted.
 See [wiki article](https://github.com/wormi4ok/evernote2md/wiki/Custom-tag-template) for more information.
 
 Flag `--help` shows all available options.
+
+To put exported notes in folders or structure in another custom way I recommend trying [mdmv](https://github.com/wormi4ok/mdmv) - Move Markdown files tool.
 
 #### With Docker
 
