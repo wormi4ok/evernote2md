@@ -1,4 +1,4 @@
-FROM golang:1.16-alpine3.14 AS build
+FROM golang:1.18-alpine3.14 AS build
 
 ENV CGO_ENABLED 0
 
