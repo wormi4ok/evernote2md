@@ -28,9 +28,9 @@ Some **bold text**
     fmt.Println("hello world")
 ```
 
-* First item
-* Second item
-    * Nested item
+- First item
+- Second item
+    - Nested item
 
 |Header 1      |Middle column          |Last column title|
 |--------------|-----------------------|-----------------|

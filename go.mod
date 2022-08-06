@@ -21,4 +21,4 @@ require (
 	golang.org/x/sys v0.0.0-20220722155257-8c9f86f7a55f // indirect
 )
 
-replace github.com/mattn/godown => github.com/wormi4ok/godown v0.2.0
+replace github.com/mattn/godown => github.com/wormi4ok/godown v0.3.0
