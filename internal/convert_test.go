@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/sergi/go-diff/diffmatchpatch"
+
 	"github.com/wormi4ok/evernote2md/encoding/enex"
 	"github.com/wormi4ok/evernote2md/encoding/markdown"
 	"github.com/wormi4ok/evernote2md/internal"

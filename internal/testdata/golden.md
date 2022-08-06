@@ -21,6 +21,10 @@ Some **bold text**
 - Second item
     - Nested item
 
+- [x] Collect underpants
+- [ ] ???
+    - [ ] Profit
+
 |Header 1      |Middle column          |Last column title|
 |--------------|-----------------------|-----------------|
 |Short text    |Verylongunbreakabletext|Something here   |
