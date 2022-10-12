@@ -20,7 +20,7 @@ jobs:
       with:
         go-version: 1.19.x
     - name: Release
-      uses: goreleaser/goreleaser-action@v2
+      uses: goreleaser/goreleaser-action@v3
       with:
         version: latest
         args: release -f .release.yml --rm-dist
