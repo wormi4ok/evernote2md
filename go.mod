@@ -8,7 +8,7 @@ require (
 	github.com/integrii/flaggy v1.5.2
 	github.com/mattn/godown v0.0.2-0.20210508133137-72c48840c3e3
 	github.com/sergi/go-diff v1.2.0
-	golang.org/x/net v0.0.0-20220722155237-a158d28d115b
+	golang.org/x/net v0.0.0-20221012135044-0b7e1fb9d458
 )
 
 require (
@@ -18,7 +18,7 @@ require (
 	github.com/mattn/go-isatty v0.0.14 // indirect
 	github.com/mattn/go-runewidth v0.0.13 // indirect
 	github.com/rivo/uniseg v0.2.0 // indirect
-	golang.org/x/sys v0.0.0-20220722155257-8c9f86f7a55f // indirect
+	golang.org/x/sys v0.0.0-20220728004956-3c1f35247d10 // indirect
 )
 
 replace github.com/mattn/godown => github.com/wormi4ok/godown v0.3.0
