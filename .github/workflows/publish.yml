@@ -20,7 +20,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
     - name: Publish Docker image to GitHub Packages
-      uses: elgohr/Publish-Docker-Github-Action@2.20
+      uses: elgohr/Publish-Docker-Github-Action@2.22
       with:
         name: ${{ github.repository }}/cli
         username: ${{ github.actor }}
