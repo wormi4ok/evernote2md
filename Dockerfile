@@ -10,7 +10,7 @@ COPY . .
 
 RUN go test ./... && go install -trimpath -ldflags "-s -w -X main.version=$(git describe --tags --abbrev=0)"
 
-FROM alpine:3.16
+FROM alpine:3.17
 
 LABEL   org.label-schema.name="evernote2md" \
         org.label-schema.description="Convert Evernote .enex export file to Markdown" \
