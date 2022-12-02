@@ -203,7 +203,24 @@ func TestConvert(t *testing.T) {
 				if !bytes.Equal(got.Content, tt.want.Content) {
 					dmp := diffmatchpatch.New()
 					diffs := dmp.DiffMain(string(tt.want.Content), string(got.Content), true)
-					t.Error(dmp.DiffPrettyText(diffs))
+					var buff bytes.Buffer
+					for _, diff := range diffs {
+						text := diff.Text
+
+						switch diff.Type {
+						case diffmatchpatch.DiffInsert:
+							_, _ = buff.WriteString("<INS>")
+							_, _ = buff.WriteString(text)
+							_, _ = buff.WriteString("</INS>")
+						case diffmatchpatch.DiffDelete:
+							_, _ = buff.WriteString("<DEL>")
+							_, _ = buff.WriteString(text)
+							_, _ = buff.WriteString("</DEL>")
+						case diffmatchpatch.DiffEqual:
+							_, _ = buff.WriteString(text)
+						}
+					}
+					t.Error(buff.String())
 				} else {
 					t.Errorf("Convert() = %s, want %+v", got.Media["c9e6c70ea74388346ffa16ff8edbdf58"].Content, tt.want)
 				}

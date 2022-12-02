@@ -29,7 +29,7 @@ Some **bold text**
 ```
 
 - First item
-- Second item
+- Second _item_
     - Nested item
 
 - [x] Collect underpants
