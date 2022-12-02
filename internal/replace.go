@@ -157,13 +157,11 @@ func (*ExtraDiv) ReplaceTag(n *html.Node) {
 	if hasExtraDiv(n) {
 		wrapper := n.FirstChild
 		if wrapper != nil && wrapper.Data == "div" {
-			content := wrapper.FirstChild
-			if content == nil {
-				return
-			}
-			wrapper.RemoveChild(content)
-			if content.Data != "br" || content.FirstChild != nil {
-				n.AppendChild(content)
+			for c := wrapper.FirstChild; c != nil; c = wrapper.FirstChild {
+				wrapper.RemoveChild(c)
+				if c.Data != "br" {
+					n.AppendChild(c)
+				}
 			}
 			n.RemoveChild(wrapper)
 		}
