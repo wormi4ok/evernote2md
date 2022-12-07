@@ -8,7 +8,7 @@ require (
 	github.com/integrii/flaggy v1.5.2
 	github.com/mattn/godown v0.0.2-0.20210508133137-72c48840c3e3
 	github.com/sergi/go-diff v1.2.0
-	golang.org/x/net v0.3.0
+	golang.org/x/net v0.4.0
 )
 
 require (
