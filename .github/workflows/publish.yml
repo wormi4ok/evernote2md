@@ -19,8 +19,15 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v3
+    - name: Publish Docker image to Docker Hub
+      uses: elgohr/Publish-Docker-Github-Action@v5
+      with:
+        name: ${{ github.repository }}
+        username: ${{ secrets.DOCKERHUB_USER }}
+        password: ${{ secrets.DOCKERHUB_PASS }}
+        tag_names: true
     - name: Publish Docker image to GitHub Packages
-      uses: elgohr/Publish-Docker-Github-Action@3.04
+      uses: elgohr/Publish-Docker-Github-Action@v5
       with:
         name: ${{ github.repository }}/cli
         username: ${{ github.actor }}
@@ -28,7 +35,7 @@ jobs:
         registry: docker.pkg.github.com
         tag_names: true
     - name: Publish Docker image to GitHub Container Registry
-      uses: elgohr/Publish-Docker-Github-Action@3.04
+      uses: elgohr/Publish-Docker-Github-Action@v5
       with:
         name: ${{ github.repository }}
         registry: ghcr.io

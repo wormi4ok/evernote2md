@@ -1,7 +1,7 @@
 # Evernote to Markdown converter
 
 [![Build Status](https://github.com/wormi4ok/evernote2md/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/wormi4ok/evernote2md/actions/workflows/ci.yml)
-[![Docker Build Status](https://img.shields.io/docker/cloud/build/wormi4ok/evernote2md?label=Docker)](https://hub.docker.com/r/wormi4ok/evernote2md/)
+[![Docker Image Size](https://img.shields.io/docker/image-size/wormi4ok/evernote2md)](https://hub.docker.com/r/wormi4ok/evernote2md/)
 [![Homebrew](https://repology.org/badge/version-for-repo/homebrew/evernote2md.svg?header=Homebrew)](https://repology.org/project/evernote2md/versions)
 [![codecov](https://codecov.io/gh/wormi4ok/evernote2md/branch/master/graph/badge.svg)](https://codecov.io/gh/wormi4ok/evernote2md)
 [![Go Report Card](https://goreportcard.com/badge/github.com/wormi4ok/evernote2md)](https://goreportcard.com/report/github.com/wormi4ok/evernote2md)

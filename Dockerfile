@@ -12,10 +12,10 @@ RUN go test ./... && go install -trimpath -ldflags "-s -w -X main.version=$(git 
 
 FROM alpine:3.17
 
-LABEL   org.label-schema.name="evernote2md" \
-        org.label-schema.description="Convert Evernote .enex export file to Markdown" \
-        org.label-schema.vcs-url="https://github.com/wormi4ok/evernote2md" \
-        org.label-schema.docker.cmd="docker run -t --rm wormi4ok/evernote2md export.enex notes"
+LABEL   org.opencontainers.image.title="evernote2md" \
+        org.opencontainers.image.description="Convert Evernote .enex export file to Markdown" \
+        org.opencontainers.image.source="https://github.com/wormi4ok/evernote2md" \
+        org.opencontainers.image.authors="wormi4ok"
 
 COPY --from=build /go/bin/evernote2md /
 
