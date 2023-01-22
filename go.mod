@@ -7,7 +7,7 @@ require (
 	github.com/hashicorp/logutils v1.0.0
 	github.com/integrii/flaggy v1.5.2
 	github.com/mattn/godown v0.0.2-0.20210508133137-72c48840c3e3
-	github.com/sergi/go-diff v1.2.0
+	github.com/sergi/go-diff v1.3.1
 	golang.org/x/net v0.4.0
 )
 
