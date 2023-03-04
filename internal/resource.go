@@ -17,12 +17,18 @@ var reImg = regexp.MustCompile(`^image/[\w]+`)
 
 var reFileAndExt = regexp.MustCompile(`(.*)(\.[\w\d]+)`)
 
+var reBase64 = regexp.MustCompile(`^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)?$`)
+
 func decoder(d enex.Data) io.Reader {
-	if d.Encoding == "base64" {
+	if d.Encoding == "base64" || isBase64Encoded(d.Content) {
 		return base64.NewDecoder(base64.StdEncoding, bytes.NewReader(bytes.TrimSpace(d.Content)))
 	}
 
 	return bytes.NewReader(d.Content)
+}
+
+func isBase64Encoded(content []byte) bool {
+	return reBase64.Match(content)
 }
 
 func isImage(mimeType string) bool {
