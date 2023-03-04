@@ -1,6 +1,9 @@
 package internal
 
 import (
+	"bytes"
+	"encoding/base64"
+	"io"
 	"testing"
 
 	"github.com/wormi4ok/evernote2md/encoding/enex"
@@ -44,6 +47,57 @@ func Test_guessName(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := guessName(tt.res); got != tt.want {
 				t.Errorf("guessName for %s = %v, want %v", tt.name, got, tt.want)
+			}
+		})
+	}
+}
+
+func Test_decoder(t *testing.T) {
+	want := []byte("sample text")
+	encoded := new(bytes.Buffer)
+	b64encoder := base64.NewEncoder(base64.StdEncoding, encoded)
+
+	if _, err := b64encoder.Write(want); err != nil {
+		t.Error(err)
+	}
+	if err := b64encoder.Close(); err != nil {
+		t.Error(err)
+	}
+
+	tests := []struct {
+		name string
+		data enex.Data
+	}{
+		{
+			name: "not encoded",
+			data: enex.Data{
+				Encoding: "",
+				Content:  want,
+			},
+		},
+		{
+			name: "base64 encoded",
+			data: enex.Data{
+				Encoding: "base64",
+				Content:  encoded.Bytes(),
+			},
+		},
+		{
+			name: "base64 encoded - encoding value missing",
+			data: enex.Data{
+				Encoding: "",
+				Content:  encoded.Bytes(),
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := io.ReadAll(decoder(tt.data))
+			if err != nil {
+				t.Error(err)
+			}
+			if !bytes.Equal(got, want) {
+				t.Errorf("decoder() = %s, want %s", got, want)
 			}
 		})
 	}
