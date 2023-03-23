@@ -71,5 +71,8 @@ func guessExt(mimeType string) string {
 	if err != nil || len(ext) == 0 {
 		return ""
 	}
+	if ext[0] == ".jpe" {
+		return ".jpg"
+	}
 	return ext[0]
 }
