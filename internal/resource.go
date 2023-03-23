@@ -66,13 +66,18 @@ func guessName(r enex.Resource) string {
 	}
 }
 
+var preferredExt = map[string]string{
+	"image/jpeg": ".jpg",
+}
+
 func guessExt(mimeType string) string {
+	if ext, ok := preferredExt[mimeType]; ok {
+		return ext
+	}
+
 	ext, err := mime.ExtensionsByType(mimeType)
 	if err != nil || len(ext) == 0 {
 		return ""
-	}
-	if ext[0] == ".jpe" {
-		return ".jpg"
 	}
 	return ext[0]
 }

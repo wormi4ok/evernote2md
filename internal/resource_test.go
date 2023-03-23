@@ -16,6 +16,7 @@ func Test_guessExt(t *testing.T) {
 		want     string
 	}{
 		{"image", "image/png", ".png"},
+		{"image", "image/jpeg", ".jpg"},
 		{"unknown mime type", "unknown", ""},
 		{"empty input", "", ""},
 	}
