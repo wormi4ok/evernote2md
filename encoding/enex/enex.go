@@ -83,15 +83,16 @@ var hashRe = regexp.MustCompile(`\b[0-9a-f]{32}\b`)
 // Decode will return an Export from evernote
 func Decode(data io.Reader) (*Export, error) {
 	var e Export
-	err := newDecoder(data).Decode(&e)
+	err := NewDecoder(data).Decode(&e)
 
 	for i := range e.Notes {
 		var c Content
 		var reader = bytes.NewReader(e.Notes[i].Content)
 
-		if err := newDecoder(reader).Decode(&c); err != nil {
+		if err := NewDecoder(reader).Decode(&c); err != nil {
 			// EOF is a known case when the content is empty
 			if !errors.Is(err, io.EOF) {
+				e.Notes = append(e.Notes[:i], e.Notes[+1:]...)
 				return nil, fmt.Errorf("decoding note %s: %w", e.Notes[i].Title, err)
 			}
 		}
@@ -106,7 +107,7 @@ func Decode(data io.Reader) (*Export, error) {
 				continue
 			}
 			var rec Recognition
-			decoder := newDecoder(bytes.NewReader(e.Notes[i].Resources[j].Recognition))
+			decoder := NewDecoder(bytes.NewReader(e.Notes[i].Resources[j].Recognition))
 			err = decoder.Decode(&rec)
 			if err != nil {
 				return nil, fmt.Errorf("decoding resource %s: %w", e.Notes[i].Resources[j].Attributes.Filename, err)
@@ -119,8 +120,57 @@ func Decode(data io.Reader) (*Export, error) {
 	return &e, err
 }
 
-func newDecoder(r io.Reader) *xml.Decoder {
+type Decoder struct {
+	xml *xml.Decoder
+}
+
+func NewDecoder(r io.Reader) *Decoder {
 	d := xml.NewDecoder(r)
 	d.Strict = false
-	return d
+
+	return &Decoder{xml: d}
+}
+
+func (d Decoder) Decode(v any) error {
+	return d.xml.Decode(v)
+}
+
+type StreamDecoder struct {
+	xml *xml.Decoder
+}
+
+func NewStreamDecoder(r io.Reader) (*StreamDecoder, error) {
+	d := xml.NewDecoder(r)
+	d.Strict = false
+
+	for {
+		token, err := d.Token()
+		if err != nil {
+			if errors.Is(err, io.EOF) {
+				return nil, errors.New("failed to initialise stream reader: no en-export data found")
+			}
+			return nil, err
+		}
+
+		element, ok := token.(xml.StartElement)
+		if ok && element.Name.Local == "en-export" {
+			break
+		}
+	}
+
+	return &StreamDecoder{xml: d}, nil
+}
+
+func (d StreamDecoder) Next(n *Note) error {
+	for {
+		token, err := d.xml.Token()
+		if err != nil {
+			return err
+		}
+		element, ok := token.(xml.StartElement)
+
+		if ok && element.Name.Local == "note" {
+			return d.xml.DecodeElement(n, &element)
+		}
+	}
 }

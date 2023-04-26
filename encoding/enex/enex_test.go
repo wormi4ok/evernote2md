@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/base64"
 	"encoding/xml"
+	"fmt"
 	"os"
 	"reflect"
 	"testing"
@@ -104,6 +105,23 @@ func TestDecodeWithMissingRecognition(t *testing.T) {
 	if id != expectHash {
 		t.Errorf("Decoded resource id = %s,\nexpected resource id = %s", id, expectHash)
 	}
+}
+
+func TestStreamDecoder(t *testing.T) {
+	enexContent, err := os.Open("testdata/export.enex")
+	if err != nil {
+		t.Error(err)
+	}
+	d, err := enex.NewStreamDecoder(enexContent)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var n enex.Note
+	err = d.Next(&n)
+	if err != nil {
+		t.Error(err)
+	}
+	fmt.Printf("%v", n)
 }
 
 func readFile(filename string) []byte {
