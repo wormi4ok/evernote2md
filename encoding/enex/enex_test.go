@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"encoding/base64"
 	"encoding/xml"
-	"fmt"
+	"io"
 	"os"
 	"reflect"
 	"testing"
@@ -110,18 +110,48 @@ func TestDecodeWithMissingRecognition(t *testing.T) {
 func TestStreamDecoder(t *testing.T) {
 	enexContent, err := os.Open("testdata/export.enex")
 	if err != nil {
-		t.Error(err)
+		t.Fatal(err)
 	}
 	d, err := enex.NewStreamDecoder(enexContent)
 	if err != nil {
 		t.Fatal(err)
 	}
-	var n enex.Note
-	err = d.Next(&n)
+	var got enex.Note
+	err = d.Next(&got)
 	if err != nil {
 		t.Error(err)
 	}
-	fmt.Printf("%v", n)
+	if !reflect.DeepEqual(got, expect.Notes[0]) {
+		t.Errorf("Next() = %+v,\nwant %+v", got, expect.Notes[0])
+	}
+	err = d.Next(&got)
+	if err != io.EOF {
+		t.Errorf("Next() second call = %+v,\nwant %+v", got, io.EOF)
+	}
+}
+
+func TestStreamDecodeEmptyNote(t *testing.T) {
+	enexContent, err := os.Open("testdata/empty.enex")
+	if err != nil {
+		t.Fatal(err)
+	}
+	d, err := enex.NewStreamDecoder(enexContent)
+	if err != nil {
+		t.Errorf("Error while Decoding = %v", err)
+	}
+	var got enex.Note
+	err = d.Next(&got)
+	if err != nil {
+		t.Error(err)
+	}
+}
+
+func TestStreamDecodeWrongFile(t *testing.T) {
+	fakeFile := bytes.NewReader([]byte("Not an XML file"))
+	_, err := enex.NewStreamDecoder(fakeFile)
+	if err == nil {
+		t.Errorf("Expected error, got = %v", err)
+	}
 }
 
 func readFile(filename string) []byte {
