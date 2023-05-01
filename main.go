@@ -2,19 +2,22 @@
 // to a directory with markdown files.
 //
 // Usage:
-//   evernote2md <file> [-o <outputDir>]
+//
+//	evernote2md <file> [-o <outputDir>]
 //
 // If outputDir is not specified, current workdir is used.
 package main
 
 import (
-	"bytes"
 	"fmt"
+	"io"
 	"log"
 	"os"
 	"path/filepath"
+	"time"
 
-	"github.com/cheggaaa/pb/v3"
+	"github.com/briandowns/spinner"
+	"github.com/hako/durafmt"
 	"github.com/hashicorp/logutils"
 	"github.com/integrii/flaggy"
 
@@ -64,42 +67,68 @@ func main() {
 	failWhen(err)
 
 	setLogLevel(debug)
-
-	run(files, output, newProgressBar(debug), converter)
+	run(files, output, newSpinner(debug), converter)
 }
 
-func run(files []string, output *noteFilesDir, progress *pb.ProgressBar, c *internal.Converter) {
-	export := decodeFiles(files)
+func newSpinner(disabled bool) *spinner.Spinner {
+	sp := spinner.New(spinner.CharSets[43], 200*time.Millisecond)
+	if disabled {
+		sp.Disable()
+	}
+	return sp
+}
 
+func run(files []string, output *noteFilesDir, sp *spinner.Spinner, c *internal.Converter) {
 	log.Printf("[DEBUG] Creating a directory: %s", output.Path())
 	err := os.MkdirAll(output.Path(), os.ModePerm)
 	failWhen(err)
 
-	progress.SetTotal(int64(len(export.Notes)))
-	progress.Start()
-	n := export.Notes
-	for i := range n {
-		log.Printf("[DEBUG] Converting a note: %s", n[i].Title)
-		md, err := c.Convert(&n[i])
-		failWhen(err)
-		err = output.SaveNote(n[i].Title, md)
-		_ = fmt.Errorf("[ERROR] %w", err)
+	cnt := 0
+	start := time.Now()
+	sp.Start()
 
-		progress.Increment()
+	for _, file := range files {
+		fd, err := os.Open(file)
+		failWhen(err)
+
+		log.Printf("[DEBUG] Decoding file: %s", file)
+		d, err := enex.NewStreamDecoder(fd)
+		if progressError(err, file, "Failed to decode file") {
+			continue
+		}
+
+		for {
+			note := enex.Note{}
+			if err := d.Next(&note); err != nil {
+				if err != io.EOF {
+					log.Printf("Failed to decode the next note: %s", err)
+				}
+				break
+			}
+			md, innerErr := c.Convert(&note)
+			if progressError(innerErr, note.Title, "Failed to convert note") {
+				continue
+			}
+			innerErr = output.SaveNote(note.Title, md)
+			if progressError(innerErr, note.Title, "Failed to save note") {
+				continue
+			}
+			cnt++
+		}
+		err = fd.Close()
+		failWhen(err)
 	}
-	progress.Finish()
-	fmt.Println("Done!")
+	sp.FinalMSG = fmt.Sprintf("Done!\nConverted %d notes in %s\n", cnt, durafmt.ParseShort(time.Since(start)))
+	sp.Stop()
 }
 
-const progressBarTmpl = `Notes: {{counters .}} {{bar . "[" "=" ">" "_" "]" }} {{percent .}} {{etime .}}`
-
-func newProgressBar(debug bool) *pb.ProgressBar {
-	progress := new(pb.ProgressBar)
-	progress.SetTemplateString(progressBarTmpl)
-	if debug {
-		progress.SetWriter(new(bytes.Buffer))
+func progressError(err error, name string, text string) bool {
+	if err != nil {
+		fmt.Print("\r") // Erase current spinner
+		log.Printf(`[ERROR] %s "%s": %s`, text, name, err)
+		return true
 	}
-	return progress
+	return false
 }
 
 // matchInput finds all files matching input pattern
@@ -134,29 +163,10 @@ func matchInput(input string) ([]string, error) {
 		}
 	}
 	if files == nil {
-		err = fmt.Errorf("[ERROR] No enex files found in the path: %s", input)
+		err = fmt.Errorf("no enex files found in the path: %s", input)
 	}
 
 	return files, err
-}
-
-// decodeFiles creates a single Evernote export from multiple input files
-func decodeFiles(files []string) *enex.Export {
-	export := new(enex.Export)
-	for _, file := range files {
-		fd, err := os.Open(file)
-		failWhen(err)
-
-		log.Printf("[DEBUG] Decoding a file: %s", file)
-		e, err := enex.Decode(fd)
-		failWhen(err)
-
-		err = fd.Close()
-		failWhen(err)
-		export.Notes = append(export.Notes, e.Notes...)
-	}
-
-	return export
 }
 
 func setLogLevel(debug bool) {
