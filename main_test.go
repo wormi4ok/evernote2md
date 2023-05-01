@@ -34,7 +34,7 @@ func Test_run(t *testing.T) {
 	files, _ := matchInput(input)
 	output := newNoteFilesDir(tmpDir, false, false)
 	converter, _ := internal.NewConverter("", true, false)
-	run(files, output, newProgressBar(false), converter)
+	run(files, output, newSpinner(true), converter)
 
 	want := filepath.Join(output.Path(), "Test.md")
 	_, err = os.Stat(want)
@@ -84,8 +84,8 @@ func Test_matchInput_glob(t *testing.T) {
 
 func Test_matchInput_fail(t *testing.T) {
 	_ = tDir(t)
-
-	if _, err := matchInput("not_exist.enex"); err == nil || !strings.HasPrefix(err.Error(), "[ERROR]") {
+	_, err := matchInput("not_exist.enex")
+	if err == nil || !strings.HasPrefix(err.Error(), "no enex files found") {
 		t.Errorf("matchInput() got unexpected eror %v", err)
 	}
 }
