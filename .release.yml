@@ -9,19 +9,17 @@ builds:
   ignore:
   - goos: linux
     goarch: arm64
+  - goos: windows
+    goarch: arm64
   env:
   - CGO_ENABLED=0
 archives:
-- replacements:
-    darwin: MacOS
-    linux: Linux
-    windows: Windows
-    amd64: 64-bit
-    arm64: M1
+- name_template: '{{ .ProjectName }}_{{ .Version }}_{{ if eq .Os "darwin" }}MacOS{{ else }}{{ title .Os }}{{ end }}_{{ if eq .Arch "amd64" }}64-bit{{ end }}{{ if eq .Arch "arm64" }}M1{{ end }}'
   format_overrides:
   - goos: windows
     format: zip
   wrap_in_directory: false
+  rlcp: true
   files:
   - none*
 release:
