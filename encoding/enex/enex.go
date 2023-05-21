@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io"
 	"regexp"
+	"strings"
 )
 
 type (
@@ -123,7 +124,13 @@ type StreamDecoder struct {
 }
 
 func NewStreamDecoder(r io.Reader) (*StreamDecoder, error) {
-	d := xml.NewDecoder(r)
+	buf := bytes.Buffer{}
+	if _, err := buf.ReadFrom(r); err != nil {
+		return nil, err
+	}
+	clean := removeNestedCDATA(buf.String())
+
+	d := xml.NewDecoder(strings.NewReader(clean))
 	d.Strict = false
 
 	for {
@@ -201,4 +208,27 @@ func decodeRecognition(n *Note) error {
 	}
 
 	return nil
+}
+
+var reCDATA = regexp.MustCompile(`<!\[CDATA\[(.*?)\]\]>`)
+
+// removeNestedCDATA tags in the note content
+//
+// Nested CDATA tags are not allowed by XML specification
+// but Evernote puts them anyway, causing "Unexpected EOF" errors during decoding
+func removeNestedCDATA(input string) string {
+	output := reCDATA.ReplaceAllStringFunc(input, func(match string) string {
+		submatch := reCDATA.FindStringSubmatch(match)
+		if len(submatch) > 1 {
+			return submatch[1]
+		}
+		return match
+	})
+
+	// Recursively remove nested CDATA tags
+	if output != input {
+		return removeNestedCDATA(output)
+	}
+
+	return output
 }

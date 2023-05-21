@@ -153,6 +153,22 @@ func TestStreamDecodeWrongFile(t *testing.T) {
 		t.Errorf("Expected error, got = %v", err)
 	}
 }
+func TestStreamDecodeAutofixCDATA(t *testing.T) {
+	enexContent, err := os.Open("testdata/cdata.issue.enex")
+	if err != nil {
+		t.Fatal(err)
+	}
+	d, err := enex.NewStreamDecoder(enexContent)
+	if err != nil {
+
+		t.Errorf("Error while Decoding = %v", err)
+	}
+	var got enex.Note
+	err = d.Next(&got)
+	if err != nil {
+		t.Error(err)
+	}
+}
 
 func readFile(filename string) []byte {
 	file, err := os.ReadFile(filename)
