@@ -230,3 +230,43 @@ func (*EmptyAnchor) ReplaceTag(n *html.Node) {
 		}
 	}
 }
+
+// NormalizeTodo replaces style-based checkboxes with tag-based checkboxes.
+type NormalizeTodo struct{}
+
+// ReplaceTag implements the TagReplacer interface
+func (*NormalizeTodo) ReplaceTag(n *html.Node) {
+	for _, attr := range n.Attr {
+		if attr.Key == "style" {
+			const prefix = "--en-checked:"
+			if idx := strings.Index(attr.Val, prefix); idx >= 0 {
+				// Figure out whether this item is checked or not.
+				end := attr.Val[(idx + len(prefix)):]
+				semi := strings.IndexByte(end, ';')
+				if semi < 0 {
+					semi = len(end)
+				}
+				isChecked := end[:semi]
+
+				// Construct a new <en-todo/> node, stealing the current node's children.
+				todoNode := &html.Node{
+					Type: html.ElementNode,
+					Data: "en-todo",
+					Attr: []html.Attribute{
+						{Key: "checked", Val: isChecked},
+					},
+					FirstChild: n.FirstChild,
+					LastChild:  n.LastChild,
+				}
+
+				for child := n.FirstChild; child != nil; child = child.NextSibling {
+					child.Parent = todoNode
+				}
+
+				// Insert <en-todo/> node as only child of the parent node.
+				n.FirstChild = todoNode
+				n.LastChild = todoNode
+			}
+		}
+	}
+}
