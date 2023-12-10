@@ -6,15 +6,10 @@ builds:
   goarch:
   - amd64
   - arm64
-  ignore:
-  - goos: linux
-    goarch: arm64
-  - goos: windows
-    goarch: arm64
   env:
   - CGO_ENABLED=0
 archives:
-- name_template: '{{ .ProjectName }}_{{ .Version }}_{{ if eq .Os "darwin" }}MacOS{{ else }}{{ title .Os }}{{ end }}_{{ if eq .Arch "amd64" }}64-bit{{ end }}{{ if eq .Arch "arm64" }}M1{{ end }}'
+- name_template: '{{ .ProjectName }}_{{ .Version }}_{{ if eq .Os "darwin" }}MacOS{{ else }}{{ title .Os }}{{ end }}_{{ if eq .Arch "amd64" }}64-bit{{ end }}{{ if eq .Arch "arm64" }}{{ if eq .Os "darwin" }}M1{{ else }}arm64{{ end }}{{ end }}'
   format_overrides:
   - goos: windows
     format: zip
