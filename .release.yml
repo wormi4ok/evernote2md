@@ -3,6 +3,7 @@ builds:
   - darwin
   - linux
   - windows
+  - android
   goarch:
   - amd64
   - arm64
