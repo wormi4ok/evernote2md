@@ -18,16 +18,20 @@ type noteFilesDir struct {
 	// flags modifying the logic for saving notes
 	flagFolders    bool
 	flagTimestamps bool
+	flagPrependCDate bool
+	flagPrependMDate bool
 
 	// A map to keep track of what notes are already created
 	names map[string]int
 }
 
-func newNoteFilesDir(output string, folders, timestamps bool) *noteFilesDir {
+func newNoteFilesDir(output string, folders, timestamps bool, prependCDate bool, prependMDate bool) *noteFilesDir {
 	return &noteFilesDir{
 		path:           output,
 		flagFolders:    folders,
 		flagTimestamps: timestamps,
+		flagPrependCDate: prependCDate,
+		flagPrependMDate: prependMDate,
 		names:          map[string]int{},
 	}
 }
@@ -35,6 +39,12 @@ func newNoteFilesDir(output string, folders, timestamps bool) *noteFilesDir {
 // SaveNote along with media resources
 func (d *noteFilesDir) SaveNote(title string, md *markdown.Note) error {
 	path := d.path
+	if d.flagPrependMDate {
+		title = md.MTime.Format("2006-01-02 ") + title
+	}
+	if d.flagPrependCDate {
+		title = md.CTime.Format("2006-01-02 ") + title
+	}
 	if d.flagFolders {
 		path = filepath.Join(d.path, d.uniqueName(title))
 		title = "README.md"

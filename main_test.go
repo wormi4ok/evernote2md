@@ -32,7 +32,7 @@ func Test_run(t *testing.T) {
 		t.Fatalf("failed to create a test file at %s", input)
 	}
 	files, _ := matchInput(input)
-	output := newNoteFilesDir(tmpDir, false, false)
+	output := newNoteFilesDir(tmpDir, false, false, false, false)
 	converter, _ := internal.NewConverter("", true, false)
 	run(files, output, newSpinner(true), converter)
 
