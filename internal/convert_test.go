@@ -111,7 +111,7 @@ func TestConvert(t *testing.T) {
 		{
 			name: "FrontMatter",
 			arg: &enex.Note{
-				Title:   "Test note",
+				Title:   "Test \"note",
 				Content: goldenFile(t, "evernote.html"),
 				Created: "20121202T112233Z",
 				Updated: "20201220T223344Z",

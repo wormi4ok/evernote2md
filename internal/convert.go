@@ -19,7 +19,7 @@ import (
 const FrontMatterTemplate = `---
 date: '{{.CTime}}'
 updated_at: '{{.MTime}}'
-title: {{ trim .Title }}
+title: {{ trim .Title | quote }}
 {{- if .TagList }}
 tags: [ {{ .TagList }} ]
 {{- end -}}
@@ -184,6 +184,9 @@ func (c *Converter) addFrontMatter(note *enex.Note, md *markdown.Note) {
 	tmpl, err := template.New("frontMatter").Funcs(template.FuncMap{
 		"trim": func(text string) string {
 			return strings.TrimSpace(text)
+		},
+		"quote": func(text string) string {
+			return fmt.Sprintf("%q", text)
 		},
 	}).Parse(c.FrontMatterTemplate)
 	if err != nil {
