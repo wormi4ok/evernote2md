@@ -33,7 +33,7 @@ func Test_run(t *testing.T) {
 	}
 	files, _ := matchInput(input)
 	output := newNoteFilesDir(tmpDir, false, false)
-	converter, _ := internal.NewConverter("", true, false)
+	converter, _ := internal.NewConverter("", true, false, true)
 	run(files, output, newSpinner(true), converter)
 
 	want := filepath.Join(output.Path(), "Test.md")

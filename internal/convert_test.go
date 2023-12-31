@@ -185,7 +185,7 @@ func TestConvert(t *testing.T) {
 		},
 	}
 	for _, tt := range tests {
-		c, _ := internal.NewConverter("", tt.enableFrontMatter, true)
+		c, _ := internal.NewConverter("", tt.enableFrontMatter, true, true)
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := c.Convert(tt.arg)
 			if (err != nil) != tt.wantErr {

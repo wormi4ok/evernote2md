@@ -49,6 +49,7 @@ source: {{ trim .Source -}}
 type Converter struct {
 	TagTemplate         string
 	EnableHighlights    bool
+	EscapeSpecialChars  bool
 	EnableFrontMatter   bool
 	FrontMatterTemplate string
 
@@ -58,7 +59,7 @@ type Converter struct {
 }
 
 // NewConverter creates a Converter with valid tagTemplate
-func NewConverter(tagTemplate string, enableFrontMatter bool, enableHighlights bool) (*Converter, error) {
+func NewConverter(tagTemplate string, enableFrontMatter, enableHighlights, escapeSpecialChars bool) (*Converter, error) {
 	if tagTemplate == "" {
 		tagTemplate = DefaultTagTemplate
 	}
@@ -67,7 +68,13 @@ func NewConverter(tagTemplate string, enableFrontMatter bool, enableHighlights b
 		return nil, errors.New("tag format should contain exactly one {{tag}} template variable")
 	}
 
-	return &Converter{TagTemplate: tagTemplate, EnableFrontMatter: enableFrontMatter, FrontMatterTemplate: FrontMatterTemplate, EnableHighlights: enableHighlights}, nil
+	return &Converter{
+		TagTemplate:         tagTemplate,
+		EnableHighlights:    enableHighlights,
+		EscapeSpecialChars:  escapeSpecialChars,
+		EnableFrontMatter:   enableFrontMatter,
+		FrontMatterTemplate: FrontMatterTemplate,
+	}, nil
 }
 
 // Convert an Evernote file to markdown
@@ -139,7 +146,7 @@ func (c *Converter) toMarkdown(note *enex.Note, md *markdown.Note) {
 		return
 	}
 	var b bytes.Buffer
-	err := markdown.Convert(&b, bytes.NewReader(note.Content), c.EnableHighlights)
+	err := markdown.Convert(&b, bytes.NewReader(note.Content), c.EnableHighlights, c.EscapeSpecialChars)
 	if c.err = err; err != nil {
 		return
 	}

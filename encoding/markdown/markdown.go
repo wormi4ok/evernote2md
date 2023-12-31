@@ -37,7 +37,7 @@ type (
 
 // Convert wraps a call to external dependency to provide
 // stable interface for package users
-func Convert(w io.Writer, r io.Reader, highlights bool) error {
+func Convert(w io.Writer, r io.Reader, highlights, escapeSpecialChars bool) error {
 	rules := []godown.CustomRule{
 		&TodoItem{}, // Handling checkboxes is always enabled
 	}
@@ -46,5 +46,8 @@ func Convert(w io.Writer, r io.Reader, highlights bool) error {
 		rules = append(rules, &HighlightedText{})
 	}
 
-	return godown.Convert(w, r, &godown.Option{CustomRules: rules})
+	return godown.Convert(w, r, &godown.Option{
+		CustomRules: rules,
+		DoNotEscape: !escapeSpecialChars,
+	})
 }
