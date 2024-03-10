@@ -19,4 +19,5 @@ jobs:
         CC_TEST_REPORTER_ID:  ${{ secrets.CC_TEST_REPORTER_ID }}
       with:
         coverageCommand: go test -coverprofile c.out -covermode=atomic ./...
+        prefix: github.com/wormi4ok/evernote2md/
         debug: true
