@@ -3,7 +3,7 @@
 [![Build Status](https://github.com/wormi4ok/evernote2md/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/wormi4ok/evernote2md/actions/workflows/ci.yml)
 [![Docker Image Size](https://img.shields.io/docker/image-size/wormi4ok/evernote2md)](https://hub.docker.com/r/wormi4ok/evernote2md/)
 [![Homebrew](https://repology.org/badge/version-for-repo/homebrew/evernote2md.svg?header=Homebrew)](https://repology.org/project/evernote2md/versions)
-[![codecov](https://codecov.io/gh/wormi4ok/evernote2md/branch/master/graph/badge.svg)](https://codecov.io/gh/wormi4ok/evernote2md)
+[![Code Climate](https://api.codeclimate.com/v1/badges/52300aa80f58f72b7175/test_coverage)](https://codeclimate.com/github/wormi4ok/evernote2md/test_coverage)
 [![Go Report Card](https://goreportcard.com/badge/github.com/wormi4ok/evernote2md)](https://goreportcard.com/report/github.com/wormi4ok/evernote2md)
 [![PkgGoDev](https://pkg.go.dev/badge/github.com/wormi4ok/evernote2md)](https://pkg.go.dev/github.com/wormi4ok/evernote2md)
 
