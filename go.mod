@@ -1,6 +1,6 @@
 module github.com/wormi4ok/evernote2md
 
-go 1.21
+go 1.23
 
 require (
 	github.com/briandowns/spinner v1.23.1
