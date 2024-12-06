@@ -2,43 +2,43 @@ name: Publish
 
 on:
   release:
-    types: [ published ]
+    types: [published]
 
 jobs:
   formula:
     runs-on: macos-latest
     steps:
-    - name: Update Homebrew Formula
-      uses: dawidd6/action-homebrew-bump-formula@v3
-      with:
-        token: ${{ secrets.HOMEBREW_TOKEN }}
-        formula: evernote2md
-        livecheck: true
+      - name: Update Homebrew Formula
+        uses: dawidd6/action-homebrew-bump-formula@v3
+        with:
+          token: ${{ secrets.HOMEBREW_TOKEN }}
+          formula: evernote2md
+          livecheck: true
   package:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-    - name: Publish Docker image to Docker Hub
-      uses: elgohr/Publish-Docker-Github-Action@v5
-      with:
-        name: ${{ github.repository }}
-        username: ${{ secrets.DOCKERHUB_USER }}
-        password: ${{ secrets.DOCKERHUB_PASS }}
-        tag_names: true
-    - name: Publish Docker image to GitHub Packages
-      uses: elgohr/Publish-Docker-Github-Action@v5
-      with:
-        name: ${{ github.repository }}/cli
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-        registry: docker.pkg.github.com
-        tag_names: true
-    - name: Publish Docker image to GitHub Container Registry
-      uses: elgohr/Publish-Docker-Github-Action@v5
-      with:
-        name: ${{ github.repository }}
-        registry: ghcr.io
-        username: ${{ github.repository_owner }}
-        password: ${{ secrets.GHCR_TOKEN }}
-        tag_semver: true
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Publish Docker image to Docker Hub
+        uses: elgohr/Publish-Docker-Github-Action@v5
+        with:
+          name: ${{ github.repository }}
+          username: ${{ secrets.DOCKERHUB_USER }}
+          password: ${{ secrets.DOCKERHUB_PASS }}
+          tag_names: true
+      - name: Publish Docker image to GitHub Packages
+        uses: elgohr/Publish-Docker-Github-Action@v5
+        with:
+          name: ${{ github.repository }}/cli
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          registry: docker.pkg.github.com
+          tag_names: true
+      - name: Publish Docker image to GitHub Container Registry
+        uses: elgohr/Publish-Docker-Github-Action@v5
+        with:
+          name: ${{ github.repository }}
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GHCR_TOKEN }}
+          tag_semver: true

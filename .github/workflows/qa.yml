@@ -7,17 +7,17 @@ jobs:
   code-coverage:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-    - name: Setup Go
-      uses: actions/setup-go@v5
-      with:
-        go-version: 1.22.x
-    - name: Code Coverage
-      uses: paambaati/codeclimate-action@v5.0.0
-      env:
-        CC_TEST_REPORTER_ID:  ${{ secrets.CC_TEST_REPORTER_ID }}
-      with:
-        coverageCommand: go test -coverprofile c.out -covermode=atomic ./...
-        prefix: github.com/wormi4ok/evernote2md/
-        debug: true
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: 1.23.x
+      - name: Code Coverage
+        uses: paambaati/codeclimate-action@v5.0.0
+        env:
+          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+        with:
+          coverageCommand: go test -coverprofile c.out -covermode=atomic ./...
+          prefix: github.com/wormi4ok/evernote2md/
+          debug: true

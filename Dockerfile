@@ -1,4 +1,4 @@
-FROM golang:1.22-alpine3.19 AS build
+FROM golang:1.23-alpine3.20 AS build
 
 ENV CGO_ENABLED 0
 
@@ -10,7 +10,7 @@ COPY . .
 
 RUN go test ./... && go install -trimpath -ldflags "-s -w -X main.version=$(git describe --tags --abbrev=0)"
 
-FROM alpine:3.19
+FROM alpine:3.21
 
 LABEL   org.opencontainers.image.title="evernote2md" \
         org.opencontainers.image.description="Convert Evernote .enex export file to Markdown" \
