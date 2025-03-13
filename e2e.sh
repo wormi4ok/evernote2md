@@ -10,13 +10,13 @@ set -euo pipefail
 IFS=$'\n\t'
 
 # Absolute path to the latest released version
-current_bin="/usr/local/bin/evernote2md"
+current_bin="/opt/homebrew/bin/evernote2md"
 
 # Absolute path to the new release candidate
 candidate_bin="$(pwd)/bin/evernote2md"
 
 # Sample Evernote export file
-input_file=".trash/My\ Notes.enex"
+input_file=".samples/example.enex"
 
 rm -rf "notes1" "notes2"
 
