@@ -41,7 +41,7 @@ Manually:
 evernote2md (flags) [input] [outputDir]
 ```
 
-`input` can be a file, a directory with exported files, or a glob pattern (like `exports/My*.enex`, for example).
+`input` can be a file, a directory with exported files, or a glob pattern (like `exports/My*.enex`, `exports/**/*.enex` for example).
 
 If `outputDir` is not specified, `./notes` is used.
 

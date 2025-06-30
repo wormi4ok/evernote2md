@@ -16,6 +16,7 @@ import (
 	"path/filepath"
 	"time"
 
+	"github.com/bmatcuk/doublestar/v4"
 	"github.com/briandowns/spinner"
 	"github.com/hako/durafmt"
 	"github.com/hashicorp/logutils"
@@ -157,7 +158,7 @@ func matchInput(input string) ([]string, error) {
 	}
 
 	// User glob patterns may include directories that we filter out
-	matches, err := filepath.Glob(input)
+	matches, err := doublestar.FilepathGlob(input)
 	for _, match := range matches {
 		if info, err := os.Stat(match); err == nil && !info.IsDir() {
 			files = append(files, match)

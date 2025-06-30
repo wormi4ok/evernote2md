@@ -3,6 +3,7 @@ module github.com/wormi4ok/evernote2md
 go 1.24
 
 require (
+	github.com/bmatcuk/doublestar/v4 v4.8.1
 	github.com/briandowns/spinner v1.23.1
 	github.com/hako/durafmt v0.0.0-20210608085754-5c1018a4e16b
 	github.com/hashicorp/logutils v1.0.0
