@@ -20,9 +20,9 @@ jobs:
         with:
           go-version: 1.24.x
       - name: Release
-        uses: goreleaser/goreleaser-action@v5
+        uses: goreleaser/goreleaser-action@v6
         with:
           version: latest
-          args: release -f .release.yml --rm-dist
+          args: release -f .release.yml --clean
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

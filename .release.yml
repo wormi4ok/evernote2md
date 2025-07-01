@@ -1,26 +1,27 @@
+version: 2
 builds:
-- goos:
-  - darwin
-  - linux
-  - windows
-  - android
-  goarch:
-  - amd64
-  - arm64
-  ignore:
-    - goos: android
-      goarch: amd64
-  env:
-  - CGO_ENABLED=0
+  - goos:
+      - darwin
+      - linux
+      - windows
+      - android
+    goarch:
+      - amd64
+      - arm64
+    ignore:
+      - goos: android
+        goarch: amd64
+    env:
+      - CGO_ENABLED=0
 universal_binaries:
   - replace: true
 archives:
-- name_template: '{{ .ProjectName }}_{{ .Version }}_{{ if eq .Os "darwin" }}MacOS{{ else }}{{ title .Os }}_{{ .Arch }}{{ end }}'
-  format_overrides:
-  - goos: windows
-    format: zip
-  wrap_in_directory: false
-  files:
-  - none*
+  - name_template: '{{ .ProjectName }}_{{ .Version }}_{{ if eq .Os "darwin" }}MacOS{{ else }}{{ title .Os }}_{{ .Arch }}{{ end }}'
+    format_overrides:
+      - goos: windows
+        formats: ["zip"]
+    wrap_in_directory: false
+    files:
+      - none*
 release:
   draft: true
