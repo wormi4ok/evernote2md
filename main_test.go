@@ -82,6 +82,21 @@ func Test_matchInput_glob(t *testing.T) {
 	}
 }
 
+func Test_matchInput_globstar(t *testing.T) {
+	tmpDir := tDir(t)
+	levelDir1 := wantDir(t, tmpDir, "level1")
+	levelDir2 := wantDir(t, tmpDir, "level1", "level2")
+	levelDir3 := wantDir(t, tmpDir, "level1", "level2", "level3")
+
+	want1 := wantFile(t, levelDir1, "note1.enex")
+	want2 := wantFile(t, levelDir2, "note2.enex")
+	want3 := wantFile(t, levelDir3, "note3.enex")
+
+	if got, _ := matchInput("level1/**/*.enex"); !matchPath(got, want1, want2, want3) {
+		t.Errorf("matchInput() with globstar pattern\n got  %v\n want %v\n and  %v\n and  %v", got, want1, want2, want3)
+	}
+}
+
 func Test_matchInput_fail(t *testing.T) {
 	_ = tDir(t)
 	_, err := matchInput("not_exist.enex")
