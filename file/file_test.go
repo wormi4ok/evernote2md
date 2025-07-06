@@ -18,7 +18,12 @@ func TestSave(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	defer os.RemoveAll(dirName)
+	defer func() {
+		err := os.RemoveAll(dirName)
+		if err != nil {
+			t.Error(err)
+		}
+	}()
 
 	// Directory should be created
 	_, err = os.Stat(dirName)

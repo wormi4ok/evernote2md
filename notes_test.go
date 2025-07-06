@@ -43,7 +43,7 @@ func TestNoteFilesDir_Flags(t *testing.T) {
 	}
 
 	stat := shouldExist(t, tmpDir, "/test_note/README.md")
-	if stat.ModTime() == fixedDate {
+	if stat.ModTime().Equal(fixedDate) {
 		t.Errorf("Timestamp matches the fixed date =  %s, want = %s", stat.ModTime().String(), time.Now().String())
 	}
 }
