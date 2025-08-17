@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE en-export SYSTEM "http://xml.evernote.com/pub/evernote-export4.dtd">
+<en-export export-date="20250724T193018Z" application="Evernote" version="Evernote iOS 10.147.1 (1241807)">
+  <note>
+    <title>Sample Note</title>
+    <content><div>Example</div></content>
+    <created>
+      20250723T150013Z
+    </created>
+    <updated>
+      20250724T191424Z
+    </updated>
+    <note-attributes>
+      <author>
+        Pepito Perez
+      </author>
+      <source>
+        mobile.iphone
+      </source>
+    </note-attributes>
+  </note>
+  </en-export>

@@ -170,6 +170,27 @@ func TestStreamDecodeAutofixCDATA(t *testing.T) {
 	}
 }
 
+func TestIssue127(t *testing.T) {
+	enexContent, err := os.Open("testdata/issue127.enex")
+	if err != nil {
+		t.Error(err)
+	}
+	d, err := enex.NewStreamDecoder(enexContent)
+	if err != nil {
+		t.Errorf("Error while initializing Decoder = %v", err)
+	}
+	var got enex.Note
+	err = d.Next(&got)
+	if err != nil {
+		t.Errorf("Error while Decodeing = %v", err)
+	}
+
+	content := got.Content
+	if len(bytes.TrimSpace(content)) == 0 {
+		t.Errorf("Decoded resource content is empty, expected non-empty content")
+	}
+}
+
 func readFile(filename string) []byte {
 	file, err := os.ReadFile(filename)
 	if err != nil {
