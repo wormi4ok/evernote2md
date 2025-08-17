@@ -3,7 +3,9 @@
 <en-export export-date="20250724T193018Z" application="Evernote" version="Evernote iOS 10.147.1 (1241807)">
   <note>
     <title>Sample Note</title>
-    <content><div>Example</div></content>
+    <content>
+        <![CDATA[<!DOCTYPE en-note SYSTEM "http://xml.evernote.com/pub/enml2.dtd"><en-note><div>Example</div></en-note>]]>
+    </content>
     <created>
       20250723T150013Z
     </created>
