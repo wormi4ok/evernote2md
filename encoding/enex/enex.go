@@ -124,48 +124,30 @@ type StreamDecoder struct {
 }
 
 func NewStreamDecoder(r io.Reader) (*StreamDecoder, error) {
-	// Do a quick scan to check if we need CDATA fixing without fully buffering
-	scanner := newCDATAScanner(r)
-	needsCDATAFix, processedReader, err := scanner.scan()
+	needsCDATAFix, reader, err := detectNestedCDATA(r)
 	if err != nil {
 		return nil, err
 	}
 
-	var d *xml.Decoder
+	var decoder *xml.Decoder
 	if needsCDATAFix {
-		// Only buffer and process when CDATA issues are detected
-		buf := bytes.Buffer{}
-		if _, err := buf.ReadFrom(processedReader); err != nil {
+		buf := new(bytes.Buffer)
+		if _, err := buf.ReadFrom(reader); err != nil {
 			return nil, err
 		}
 		content := buf.String()
-		if hasNestedCDATA(content) {
-			content = removeNestedCDATA(content)
-		}
-		d = xml.NewDecoder(strings.NewReader(content))
+		content = removeNestedCDATA(content)
+		decoder = xml.NewDecoder(strings.NewReader(content))
 	} else {
-		// Use streaming approach
-		d = xml.NewDecoder(processedReader)
+		decoder = xml.NewDecoder(reader)
+	}
+	decoder.Strict = false
+
+	if err := findEnExportElement(decoder); err != nil {
+		return nil, err
 	}
 
-	d.Strict = false
-
-	for {
-		token, err := d.Token()
-		if err != nil {
-			if errors.Is(err, io.EOF) {
-				return nil, fmt.Errorf("failed to initialise stream reader: no en-export data found: %w", err)
-			}
-			return nil, err
-		}
-
-		element, ok := token.(xml.StartElement)
-		if ok && element.Name.Local == "en-export" {
-			break
-		}
-	}
-
-	return &StreamDecoder{xml: d}, nil
+	return &StreamDecoder{xml: decoder}, nil
 }
 
 func (d StreamDecoder) Next(n *Note) error {
@@ -227,87 +209,19 @@ func decodeRecognition(n *Note) error {
 	return nil
 }
 
-var reCDATA = regexp.MustCompile(`<!\[CDATA\[(.*?)\]\]>`)
-
-// cdataScanner performs a lightweight scan to detect CDATA issues without full buffering
-type cdataScanner struct {
-	reader io.Reader
-	buffer bytes.Buffer
-}
-
-func newCDATAScanner(r io.Reader) *cdataScanner {
-	return &cdataScanner{reader: r}
-}
-
-// scan checks if CDATA fixing is needed by reading a limited amount and looking for patterns
-func (s *cdataScanner) scan() (bool, io.Reader, error) {
-	// Read first 8KB to check for CDATA patterns (most ENEX files have the problematic CDATA early)
-	limited := io.LimitReader(s.reader, 8192)
-	tee := io.TeeReader(limited, &s.buffer)
-
-	chunk, err := io.ReadAll(tee)
-	if err != nil && !errors.Is(err, io.EOF) {
-		return false, nil, err
-	}
-
-	needsFix := hasNestedCDATA(string(chunk))
-
-	// Return a reader that includes both the scanned chunk and remaining data
-	fullReader := io.MultiReader(&s.buffer, s.reader)
-
-	return needsFix, fullReader, nil
-}
-
-// hasNestedCDATA checks if the input contains malformed nested CDATA sections
-// This happens when there's incomplete CDATA sections like:
-// <![CDATA[content <![CDATA[>]]> more content]]>
-// or broken CDATA sections that cause XML parsing errors
-func hasNestedCDATA(input string) bool {
-	// Count CDATA opening and closing tags separately
-	openingTags := strings.Count(input, "<![CDATA[")
-	closingTags := strings.Count(input, "]]>")
-
-	// If there are more CDATA sections than expected or unbalanced tags, we likely have nested/malformed CDATA
-	if openingTags > 1 && openingTags != closingTags {
-		return true
-	}
-
-	// Also check for CDATA tags within the content of other CDATA sections
-	// by looking for the pattern where CDATA appears after <![CDATA[ but before the matching ]]>
-	cdataStart := strings.Index(input, "<![CDATA[")
-	if cdataStart != -1 {
-		// Find the matching ]]> for this CDATA section
-		remaining := input[cdataStart+9:] // Skip "<![CDATA["
-		cdataEnd := strings.Index(remaining, "]]>")
-		if cdataEnd != -1 {
-			content := remaining[:cdataEnd]
-			// Check if there's another CDATA tag within this content
-			if strings.Contains(content, "<![CDATA[") {
-				return true
+// findEnExportElement advances the decoder to the en-export element.
+func findEnExportElement(decoder *xml.Decoder) error {
+	for {
+		token, err := decoder.Token()
+		if err != nil {
+			if errors.Is(err, io.EOF) {
+				return fmt.Errorf("failed to initialise stream reader: no en-export data found: %w", err)
 			}
+			return err
+		}
+		if element, ok := token.(xml.StartElement); ok && element.Name.Local == "en-export" {
+			break
 		}
 	}
-
-	return false
-}
-
-// removeNestedCDATA tags in the note content
-//
-// Nested CDATA tags are not allowed by XML specification
-// but Evernote puts them anyway, causing "Unexpected EOF" errors during decoding
-func removeNestedCDATA(input string) string {
-	output := reCDATA.ReplaceAllStringFunc(input, func(match string) string {
-		submatch := reCDATA.FindStringSubmatch(match)
-		if len(submatch) > 1 {
-			return submatch[1]
-		}
-		return match
-	})
-
-	// Recursively remove nested CDATA tags
-	if output != input {
-		return removeNestedCDATA(output)
-	}
-
-	return output
+	return nil
 }
