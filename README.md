@@ -66,8 +66,3 @@ Here is a link to an article in Evernote Help Center:
 
 Newer versions of the Evernote App do not allow selecting more than 50 notes at a time.
 Consider [exporting entire Notebook](https://github.com/wormi4ok/evernote2md/wiki/Export-a-notebook) instead.
-
------
-Made with ❤ using IDE from JetBrains.
-
-[![JetBrains](.github/powered_by.svg)](https://www.jetbrains.com/?from=evernote2md)
