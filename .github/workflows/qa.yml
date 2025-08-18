@@ -2,22 +2,27 @@ name: Code quality
 
 on:
   push:
+permissions:
+  contents: read
+  id-token: write
 
 jobs:
   code-coverage:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Setup Go
         uses: actions/setup-go@v5
         with:
-          go-version: 1.24.x
-      - name: Code Coverage
-        uses: paambaati/codeclimate-action@v9.0.0
-        env:
-          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+          go-version: 1.25.x
+
+      - name: Run tests
+        run: go test -coverprofile=coverage.out -covermode=atomic ./...
+
+      - uses: qltysh/qlty-action/coverage@v2
         with:
-          coverageCommand: go test -coverprofile c.out -covermode=atomic ./...
-          prefix: github.com/wormi4ok/evernote2md/
-          debug: true
+          oidc: true
+          files: coverage.out
+          strip-prefix: github.com/wormi4ok/evernote2md/
+          verbose: true
