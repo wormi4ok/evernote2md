@@ -33,6 +33,7 @@ func init() {
 	flaggy.SetDescription(" Convert Evernote notes exported in *.enex format to markdown files")
 	flaggy.SetVersion(version)
 
+	flaggy.DefaultParser.ShowCompletion = false
 	flaggy.DefaultParser.ShowHelpOnUnexpected = false
 	flaggy.DefaultParser.AdditionalHelpPrepend = "http://github.com/wormi4ok/evernote2md"
 }
