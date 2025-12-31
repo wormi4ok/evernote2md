@@ -50,17 +50,17 @@ func name(r enex.Resource) (name string, extension string) {
 
 // guessName of the res with the following priority:
 // 1. Filename attribute
-// 2. SourceUrl attribute
-// 3. ID of the res
+// 2. ID of the res (hash) - when filename is empty, prefer hash over SourceUrl
+// 3. SourceUrl attribute
 // 4. File type as name
 func guessName(r enex.Resource) string {
 	switch {
 	case r.Attributes.Filename != "":
 		return r.Attributes.Filename
-	case r.Attributes.SourceUrl != "":
-		return strings.TrimSpace(path.Base(r.Attributes.SourceUrl))
 	case r.ID != "":
 		return r.ID
+	case r.Attributes.SourceUrl != "":
+		return strings.TrimSpace(path.Base(r.Attributes.SourceUrl))
 	default:
 		return r.Type
 	}
