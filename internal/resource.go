@@ -67,7 +67,14 @@ func guessName(r enex.Resource) string {
 }
 
 var preferredExt = map[string]string{
-	"image/jpeg": ".jpg",
+	"image/jpeg":    ".jpg",
+	"image/png":     ".png",
+	"image/gif":     ".gif",
+	"image/webp":    ".webp",
+	"image/svg+xml": ".svg",
+	"image/tiff":    ".tiff",
+	"image/bmp":     ".bmp",
+	"image/ico":     ".ico",
 }
 
 func guessExt(mimeType string) string {

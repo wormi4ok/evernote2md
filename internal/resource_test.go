@@ -15,8 +15,14 @@ func Test_guessExt(t *testing.T) {
 		mimeType string
 		want     string
 	}{
-		{"image", "image/png", ".png"},
-		{"image", "image/jpeg", ".jpg"},
+		{"PNG image", "image/png", ".png"},
+		{"JPEG image", "image/jpeg", ".jpg"},
+		{"GIF image", "image/gif", ".gif"},
+		{"WebP image", "image/webp", ".webp"},
+		{"SVG image", "image/svg+xml", ".svg"},
+		{"TIFF image", "image/tiff", ".tiff"},
+		{"BMP image", "image/bmp", ".bmp"},
+		{"ICO image", "image/ico", ".ico"},
 		{"unknown mime type", "unknown", ""},
 		{"empty input", "", ""},
 	}
