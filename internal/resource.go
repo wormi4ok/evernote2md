@@ -50,7 +50,7 @@ func name(r enex.Resource) (name string, extension string) {
 
 // guessName of the res with the following priority:
 // 1. Filename attribute
-// 2. SourceUrl attribute (when sourceUrl is "en-cache://... use ID)
+// 2. SourceUrl attribute (but use ID when sourceUrl starts with "en-cache://")
 // 3. ID of the res (hash)
 // 4. File type as name
 func guessName(r enex.Resource) string {
