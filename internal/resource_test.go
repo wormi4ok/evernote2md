@@ -44,12 +44,13 @@ func Test_guessName(t *testing.T) {
 			SourceUrl: "?",
 		}}, "!"},
 		{"prefer ID over SourceUrl with protocol 'en-cache://' when filename is empty", enex.Resource{
-			ID: "1xxx590685x61x4xxx1x24xxxxx0097x",
+			ID:   "1xxx590685x61x4xxx1x24xxxxx0097x",
+			Mime: "image/png",
 			Attributes: enex.Attributes{
 				Filename:  "",
 				SourceUrl: "en-cache://tokenKey%3D%22AuthToken%3AUser%3A00000000%22+0x00xx00-0000-000x-0000-xx00x0xxx0x0+1xxx590685x61x4xxx1x24xxxxx0097x+https%3A%2F%2Fpublic.www.evernote.com%2Fresources%2Fx000%2F000000x0-0x0x-000x-xx0x-x0000000000x",
 			},
-		}, "1xxx590685x61x4xxx1x24xxxxx0097x"},
+		}, "1xxx590685x61x4xxx1x24xxxxx0097x.png"},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
