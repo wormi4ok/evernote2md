@@ -58,13 +58,14 @@ func guessName(r enex.Resource) string {
 	case r.Attributes.Filename != "":
 		return r.Attributes.Filename
 	case r.Attributes.SourceUrl != "":
-		if strings.HasPrefix(r.Attributes.SourceUrl, "en-cache://") {
+		if !strings.HasPrefix(r.Attributes.SourceUrl, "en-cache://") {
+			return strings.TrimSpace(path.Base(r.Attributes.SourceUrl))
+		}
+		fallthrough
+	default:
+		if r.ID != "" {
 			return r.ID
 		}
-		return strings.TrimSpace(path.Base(r.Attributes.SourceUrl))
-	case r.ID != "":
-		return r.ID
-	default:
 		return r.Type
 	}
 }
