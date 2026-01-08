@@ -10,7 +10,7 @@ COPY . .
 
 RUN go test ./... && go install -trimpath -ldflags "-s -w -X main.version=$(git describe --tags --abbrev=0)"
 
-FROM alpine:3.22
+FROM alpine:3.23
 
 LABEL   org.opencontainers.image.title="evernote2md" \
     org.opencontainers.image.description="Convert Evernote .enex export file to Markdown" \
