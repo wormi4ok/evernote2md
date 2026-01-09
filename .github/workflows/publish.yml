@@ -26,14 +26,6 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USER }}
           password: ${{ secrets.DOCKERHUB_PASS }}
           tag_names: true
-      - name: Publish Docker image to GitHub Packages
-        uses: elgohr/Publish-Docker-Github-Action@v5
-        with:
-          name: ${{ github.repository }}/cli
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-          registry: docker.pkg.github.com
-          tag_names: true
       - name: Publish Docker image to GitHub Container Registry
         uses: elgohr/Publish-Docker-Github-Action@v5
         with:
