@@ -8,7 +8,7 @@ require (
 	github.com/hako/durafmt v0.0.0-20210608085754-5c1018a4e16b
 	github.com/hashicorp/logutils v1.0.0
 	github.com/integrii/flaggy v1.8.0
-	github.com/mattn/godown v0.0.2-0.20210508133137-72c48840c3e3
+	github.com/mattn/godown v0.0.2-0.20231214125249-43ad2e5393f9
 	github.com/sergi/go-diff v1.4.0
 	golang.org/x/net v0.48.0
 )
