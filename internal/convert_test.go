@@ -229,6 +229,45 @@ func TestConvert(t *testing.T) {
 	}
 }
 
+// Attachments with the same filename should not overwrite each other
+func TestConvertUniqueResourceNamesAcrossNotes(t *testing.T) {
+	c, _ := internal.NewConverter("", false, true, true)
+
+	saved := map[string]string{}
+	for _, id := range []string{"c9e6c70ea74388346ffa16ff8edbdf58", "1sdb49hgt574388346ffa19kh3edbdf09"} {
+		note := &enex.Note{
+			Title:   "Note with " + id,
+			Content: []byte(`<en-media type="image/png" hash="` + id + `"/>`),
+			Resources: []enex.Resource{{
+				ID:   id,
+				Mime: "image/png",
+				Attributes: enex.Attributes{
+					Filename: "image.png",
+				},
+				Data: enex.Data{
+					Encoding: "base64",
+					Content:  []byte(encodedImage),
+				},
+			}},
+		}
+
+		got, err := c.Convert(note)
+		if err != nil {
+			t.Fatalf("Convert() error = %v", err)
+		}
+
+		name := got.Media[id].Name
+		if previous, exist := saved[name]; exist {
+			t.Errorf("Attachment %q of %q overwrites the one saved for %q", name, note.Title, previous)
+		}
+		saved[name] = note.Title
+
+		if !bytes.Contains(got.Content, []byte("image/"+name)) {
+			t.Errorf("Note %q does not link to its attachment %q", note.Title, name)
+		}
+	}
+}
+
 func goldenFile(t *testing.T, filename string) []byte {
 	golden := filepath.Join("testdata", filename)
 	expected, err := os.ReadFile(golden)

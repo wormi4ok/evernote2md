@@ -53,6 +53,9 @@ type Converter struct {
 	EnableFrontMatter   bool
 	FrontMatterTemplate string
 
+	// resourceNames tracks attachment names to keep them unique across all notes in the output directory
+	resourceNames map[string]int
+
 	// err holds an error during conversion
 	// Every conversion step should check this field and skip execution if it is not empty
 	err error
@@ -74,6 +77,7 @@ func NewConverter(tagTemplate string, enableFrontMatter, enableHighlights, escap
 		EscapeSpecialChars:  escapeSpecialChars,
 		EnableFrontMatter:   enableFrontMatter,
 		FrontMatterTemplate: FrontMatterTemplate,
+		resourceNames:       map[string]int{},
 	}, nil
 }
 
@@ -97,7 +101,6 @@ func (c *Converter) Convert(note *enex.Note) (*markdown.Note, error) {
 }
 
 func (c *Converter) mapResources(note *enex.Note, md *markdown.Note) {
-	names := map[string]int{}
 	r := note.Resources
 	for i := range r {
 		p, err := io.ReadAll(decoder(r[i].Data))
@@ -111,13 +114,7 @@ func (c *Converter) mapResources(note *enex.Note, md *markdown.Note) {
 		}
 		name, ext := name(r[i])
 
-		// Ensure the name is unique
-		if cnt, exist := names[name+ext]; exist {
-			names[name+ext] = cnt + 1
-			name = fmt.Sprintf("%s-%d", name, cnt)
-		} else {
-			names[name+ext] = 1
-		}
+		name = c.uniqueName(name, ext)
 
 		mdr := markdown.Resource{
 			Name:    name + ext,
@@ -130,6 +127,22 @@ func (c *Converter) mapResources(note *enex.Note, md *markdown.Note) {
 		} else {
 			md.Media[strconv.Itoa(i)] = mdr
 		}
+	}
+}
+
+// uniqueName appends a counter to an attachment name that is already taken
+func (c *Converter) uniqueName(name, ext string) string {
+	index := strings.ToLower(name + ext)
+
+	for {
+		cnt, exist := c.resourceNames[index]
+		if !exist {
+			c.resourceNames[index] = 1
+			return name
+		}
+		c.resourceNames[index] = cnt + 1
+		name = fmt.Sprintf("%s-%d", name, cnt)
+		index = strings.ToLower(name + ext)
 	}
 }
 
