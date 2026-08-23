@@ -5,15 +5,6 @@ on:
     types: [published]
 
 jobs:
-  formula:
-    runs-on: macos-latest
-    steps:
-      - name: Update Homebrew Formula
-        uses: dawidd6/action-homebrew-bump-formula@v8
-        with:
-          token: ${{ secrets.HOMEBREW_TOKEN }}
-          formula: evernote2md
-          livecheck: true
   package:
     runs-on: ubuntu-latest
     steps:
