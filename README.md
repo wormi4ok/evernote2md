@@ -4,7 +4,7 @@
 [![Docker Image Size](https://img.shields.io/docker/image-size/wormi4ok/evernote2md)](https://hub.docker.com/r/wormi4ok/evernote2md/)
 [![Homebrew](https://repology.org/badge/version-for-repo/homebrew/evernote2md.svg?header=Homebrew)](https://repology.org/project/evernote2md/versions)
 [![Code Coverage](https://qlty.sh/gh/wormi4ok/projects/evernote2md/coverage.svg)](https://qlty.sh/gh/wormi4ok/projects/evernote2md)
-[![Go Report Card](https://goreportcard.com/badge/github.com/wormi4ok/evernote2md)](https://goreportcard.com/report/github.com/wormi4ok/evernote2md)
+[![Maintainability](https://qlty.sh/gh/wormi4ok/projects/evernote2md/maintainability.svg)](https://qlty.sh/gh/wormi4ok/projects/evernote2md)
 [![PkgGoDev](https://pkg.go.dev/badge/github.com/wormi4ok/evernote2md)](https://pkg.go.dev/github.com/wormi4ok/evernote2md)
 
 Evernote2md is a CLI tool to convert Evernote notes exported in *.enex format to a directory with markdown files.
