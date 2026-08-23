@@ -9,7 +9,7 @@ jobs:
     runs-on: macos-latest
     steps:
       - name: Update Homebrew Formula
-        uses: dawidd6/action-homebrew-bump-formula@v7
+        uses: dawidd6/action-homebrew-bump-formula@v8
         with:
           token: ${{ secrets.HOMEBREW_TOKEN }}
           formula: evernote2md
@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: Publish Docker image to Docker Hub
         uses: elgohr/Publish-Docker-Github-Action@v5
         with:
