@@ -10,7 +10,7 @@ require (
 	github.com/integrii/flaggy v1.8.0
 	github.com/mattn/godown v0.0.2-0.20231214125249-43ad2e5393f9
 	github.com/sergi/go-diff v1.4.0
-	golang.org/x/net v0.58.0
+	golang.org/x/net v0.59.0
 )
 
 require (
@@ -19,8 +19,8 @@ require (
 	github.com/mattn/go-colorable v0.1.15 // indirect
 	github.com/mattn/go-isatty v0.0.24 // indirect
 	github.com/mattn/go-runewidth v0.0.28 // indirect
-	golang.org/x/sys v0.47.0 // indirect
-	golang.org/x/term v0.45.0 // indirect
+	golang.org/x/sys v0.48.0 // indirect
+	golang.org/x/term v0.46.0 // indirect
 )
 
 replace github.com/mattn/godown => github.com/wormi4ok/godown v0.5.0
