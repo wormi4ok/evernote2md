@@ -3,24 +3,24 @@ module github.com/wormi4ok/evernote2md
 go 1.27.0
 
 require (
-	github.com/bmatcuk/doublestar/v4 v4.10.0
+	github.com/bmatcuk/doublestar/v4 v4.10.3
 	github.com/briandowns/spinner v1.23.2
 	github.com/hako/durafmt v0.0.0-20210608085754-5c1018a4e16b
 	github.com/hashicorp/logutils v1.0.0
 	github.com/integrii/flaggy v1.8.0
 	github.com/mattn/godown v0.0.2-0.20231214125249-43ad2e5393f9
 	github.com/sergi/go-diff v1.4.0
-	golang.org/x/net v0.58.0
+	golang.org/x/net v0.61.0
 )
 
 require (
 	github.com/clipperhouse/uax29/v2 v2.7.0 // indirect
 	github.com/fatih/color v1.19.0 // indirect
-	github.com/mattn/go-colorable v0.1.15 // indirect
+	github.com/mattn/go-colorable v0.1.16 // indirect
 	github.com/mattn/go-isatty v0.0.24 // indirect
-	github.com/mattn/go-runewidth v0.0.28 // indirect
-	golang.org/x/sys v0.47.0 // indirect
-	golang.org/x/term v0.45.0 // indirect
+	github.com/mattn/go-runewidth v0.0.31 // indirect
+	golang.org/x/sys v0.49.0 // indirect
+	golang.org/x/term v0.47.0 // indirect
 )
 
 replace github.com/mattn/godown => github.com/wormi4ok/godown v0.5.0
